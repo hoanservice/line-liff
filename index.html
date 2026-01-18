@@ -62,17 +62,47 @@
     }
 
     function checkStatus(uid) {
-      fetch(`${gasUrl}?uid=${uid}`)
-        .then(res => res.json())
+      // 設定一個 10 秒超時，防止網頁無限轉圈圈
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 10000);
+
+      console.log("正在比對 UID:", uid);
+      
+      // 這裡會嘗試抓取資料
+      fetch(`${gasUrl}?uid=${uid}`, { signal: controller.signal })
+        .then(res => {
+          clearTimeout(timeoutId);
+          if (!res.ok) throw new Error('網路連線不穩或網址錯誤 (Status: ' + res.status + ')');
+          return res.json();
+        })
         .then(data => {
+          console.log("收到回應:", data);
           document.getElementById('loader').style.display = 'none';
+          
           if (data.isRegistered) {
+            // 情境：已註冊，切換到會員頁面
             document.getElementById('member-page').style.display = 'block';
             document.getElementById('mem-name').innerText = data.name;
             document.getElementById('mem-phone').innerText = data.phone;
           } else {
+            // 情境：未註冊，切換到註冊頁面
             document.getElementById('register-page').style.display = 'block';
           }
+        })
+        .catch(err => {
+          clearTimeout(timeoutId);
+          // --- 這裡就是除錯模式的重點：直接在手機畫面上顯示錯誤原因 ---
+          document.getElementById('loader').innerHTML = `
+            <div class="alert alert-danger mx-3">
+              <strong>連線失敗</strong><br>
+              原因：${err.name === 'AbortError' ? '連線逾時 (GAS沒回應)' : err.message}<br><br>
+              <small>請檢查：<br>
+              1. GAS 部署網址是否包含 /exec<br>
+              2. 權限是否設為「所有人 (Anyone)」</small>
+            </div>
+            <button onclick="location.reload()" class="btn btn-outline-secondary btn-sm">重新整理</button>
+          `;
+          console.error("錯誤細節:", err);
         });
     }
 
