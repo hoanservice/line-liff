@@ -21,19 +21,51 @@
 
   <div class="container p-4">
     <div id="register-page" style="display:none;">
-      <div class="card shadow p-4">
-        <h3 class="text-center mb-4">加入守護中心</h3>
-        <div class="mb-3">
-          <label class="form-label">真實姓名</label>
-          <input type="text" id="reg-name" class="form-control" placeholder="請輸入姓名">
-        </div>
-        <div class="mb-3">
-          <label class="form-label">手機號碼</label>
-          <input type="tel" id="reg-phone" class="form-control" placeholder="09xxxxxxxx">
-        </div>
-        <button onclick="submitRegister()" class="btn btn-primary w-100 py-2">完成註冊</button>
+  <div class="card shadow p-4">
+    <h3 class="text-center mb-4">加入守護中心</h3>
+    
+    <div class="mb-3">
+      <label class="form-label">您的姓名</label>
+      <input type="text" id="reg-name" class="form-control" placeholder="請輸入姓名">
+    </div>
+    <div class="mb-3">
+      <label class="form-label">您的手機</label>
+      <input type="tel" id="reg-phone" class="form-control" placeholder="09xxxxxxxx">
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">守護對象是？</label>
+      <select id="reg-target" class="form-select" onchange="toggleFields()">
+        <option value="self">我自己</option>
+        <option value="elder">親友長輩</option>
+      </select>
+    </div>
+
+    <div id="fields-self">
+      <div class="mb-3">
+        <label class="form-label">緊急聯絡人姓名</label>
+        <input type="text" id="reg-eName" class="form-control">
+      </div>
+      <div class="mb-3">
+        <label class="form-label">緊急聯絡人電話</label>
+        <input type="tel" id="reg-ePhone" class="form-control">
       </div>
     </div>
+
+    <div id="fields-elder" style="display:none;">
+      <div class="mb-3">
+        <label class="form-label">您如何稱呼受守護者？(如：王奶奶)</label>
+        <input type="text" id="reg-uTitle" class="form-control">
+      </div>
+      <div class="mb-3">
+        <label class="form-label">對象如何稱呼您？(如：乖孫小明)</label>
+        <input type="text" id="reg-sAlias" class="form-control">
+      </div>
+    </div>
+
+    <button onclick="submitRegister()" class="btn btn-primary w-100 py-2 mt-3">完成註冊</button>
+  </div>
+</div>
 
     <div id="member-page" style="display:none;">
       <div class="card shadow bg-gradient-custom p-4">
