@@ -22,11 +22,11 @@
   <div class="container p-4">
     <div id="register-page" style="display:none;">
   <div class="card shadow p-4">
-    <h3 class="text-center mb-4">加入守護中心</h3>
+    <h3 class="text-center mb-4">加入厚安守護中心</h3>
     
     <div class="mb-3">
       <label class="form-label">您的姓名</label>
-      <input type="text" id="reg-name" class="form-control" placeholder="請輸入姓名">
+      <input type="text" id="reg-name" class="form-control" placeholder="請輸入真實姓名">
     </div>
     <div class="mb-3">
       <label class="form-label">您的手機</label>
@@ -34,10 +34,10 @@
     </div>
 
     <div class="mb-3">
-      <label class="form-label">守護對象是？</label>
+      <label class="form-label">您要守護的對象是？</label>
       <select id="reg-target" class="form-select" onchange="toggleFields()">
-        <option value="self">我自己</option>
-        <option value="elder">親友長輩</option>
+        <option value="self">自己</option>
+        <option value="elder">親友</option>
       </select>
     </div>
 
@@ -54,11 +54,11 @@
 
     <div id="fields-elder" style="display:none;">
       <div class="mb-3">
-        <label class="form-label">您如何稱呼受守護者？(如：王奶奶)</label>
+        <label class="form-label">您如何稱呼守護對象？(如：爺爺)</label>
         <input type="text" id="reg-uTitle" class="form-control">
       </div>
       <div class="mb-3">
-        <label class="form-label">對象如何稱呼您？(如：乖孫小明)</label>
+        <label class="form-label">該對象如何稱呼您？(如：乖孫小明)</label>
         <input type="text" id="reg-sAlias" class="form-control">
       </div>
     </div>
@@ -68,18 +68,34 @@
 </div>
 
     <div id="member-page" style="display:none;">
-      <div class="card shadow bg-gradient-custom p-4">
-        <p class="small opacity-75">MEMBER CARD</p>
-        <h2 id="mem-name" class="mb-3">載入中...</h2>
-        <p class="mb-0">電話：<span id="mem-phone">---</span></p>
-        <hr>
-        <div class="text-end">
-          <span class="badge bg-white text-dark">尊榮會員</span>
-        </div>
-      </div>
-      <button class="btn btn-outline-secondary w-100 mt-4">查看歷史紀錄</button>
+  <div class="card shadow bg-gradient-custom p-4">
+    <p class="small opacity-75 mb-2">MEMBER CARD</p>
+    <h2 id="mem-name" class="mb-1">載入中...</h2>
+    <p id="mem-phone" class="mb-3">---</p>
+    
+    <div id="emergency-info" style="border-top: 1px solid rgba(255,255,255,0.3); padding-top: 15px; display:none;">
+      <p class="small mb-1" style="opacity: 0.8;">緊急聯絡資訊：</p>
+      <p class="mb-0">姓名：<span id="mem-eName">---</span></p>
+      <p class="mb-0">電話：<span id="mem-ePhone">---</span></p>
+    </div>
+
+    <div id="elder-info" style="border-top: 1px solid rgba(255,255,255,0.3); padding-top: 15px; display:none;">
+      <p class="small mb-1" style="opacity: 0.8;">守護對象資訊：</p>
+      <p class="mb-0">對象：<span id="mem-uTitle">---</span></p>
+      <p class="mb-0">自稱：<span id="mem-sAlias">---</span></p>
+    </div>
+
+    <div class="text-end mt-3">
+      <span class="badge bg-white text-dark">尊榮會員</span>
     </div>
   </div>
+  
+  <p class="text-center mt-3 small text-secondary">
+    ※ 如需修改會員資料，請與客服聯繫。
+  </p>
+  
+  <button class="btn btn-outline-secondary w-100 mt-2">查看歷史紀錄</button>
+</div>
 
   <script>
   const liffId = "2008912295-edmRNdOM"; 
@@ -104,26 +120,49 @@
 
   // 2. 檢查會員狀態 (查詢)
   function checkStatus(uid) {
-    document.getElementById('loader').style.display = 'flex';
-    document.getElementById('loader-text').innerText = "資料查詢中...";
+      document.getElementById('loader').style.display = 'flex';
+      document.getElementById('loader-text').innerText = "資料查詢中...";
 
-    fetch(`${gasUrl}?action=query&uid=${uid}`)
-      .then(res => res.json())
-      .then(data => {
-        document.getElementById('loader').style.display = 'none';
-        document.getElementById('register-page').style.display = 'none';
-        document.getElementById('member-page').style.display = 'none';
+      fetch(`${gasUrl}?action=query&uid=${uid}`)
+        .then(res => res.json())
+        .then(data => {
+          document.getElementById('loader').style.display = 'none';
+          document.getElementById('register-page').style.display = 'none';
+          document.getElementById('member-page').style.display = 'none';
 
-        if (data.exists) {
-          document.getElementById('member-page').style.display = 'block';
-          document.getElementById('mem-name').innerText = data.name;
-          document.getElementById('mem-phone').innerText = data.phone;
-        } else {
-          document.getElementById('register-page').style.display = 'block';
-        }
-      })
-      .catch(err => showError("讀取資料失敗: " + err.message));
-  }
+          if (data.exists) {
+            // 顯示會員卡頁面
+            document.getElementById('member-page').style.display = 'block';
+            
+            // 填入基本資料
+            document.getElementById('mem-name').innerText = data.name;
+            document.getElementById('mem-phone').innerText = "電話：" + data.phone;
+
+            // --- 新增：判斷顯示欄位的邏輯 ---
+            if (data.target === 'self') {
+              // 顯示「自己」的緊急聯絡資訊，隱藏長輩資訊
+              document.getElementById('emergency-info').style.display = 'block';
+              document.getElementById('elder-info').style.display = 'none';
+              
+              document.getElementById('mem-eName').innerText = data.eName || "未填寫";
+              document.getElementById('mem-ePhone').innerText = data.ePhone || "未填寫";
+            } else {
+              // 顯示「親友長輩」的資訊，隱藏緊急聯絡資訊
+              document.getElementById('emergency-info').style.display = 'none';
+              document.getElementById('elder-info').style.display = 'block';
+              
+              document.getElementById('mem-uTitle').innerText = data.uTitle || "未填寫";
+              document.getElementById('mem-sAlias').innerText = data.sAlias || "未填寫";
+            }
+            // ---------------------------
+
+          } else {
+            // 若查無資料，顯示註冊頁面
+            document.getElementById('register-page').style.display = 'block';
+          }
+        })
+        .catch(err => showError("讀取資料失敗: " + err.message));
+    }
 
   // 3. 【新功能】控制欄位顯示切換
   function toggleFields() {
