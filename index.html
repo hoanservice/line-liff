@@ -82,81 +82,105 @@
   </div>
 
   <script>
-    const liffId = "2008912295-edmRNdOM"; 
-    const gasUrl = "https://script.google.com/macros/s/AKfycbzyedQifRTqM6bnusIsB5XHZfeCaQ22M5D1QoYh3cP92ugT5FrqRqj1EbI74qm4CTuq5w/exec"; 
-    let userUid = "";
+  const liffId = "2008912295-edmRNdOM"; 
+  const gasUrl = "https://script.google.com/macros/s/AKfycbzyedQifRTqM6bnusIsB5XHZfeCaQ22M5D1QoYh3cP92ugT5FrqRqj1EbI74qm4CTuq5w/exec"; 
+  let userUid = "";
 
-    async function init() {
-      try {
-        await liff.init({ liffId: liffId });
-        if (!liff.isLoggedIn()) { 
-          liff.login(); 
-          return;
-        }
-        const profile = await liff.getProfile();
-        userUid = profile.userId;
-        checkStatus(userUid);
-      } catch (err) {
-        showError("LIFF 初始化失敗: " + err);
+  // 1. 初始化 LIFF
+  async function init() {
+    try {
+      await liff.init({ liffId: liffId });
+      if (!liff.isLoggedIn()) { 
+        liff.login(); 
+        return;
       }
+      const profile = await liff.getProfile();
+      userUid = profile.userId;
+      checkStatus(userUid);
+    } catch (err) {
+      showError("LIFF 初始化失敗: " + err);
+    }
+  }
+
+  // 2. 檢查會員狀態 (查詢)
+  function checkStatus(uid) {
+    document.getElementById('loader').style.display = 'flex';
+    document.getElementById('loader-text').innerText = "資料查詢中...";
+
+    fetch(`${gasUrl}?action=query&uid=${uid}`)
+      .then(res => res.json())
+      .then(data => {
+        document.getElementById('loader').style.display = 'none';
+        document.getElementById('register-page').style.display = 'none';
+        document.getElementById('member-page').style.display = 'none';
+
+        if (data.exists) {
+          document.getElementById('member-page').style.display = 'block';
+          document.getElementById('mem-name').innerText = data.name;
+          document.getElementById('mem-phone').innerText = data.phone;
+        } else {
+          document.getElementById('register-page').style.display = 'block';
+        }
+      })
+      .catch(err => showError("讀取資料失敗: " + err.message));
+  }
+
+  // 3. 【新功能】控制欄位顯示切換
+  function toggleFields() {
+    const target = document.getElementById('reg-target').value;
+    // 根據選擇顯示對應區塊
+    document.getElementById('fields-self').style.display = (target === 'self') ? 'block' : 'none';
+    document.getElementById('fields-elder').style.display = (target === 'elder') ? 'block' : 'none';
+  }
+
+  // 4. 【新功能】處理註冊提交
+  function submitRegister() {
+    const name = document.getElementById('reg-name').value;
+    const phone = document.getElementById('reg-phone').value;
+    const target = document.getElementById('reg-target').value;
+    
+    if (!name || !phone) return alert("請完整填寫基本資料");
+
+    // 基本參數
+    let params = `action=register&uid=${userUid}&name=${encodeURIComponent(name)}&phone=${encodeURIComponent(phone)}&target=${target}`;
+    
+    // 根據選擇加入額外參數
+    if (target === 'self') {
+      const eName = document.getElementById('reg-eName').value;
+      const ePhone = document.getElementById('reg-ePhone').value;
+      params += `&eName=${encodeURIComponent(eName)}&ePhone=${encodeURIComponent(ePhone)}`;
+    } else {
+      const uTitle = document.getElementById('reg-uTitle').value;
+      const sAlias = document.getElementById('reg-sAlias').value;
+      params += `&uTitle=${encodeURIComponent(uTitle)}&sAlias=${encodeURIComponent(sAlias)}`;
     }
 
-    function checkStatus(uid) {
-      document.getElementById('loader').style.display = 'flex';
-      document.getElementById('loader-text').innerText = "資料查詢中...";
+    document.getElementById('loader').style.display = 'flex';
+    document.getElementById('loader-text').innerText = "註冊資料寫入中...";
 
-      // 增加 action=query 參數以對應新版 GAS
-      fetch(`${gasUrl}?action=query&uid=${uid}`)
-        .then(res => res.json())
-        .then(data => {
-          document.getElementById('loader').style.display = 'none';
-          // 隱藏所有頁面，準備重新顯示
-          document.getElementById('register-page').style.display = 'none';
-          document.getElementById('member-page').style.display = 'none';
+    fetch(`${gasUrl}?${params}`)
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          alert("註冊成功！");
+          checkStatus(userUid); // 註冊成功後自動切換至會員卡面
+        } else {
+          throw new Error("註冊過程發生錯誤");
+        }
+      })
+      .catch(err => {
+        document.getElementById('loader').style.display = 'none';
+        alert("註冊失敗: " + err.message);
+      });
+  }
 
-          if (data.exists) {
-            document.getElementById('member-page').style.display = 'block';
-            document.getElementById('mem-name').innerText = data.name;
-            document.getElementById('mem-phone').innerText = data.phone;
-          } else {
-            document.getElementById('register-page').style.display = 'block';
-          }
-        })
-        .catch(err => showError("讀取資料失敗: " + err.message));
-    }
+  function showError(msg) {
+    document.getElementById('loader').style.display = 'none';
+    alert(msg);
+  }
 
-    function submitRegister() {
-      const name = document.getElementById('reg-name').value;
-      const phone = document.getElementById('reg-phone').value;
-      if (!name || !phone) return alert("請完整填寫");
-
-      document.getElementById('loader').style.display = 'flex';
-      document.getElementById('loader-text').innerText = "註冊資料寫入中...";
-
-      // 修改處：增加 action=register 參數，並在成功後呼叫 checkStatus
-      fetch(`${gasUrl}?action=register&uid=${userUid}&name=${encodeURIComponent(name)}&phone=${encodeURIComponent(phone)}`)
-        .then(res => res.json())
-        .then(data => {
-          if (data.success) {
-            alert("註冊成功！");
-            // 關鍵修改：不刷頁面，直接重新查詢狀態，頁面會自動切換至會員卡
-            checkStatus(userUid);
-          } else {
-            throw new Error(data.message || "註冊過程發生錯誤");
-          }
-        })
-        .catch(err => {
-          document.getElementById('loader').style.display = 'none';
-          alert("註冊失敗: " + err.message);
-        });
-    }
-
-    function showError(msg) {
-      document.getElementById('loader').style.display = 'none';
-      alert(msg);
-    }
-
-    window.onload = init;
-  </script>
+  window.onload = init;
+</script>
+    
 </body>
 </html>
