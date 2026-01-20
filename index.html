@@ -108,20 +108,31 @@
   let userUid = "";
 
   // 1. 初始化 LIFF
-  async function init() {
-    try {
-      await liff.init({ liffId: liffId });
-      if (!liff.isLoggedIn()) { 
-        liff.login(); 
-        return;
-      }
-      const profile = await liff.getProfile();
-      userUid = profile.userId;
-      checkStatus(userUid);
-    } catch (err) {
-      showError("LIFF 初始化失敗: " + err);
+ async function init() {
+  try {
+    await liff.init({ liffId: liffId });
+    if (!liff.isLoggedIn()) { 
+      liff.login(); 
+      return;
     }
+    const profile = await liff.getProfile();
+    userUid = profile.userId;
+
+    // --- 新增：解析網址中的邀請者 ID ---
+    const urlParams = new URLSearchParams(window.location.search);
+    const inviterUid = urlParams.get('inviter');
+
+    if (inviterUid && inviterUid !== userUid) {
+      // 如果有邀請者，且不是自己點自己的連結，進入「綁定流程」
+      handleBinding(inviterUid, userUid);
+    } else {
+      // 一般進入流程
+      checkStatus(userUid);
+    }
+  } catch (err) {
+    showError("LIFF 初始化失敗: " + err);
   }
+}
 
   // 2. 檢查會員狀態 (查詢)
   function checkStatus(uid) {
@@ -217,7 +228,43 @@
         alert("註冊失敗: " + err.message);
       });
   }
+function sendInvite() {
+    if (!liff.isApiAvailable('shareTargetPicker')) {
+      alert("請在手機 LINE App 中開啟此功能");
+      return;
+    }
 
+    const inviteUrl = `https://liff.line.me/${liffId}?inviter=${userUid}`;
+
+    liff.shareTargetPicker([
+      {
+        "type": "flex",
+        "altText": "您收到一張厚安守護卡",
+        "contents": {
+          "type": "bubble",
+          "body": {
+            "type": "box",
+            "layout": "vertical",
+            "contents": [
+              { "type": "text", "text": "厚安守護中心", "weight": "bold", "color": "#1DB446", "size": "sm" },
+              { "type": "text", "text": "守護卡綁定邀請", "weight": "bold", "size": "xl", "margin": "md" },
+              { "type": "text", "text": "您的親友邀請您綁定守護卡，點擊下方按鈕完成連結。", "size": "xs", "color": "#aaaaaa", "wrap": true, "margin": "md" },
+              {
+                "type": "button",
+                "style": "primary",
+                "color": "#667eea",
+                "margin": "xl",
+                "action": { "type": "uri", "label": "接受守護並綁定", "uri": inviteUrl }
+              }
+            ]
+          }
+        }
+      }
+    ])
+    .then(res => { if (res) { console.log("訊息已傳送"); } })
+    .catch(err => console.error("傳送失敗", err));
+  }
+    
   function showError(msg) {
     document.getElementById('loader').style.display = 'none';
     alert(msg);
