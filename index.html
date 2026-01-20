@@ -92,16 +92,18 @@
   
   <p class="text-center mt-3 small text-secondary">
     ※ 如需修改會員資料，請與客服聯繫。
-  </p>
+<div id="member-page" style="display:none;">
   <div id="manager-actions" class="mt-4" style="display:none;">
-  <button onclick="sendInvite()" class="btn btn-success w-100 py-2">
-    傳送守護卡給指定對象
-  </button>
-  <p class="small text-muted text-center mt-2">
-    點擊傳送連結，讓守護對象綁定您的帳號
-  </p>
-</div>
+    <button onclick="sendGuardianCard()" class="btn btn-success w-100 py-2">
+      傳送守護卡給指定對象
+    </button>
+    <p class="text-center small text-secondary mt-2">點擊傳送連結，讓守護對象綁定您的帳號</p>
+  </div>
 
+  <div id="target-notice" class="alert alert-info mt-4" style="display:none;">
+    您的帳號已受守護，如有需求請聯繫您的守護者。
+  </div>
+</div>
 <div class="mt-2">
   <button class="btn btn-outline-secondary w-100 py-2">
     查看回報歷史紀錄
