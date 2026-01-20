@@ -153,15 +153,16 @@
           document.getElementById('member-page').style.display = 'none';
 
           if (data.exists) {
-            // 顯示會員卡頁面
-            document.getElementById('member-page').style.display = 'block';
-    
-            // --- 新增判斷：只有守護對象是「親友長輩(elder)」的人才看得到發送按鈕 ---
-            if (data.target === 'elder') {
-            document.getElementById('manager-actions').style.display = 'block';
-            } else {
-            document.getElementById('manager-actions').style.display = 'none';
-            }
+          document.getElementById('member-page').style.display = 'block';
+
+          // --- 關鍵邏輯檢查 ---
+          // 只有當「守護對象」是選「親友長輩 (elder)」時，才顯示傳送邀請的功能
+          if (data.target === 'elder') {
+          document.getElementById('manager-actions').style.display = 'block';
+          } else {
+          // 如果 target 是 'self'，或是其他狀況，則隱藏該區塊
+          document.getElementById('manager-actions').style.display = 'none';
+          }
             
             // 填入基本資料
             document.getElementById('mem-name').innerText = data.name;
