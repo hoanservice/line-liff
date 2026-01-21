@@ -227,25 +227,87 @@
     }
 
     function sendInvite() {
-      if (!liff.isApiAvailable('shareTargetPicker')) return alert("請在 LINE App 中開啟");
-      const inviteUrl = `https://liff.line.me/${liffId}?inviter=${userUid}`;
-      liff.shareTargetPicker([{
-        "type": "flex",
-        "altText": "您收到一張厚安守護卡",
-        "contents": {
-          "type": "bubble",
-          "body": {
-            "type": "box", "layout": "vertical",
-            "contents": [
-              { "type": "text", "text": "厚安守護中心", "weight": "bold", "color": "#1DB446", "size": "sm" },
-              { "type": "text", "text": "守護卡綁定邀請", "weight": "bold", "size": "xl", "margin": "md" },
-              { "type": "text", "text": "您的親友邀請您綁定守護卡，點擊下方按鈕完成連結。", "size": "xs", "color": "#aaaaaa", "wrap": true, "margin": "md" },
-              { "type": "button", "style": "primary", "color": "#667eea", "margin": "xl", "action": { "type": "uri", "label": "接受守護並綁定", "uri": inviteUrl } }
-            ]
+  if (!liff.isApiAvailable('shareTargetPicker')) return alert("請在 LINE App 中開啟");
+  
+  // 取得當前用戶（守護者）的姓名，讓訊息更有溫度
+  const senderName = document.getElementById('mem-name').innerText;
+  const inviteUrl = `https://liff.line.me/${liffId}?inviter=${userUid}`;
+
+  liff.shareTargetPicker([{
+    "type": "flex",
+    "altText": `${senderName} 邀請您加入厚安守護`,
+    "contents": {
+      "type": "bubble",
+      "styles": {
+        "footer": { "separator": true }
+      },
+      "body": {
+        "type": "box",
+        "layout": "vertical",
+        "contents": [
+          {
+            "type": "text",
+            "text": "厚安守護中心 🛡️",
+            "weight": "bold",
+            "color": "#4A90E2",
+            "size": "sm"
+          },
+          {
+            "type": "text",
+            "text": "成為家人的溫暖依靠",
+            "weight": "bold",
+            "size": "xl",
+            "margin": "md",
+            "color": "#333333"
+          },
+          {
+            "type": "text",
+            "text": `親愛的家人，我是 ${senderName}。我已為您申請了「厚安守護卡」。`,
+            "size": "sm",
+            "color": "#555555",
+            "wrap": true,
+            "margin": "lg"
+          },
+          {
+            "type": "text",
+            "text": "邀請您點擊下方按鈕完成綁定，讓這份守護在日常中多一份安心。",
+            "size": "sm",
+            "color": "#555555",
+            "wrap": true,
+            "margin": "sm"
+          },
+          {
+            "type": "button",
+            "style": "primary",
+            "color": "#667eea",
+            "margin": "xxl",
+            "height": "sm",
+            "action": {
+              "type": "uri",
+              "label": "✨ 接受守護並綁定 ✨",
+              "uri": inviteUrl
+            }
           }
-        }
-      }]);
+        ]
+      },
+      "footer": {
+        "type": "box",
+        "layout": "vertical",
+        "contents": [
+          {
+            "type": "text",
+            "text": "此連結僅限本人綁定使用",
+            "size": "xxs",
+            "color": "#aaaaaa",
+            "align": "center"
+          }
+        ]
+      }
     }
+  }])
+  .then(res => { if (res) { alert("守護邀請已送出！"); } })
+  .catch(err => console.error("傳送失敗", err));
+}
 
     function showError(msg) {
       document.getElementById('loader').style.display = 'none';
