@@ -106,6 +106,12 @@
       <div class="mt-2">
         <button class="btn btn-outline-secondary w-100 py-2">查看回報歷史紀錄</button>
       </div>
+      <div class="mt-4">
+  <h6 class="text-secondary fw-bold">近 7 天回報紀錄</h6>
+  <div id="history-list" class="list-group shadow-sm">
+    <div class="list-group-item small text-center text-muted">讀取中...</div>
+  </div>
+</div>
     </div>
   </div>
 
@@ -148,8 +154,8 @@
 
             const card = document.getElementById('member-card');
             
+            // --- 判斷角色顯示邏輯 ---
             if (data.isTarget) {
-              // 【受守護者視圖】
               card.className = "card shadow bg-gradient-target p-4";
               document.getElementById('card-type-label').innerText = "GUARDIAN CARD";
               document.getElementById('guardian-info-box').style.display = 'block';
@@ -160,13 +166,11 @@
               document.getElementById('emergency-info').style.display = 'none';
               document.getElementById('elder-info').style.display = 'none';
             } else {
-              // 【管理者視圖】
               card.className = "card shadow bg-gradient-custom p-4";
               document.getElementById('card-type-label').innerText = "MEMBER CARD";
               document.getElementById('guardian-info-box').style.display = 'none';
               document.getElementById('target-notice').style.display = 'none';
               
-              // 依據註冊對象切換顯示
               if (data.target === 'self') {
                 document.getElementById('emergency-info').style.display = 'block';
                 document.getElementById('elder-info').style.display = 'none';
@@ -179,13 +183,29 @@
                 document.getElementById('mem-uTitle').innerText = data.uTitle || "未填寫";
                 document.getElementById('mem-sAlias').innerText = data.sAlias || "未填寫";
                 
-                // 如果已經有守護對象了，就改按鈕文字或隱藏
                 if (data.hasManaged) {
                   document.getElementById('manager-actions').innerHTML = `<button class="btn btn-info w-100 text-white py-2">查看受守護者狀態</button>`;
                 }
                 document.getElementById('manager-actions').style.display = 'block';
               }
             }
+
+            // ==========================================
+            // 這裡就是你要放「顯示紀錄」的地方！
+            // ==========================================
+            const historyBox = document.getElementById('history-list');
+            if (data.history && data.history.length > 0) {
+              historyBox.innerHTML = data.history.map(item => `
+                <div class="list-group-item d-flex justify-content-between align-items-center">
+                  <span>${item.name} 報平安</span>
+                  <span class="badge bg-light text-secondary">${item.time}</span>
+                </div>
+              `).join('');
+            } else {
+              historyBox.innerHTML = '<div class="list-group-item small text-center text-muted">目前尚無紀錄</div>';
+            }
+            // ==========================================
+
           } else {
             document.getElementById('register-page').style.display = 'block';
           }
