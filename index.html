@@ -9,6 +9,7 @@
   <style>
     .card { border-radius: 15px; border: none; }
     .bg-gradient-custom { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
+    .bg-gradient-target { background: linear-gradient(135deg, #f6d365 0%, #fda085 100%); color: white; }
     #loader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.8); z-index: 1000; display: flex; flex-direction: column; justify-content: center; align-items: center; }
   </style>
 </head>
@@ -21,132 +22,118 @@
 
   <div class="container p-4">
     <div id="register-page" style="display:none;">
-  <div class="card shadow p-4">
-    <h3 class="text-center mb-4">加入厚安守護中心</h3>
-    
-    <div class="mb-3">
-      <label class="form-label">您的姓名</label>
-      <input type="text" id="reg-name" class="form-control" placeholder="請輸入真實姓名">
-    </div>
-    <div class="mb-3">
-      <label class="form-label">您的手機</label>
-      <input type="tel" id="reg-phone" class="form-control" placeholder="09xxxxxxxx">
-    </div>
-
-    <div class="mb-3">
-      <label class="form-label">您要守護的對象是？</label>
-      <select id="reg-target" class="form-select" onchange="toggleFields()">
-        <option value="self">自己</option>
-        <option value="elder">親友</option>
-      </select>
-    </div>
-
-    <div id="fields-self">
-      <div class="mb-3">
-        <label class="form-label">緊急聯絡人姓名</label>
-        <input type="text" id="reg-eName" class="form-control">
+      <div class="card shadow p-4">
+        <h3 class="text-center mb-4">加入厚安守護中心</h3>
+        <div class="mb-3">
+          <label class="form-label">您的姓名</label>
+          <input type="text" id="reg-name" class="form-control" placeholder="請輸入真實姓名">
+        </div>
+        <div class="mb-3">
+          <label class="form-label">您的手機</label>
+          <input type="tel" id="reg-phone" class="form-control" placeholder="09xxxxxxxx">
+        </div>
+        <div class="mb-3">
+          <label class="form-label">您要守護的對象是？</label>
+          <select id="reg-target" class="form-select" onchange="toggleFields()">
+            <option value="self">自己</option>
+            <option value="elder">親友</option>
+          </select>
+        </div>
+        <div id="fields-self">
+          <div class="mb-3">
+            <label class="form-label">緊急聯絡人姓名</label>
+            <input type="text" id="reg-eName" class="form-control">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">緊急聯絡人電話</label>
+            <input type="tel" id="reg-ePhone" class="form-control">
+          </div>
+        </div>
+        <div id="fields-elder" style="display:none;">
+          <div class="mb-3">
+            <label class="form-label">您如何稱呼守護對象？(如：爺爺)</label>
+            <input type="text" id="reg-uTitle" class="form-control">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">對方如何稱呼您？(如：乖孫小明)</label>
+            <input type="text" id="reg-sAlias" class="form-control">
+          </div>
+        </div>
+        <button onclick="submitRegister()" class="btn btn-primary w-100 py-2 mt-3">完成註冊</button>
       </div>
-      <div class="mb-3">
-        <label class="form-label">緊急聯絡人電話</label>
-        <input type="tel" id="reg-ePhone" class="form-control">
-      </div>
     </div>
-
-    <div id="fields-elder" style="display:none;">
-      <div class="mb-3">
-        <label class="form-label">您如何稱呼守護對象？(如：爺爺)</label>
-        <input type="text" id="reg-uTitle" class="form-control">
-      </div>
-      <div class="mb-3">
-        <label class="form-label">對方如何稱呼您？(如：乖孫小明)</label>
-        <input type="text" id="reg-sAlias" class="form-control">
-      </div>
-    </div>
-
-    <button onclick="submitRegister()" class="btn btn-primary w-100 py-2 mt-3">完成註冊</button>
-  </div>
-</div>
 
     <div id="member-page" style="display:none;">
-  <div class="card shadow bg-gradient-custom p-4">
-    <p class="small opacity-75 mb-2">MEMBER CARD</p>
-    <h2 id="mem-name" class="mb-1">載入中...</h2>
-    <p id="mem-phone" class="mb-3">---</p>
-    
-    <div id="emergency-info" style="border-top: 1px solid rgba(255,255,255,0.3); padding-top: 15px; display:none;">
-      <p class="small mb-1" style="opacity: 0.8;">緊急聯絡資訊</p>
-      <p class="mb-0">姓名：<span id="mem-eName">---</span></p>
-      <p class="mb-0">電話：<span id="mem-ePhone">---</span></p>
-    </div>
+      <div id="member-card" class="card shadow bg-gradient-custom p-4">
+        <p id="card-type-label" class="small opacity-75 mb-2">MEMBER CARD</p>
+        <h2 id="mem-name" class="mb-1">載入中...</h2>
+        <p id="mem-phone" class="mb-3">---</p>
+        
+        <div id="guardian-info-box" style="display:none; background: rgba(255,255,255,0.2); border-radius: 10px; padding: 10px; margin-top: 10px;">
+          <p class="mb-0 small">✨ 受守護中</p>
+          <h5 class="mb-0">守護者：<span id="guardian-name">---</span></h5>
+          <p class="small mb-0" id="guardian-relation-text"></p>
+        </div>
 
-    <div id="elder-info" style="border-top: 1px solid rgba(255,255,255,0.3); padding-top: 15px; display:none;">
-      <p class="small mb-1" style="opacity: 0.8;">守護對象資訊</p>
-      <p class="mb-0">對象：<span id="mem-uTitle">---</span></p>
-      <p class="mb-0">自稱：<span id="mem-sAlias">---</span></p>
-    </div>
+        <div id="emergency-info" style="border-top: 1px solid rgba(255,255,255,0.3); padding-top: 15px; display:none;">
+          <p class="small mb-1" style="opacity: 0.8;">緊急聯絡資訊</p>
+          <p class="mb-0">姓名：<span id="mem-eName">---</span></p>
+          <p class="mb-0">電話：<span id="mem-ePhone">---</span></p>
+        </div>
 
-    <div class="text-end mt-3">
-      <span class="badge bg-white text-dark">一般會員</span>
+        <div id="elder-info" style="border-top: 1px solid rgba(255,255,255,0.3); padding-top: 15px; display:none;">
+          <p class="small mb-1" style="opacity: 0.8;">守護對象資訊</p>
+          <p class="mb-0">對象：<span id="mem-uTitle">---</span></p>
+          <p class="mb-0">自稱：<span id="mem-sAlias">---</span></p>
+        </div>
+
+        <div class="text-end mt-3">
+          <span class="badge bg-white text-dark">尊榮會員</span>
+        </div>
+      </div>
+      
+      <p class="text-center mt-3 small text-secondary">※ 如需修改會員資料，請與客服聯繫。</p>
+
+      <div id="manager-actions" class="mt-4" style="display:none;">
+        <button onclick="sendInvite()" class="btn btn-success w-100 py-2">傳送守護卡給指定對象</button>
+        <p class="text-center small text-secondary mt-2">點擊傳送連結，讓守護對象綁定您的帳號</p>
+      </div>
+
+      <div id="target-notice" class="alert alert-info mt-4" style="display:none;">
+        您的帳號已受守護，如有需求請點擊下方回報。
+      </div>
+
+      <div class="mt-2">
+        <button class="btn btn-outline-secondary w-100 py-2">查看回報歷史紀錄</button>
+      </div>
     </div>
   </div>
-  
-  <p class="text-center mt-3 small text-secondary">
-    ※ 如需修改會員資料，請與客服聯繫。
-<div id="member-page" style="display:none;">
-  <div id="manager-actions" class="mt-4" style="display:none;">
-    <button onclick="sendGuardianCard()" class="btn btn-success w-100 py-2">
-      傳送守護卡給指定對象
-    </button>
-    <p class="text-center small text-secondary mt-2">點擊傳送連結，讓守護對象綁定您的帳號</p>
-  </div>
-
-  <div id="target-notice" class="alert alert-info mt-4" style="display:none;">
-    您的帳號已受守護，如有需求請聯繫您的守護者。
-  </div>
-</div>
-<div class="mt-2">
-  <button class="btn btn-outline-secondary w-100 py-2">
-    查看回報歷史紀錄
-  </button>
-</div>
 
   <script>
-  const liffId = "2008912295-edmRNdOM"; 
-  const gasUrl = "https://script.google.com/macros/s/AKfycbzyedQifRTqM6bnusIsB5XHZfeCaQ22M5D1QoYh3cP92ugT5FrqRqj1EbI74qm4CTuq5w/exec"; 
-  let userUid = "";
+    const liffId = "2008912295-edmRNdOM"; 
+    const gasUrl = "https://script.google.com/macros/s/AKfycbzyedQifRTqM6bnusIsB5XHZfeCaQ22M5D1QoYh3cP92ugT5FrqRqj1EbI74qm4CTuq5w/exec"; 
+    let userUid = "";
+    let inviterId = "";
 
-  // 1. 初始化 LIFF
- async function init() {
-  try {
-    await liff.init({ liffId: liffId });
-    if (!liff.isLoggedIn()) { 
-      liff.login(); 
-      return;
+    async function init() {
+      try {
+        await liff.init({ liffId: liffId });
+        if (!liff.isLoggedIn()) { liff.login(); return; }
+        
+        const profile = await liff.getProfile();
+        userUid = profile.userId;
+
+        const urlParams = new URLSearchParams(window.location.search);
+        inviterId = urlParams.get('inviter');
+
+        checkStatus(userUid);
+      } catch (err) {
+        showError("LIFF 初始化失敗: " + err);
+      }
     }
-    const profile = await liff.getProfile();
-    userUid = profile.userId;
 
-    // --- 新增：解析網址中的邀請者 ID ---
-    const urlParams = new URLSearchParams(window.location.search);
-    const inviterUid = urlParams.get('inviter');
-
-    if (inviterUid && inviterUid !== userUid) {
-      // 如果有邀請者，且不是自己點自己的連結，進入「綁定流程」
-      handleBinding(inviterUid, userUid);
-    } else {
-      // 一般進入流程
-      checkStatus(userUid);
-    }
-  } catch (err) {
-    showError("LIFF 初始化失敗: " + err);
-  }
-}
-
-  // 2. 檢查會員狀態 (查詢)
-  function checkStatus(uid) {
+    function checkStatus(uid) {
       document.getElementById('loader').style.display = 'flex';
-      document.getElementById('loader-text').innerText = "資料查詢中...";
-
       fetch(`${gasUrl}?action=query&uid=${uid}`)
         .then(res => res.json())
         .then(data => {
@@ -155,139 +142,117 @@
           document.getElementById('member-page').style.display = 'none';
 
           if (data.exists) {
-          document.getElementById('member-page').style.display = 'block';
-
-          // --- 關鍵邏輯檢查 ---
-          // 只有當「守護對象」是選「親友長輩 (elder)」時，才顯示傳送邀請的功能
-          if (data.target === 'elder') {
-          document.getElementById('manager-actions').style.display = 'block';
-          } else {
-          // 如果 target 是 'self'，或是其他狀況，則隱藏該區塊
-          document.getElementById('manager-actions').style.display = 'none';
-          }
-            
-            // 填入基本資料
+            document.getElementById('member-page').style.display = 'block';
             document.getElementById('mem-name').innerText = data.name;
             document.getElementById('mem-phone').innerText = "電話：" + data.phone;
 
-            // --- 新增：判斷顯示欄位的邏輯 ---
-            if (data.target === 'self') {
-              // 顯示「自己」的緊急聯絡資訊，隱藏長輩資訊
-              document.getElementById('emergency-info').style.display = 'block';
-              document.getElementById('elder-info').style.display = 'none';
-              
-              document.getElementById('mem-eName').innerText = data.eName || "未填寫";
-              document.getElementById('mem-ePhone').innerText = data.ePhone || "未填寫";
-            } else {
-              // 顯示「親友長輩」的資訊，隱藏緊急聯絡資訊
+            const card = document.getElementById('member-card');
+            
+            if (data.isTarget) {
+              // 【受守護者視圖】
+              card.className = "card shadow bg-gradient-target p-4";
+              document.getElementById('card-type-label').innerText = "GUARDIAN CARD";
+              document.getElementById('guardian-info-box').style.display = 'block';
+              document.getElementById('guardian-name').innerText = data.guardianName;
+              document.getElementById('guardian-relation-text').innerText = `${data.sAlias || '親友'} 正在守護您`;
+              document.getElementById('target-notice').style.display = 'block';
+              document.getElementById('manager-actions').style.display = 'none';
               document.getElementById('emergency-info').style.display = 'none';
-              document.getElementById('elder-info').style.display = 'block';
+              document.getElementById('elder-info').style.display = 'none';
+            } else {
+              // 【管理者視圖】
+              card.className = "card shadow bg-gradient-custom p-4";
+              document.getElementById('card-type-label').innerText = "MEMBER CARD";
+              document.getElementById('guardian-info-box').style.display = 'none';
+              document.getElementById('target-notice').style.display = 'none';
               
-              document.getElementById('mem-uTitle').innerText = data.uTitle || "未填寫";
-              document.getElementById('mem-sAlias').innerText = data.sAlias || "未填寫";
+              // 依據註冊對象切換顯示
+              if (data.target === 'self') {
+                document.getElementById('emergency-info').style.display = 'block';
+                document.getElementById('elder-info').style.display = 'none';
+                document.getElementById('mem-eName').innerText = data.eName || "未填寫";
+                document.getElementById('mem-ePhone').innerText = data.ePhone || "未填寫";
+                document.getElementById('manager-actions').style.display = 'none';
+              } else {
+                document.getElementById('emergency-info').style.display = 'none';
+                document.getElementById('elder-info').style.display = 'block';
+                document.getElementById('mem-uTitle').innerText = data.uTitle || "未填寫";
+                document.getElementById('mem-sAlias').innerText = data.sAlias || "未填寫";
+                
+                // 如果已經有守護對象了，就改按鈕文字或隱藏
+                if (data.hasManaged) {
+                  document.getElementById('manager-actions').innerHTML = `<button class="btn btn-info w-100 text-white py-2">查看受守護者狀態</button>`;
+                }
+                document.getElementById('manager-actions').style.display = 'block';
+              }
             }
-            // ---------------------------
-
           } else {
-            // 若查無資料，顯示註冊頁面
             document.getElementById('register-page').style.display = 'block';
           }
         })
-        .catch(err => showError("讀取資料失敗: " + err.message));
+        .catch(err => showError("讀取失敗: " + err.message));
     }
 
-  // 3. 【新功能】控制欄位顯示切換
-  function toggleFields() {
-    const target = document.getElementById('reg-target').value;
-    // 根據選擇顯示對應區塊
-    document.getElementById('fields-self').style.display = (target === 'self') ? 'block' : 'none';
-    document.getElementById('fields-elder').style.display = (target === 'elder') ? 'block' : 'none';
-  }
-
-  // 4. 【新功能】處理註冊提交
-  function submitRegister() {
-    const name = document.getElementById('reg-name').value;
-    const phone = document.getElementById('reg-phone').value;
-    const target = document.getElementById('reg-target').value;
-    
-    if (!name || !phone) return alert("請完整填寫基本資料");
-
-    // 基本參數
-    let params = `action=register&uid=${userUid}&name=${encodeURIComponent(name)}&phone=${encodeURIComponent(phone)}&target=${target}`;
-    
-    // 根據選擇加入額外參數
-    if (target === 'self') {
-      const eName = document.getElementById('reg-eName').value;
-      const ePhone = document.getElementById('reg-ePhone').value;
-      params += `&eName=${encodeURIComponent(eName)}&ePhone=${encodeURIComponent(ePhone)}`;
-    } else {
-      const uTitle = document.getElementById('reg-uTitle').value;
-      const sAlias = document.getElementById('reg-sAlias').value;
-      params += `&uTitle=${encodeURIComponent(uTitle)}&sAlias=${encodeURIComponent(sAlias)}`;
+    function toggleFields() {
+      const target = document.getElementById('reg-target').value;
+      document.getElementById('fields-self').style.display = (target === 'self') ? 'block' : 'none';
+      document.getElementById('fields-elder').style.display = (target === 'elder') ? 'block' : 'none';
     }
 
-    document.getElementById('loader').style.display = 'flex';
-    document.getElementById('loader-text').innerText = "註冊資料寫入中...";
+    function submitRegister() {
+      const name = document.getElementById('reg-name').value;
+      const phone = document.getElementById('reg-phone').value;
+      const target = document.getElementById('reg-target').value;
+      if (!name || !phone) return alert("請完整填寫基本資料");
 
-    fetch(`${gasUrl}?${params}`)
-      .then(res => res.json())
-      .then(data => {
-        if (data.success) {
-          alert("註冊成功！");
-          checkStatus(userUid); // 註冊成功後自動切換至會員卡面
-        } else {
-          throw new Error("註冊過程發生錯誤");
-        }
-      })
-      .catch(err => {
-        document.getElementById('loader').style.display = 'none';
-        alert("註冊失敗: " + err.message);
-      });
-  }
-function sendInvite() {
-    if (!liff.isApiAvailable('shareTargetPicker')) {
-      alert("請在手機 LINE App 中開啟此功能");
-      return;
+      let params = `action=register&uid=${userUid}&name=${encodeURIComponent(name)}&phone=${encodeURIComponent(phone)}&target=${target}`;
+      if (inviterId) params += `&inviter=${inviterId}`;
+
+      if (target === 'self') {
+        params += `&eName=${encodeURIComponent(document.getElementById('reg-eName').value)}&ePhone=${encodeURIComponent(document.getElementById('reg-ePhone').value)}`;
+      } else {
+        params += `&uTitle=${encodeURIComponent(document.getElementById('reg-uTitle').value)}&sAlias=${encodeURIComponent(document.getElementById('reg-sAlias').value)}`;
+      }
+
+      document.getElementById('loader').style.display = 'flex';
+      fetch(`${gasUrl}?${params}`)
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) {
+            alert("註冊成功！");
+            location.href = window.location.pathname; // 清除網址參數並重整
+          }
+        })
+        .catch(err => showError("註冊失敗: " + err));
     }
 
-    const inviteUrl = `https://liff.line.me/${liffId}?inviter=${userUid}`;
-
-    liff.shareTargetPicker([
-      {
+    function sendInvite() {
+      if (!liff.isApiAvailable('shareTargetPicker')) return alert("請在 LINE App 中開啟");
+      const inviteUrl = `https://liff.line.me/${liffId}?inviter=${userUid}`;
+      liff.shareTargetPicker([{
         "type": "flex",
         "altText": "您收到一張厚安守護卡",
         "contents": {
           "type": "bubble",
           "body": {
-            "type": "box",
-            "layout": "vertical",
+            "type": "box", "layout": "vertical",
             "contents": [
               { "type": "text", "text": "厚安守護中心", "weight": "bold", "color": "#1DB446", "size": "sm" },
               { "type": "text", "text": "守護卡綁定邀請", "weight": "bold", "size": "xl", "margin": "md" },
               { "type": "text", "text": "您的親友邀請您綁定守護卡，點擊下方按鈕完成連結。", "size": "xs", "color": "#aaaaaa", "wrap": true, "margin": "md" },
-              {
-                "type": "button",
-                "style": "primary",
-                "color": "#667eea",
-                "margin": "xl",
-                "action": { "type": "uri", "label": "接受守護並綁定", "uri": inviteUrl }
-              }
+              { "type": "button", "style": "primary", "color": "#667eea", "margin": "xl", "action": { "type": "uri", "label": "接受守護並綁定", "uri": inviteUrl } }
             ]
           }
         }
-      }
-    ])
-    .then(res => { if (res) { console.log("訊息已傳送"); } })
-    .catch(err => console.error("傳送失敗", err));
-  }
-    
-  function showError(msg) {
-    document.getElementById('loader').style.display = 'none';
-    alert(msg);
-  }
+      }]);
+    }
 
-  window.onload = init;
-</script>
-    
+    function showError(msg) {
+      document.getElementById('loader').style.display = 'none';
+      alert(msg);
+    }
+
+    window.onload = init;
+  </script>
 </body>
 </html>
