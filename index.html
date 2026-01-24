@@ -113,7 +113,7 @@
 
   <script>
     const liffId = "2008912295-edmRNdOM"; 
-    const gasUrl = "https://script.google.com/macros/s/AKfycbyKRyr4OPVC1dln9SFNp2Cj9JCMFRrP-Vp6-dqjT9A-wDsicf1jANNnTCdFe9tDCYda6w/exec"; 
+    const gasUrl = "https://script.google.com/macros/s/AKfycbyBkgvbHViTf0oWj3K_TZvy7VPwZUQ3UAfvFQPt8U7FxCI1DMi-QIbEy3Epmol_8mWG/exec"; 
     let userUid = "";
     let inviterId = "";
 
@@ -136,7 +136,10 @@
 
     function checkStatus(uid) {
       document.getElementById('loader').style.display = 'flex';
-      fetch(`${gasUrl}?action=query&uid=${uid}`)
+      fetch(`${gasUrl}?action=query&uid=${uid}`, {
+      method: 'GET',
+      mode: 'cors'
+      })
         .then(res => res.json())
         .then(data => {
           document.getElementById('loader').style.display = 'none';
