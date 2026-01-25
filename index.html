@@ -261,7 +261,7 @@
       }
 
       document.getElementById('loader').style.display = 'flex';
-      fetch(`${gasUrl}?${params}`, { method: 'POST', mode: 'cors' }) // 使用 POST 或 GET 皆可，配合 GAS 設定
+      fetch(`${gasUrl}?${params}`, { method: 'GET', mode: 'cors' }) // 使用 POST 或 GET 皆可，配合 GAS 設定
         .then(res => res.json())
         .then(data => {
           if (data.success) {
