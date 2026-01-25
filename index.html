@@ -245,17 +245,26 @@
         .catch(err => showError("註冊失敗: " + err));
     }
 
-    function sendInvite() {
-  if (!liff.isApiAvailable('shareTargetPicker')) return alert("請在 LINE App 中開啟");
-  
-  // 取得當前用戶（守護者）的姓名，讓訊息更有溫度
-  const senderName = document.getElementById('mem-name').innerText;
-  const inviteUrl = `https://liff.line.me/${liffId}?inviter=${userUid}`;
+function sendInvite() {
+      if (!liff.isApiAvailable('shareTargetPicker')) return alert("請在 LINE App 中開啟");
+      
+      // 1. 取得發送者姓名
+      const senderName = document.getElementById('mem-name').innerText;
 
-  liff.shareTargetPicker([{
-    "type": "flex",
-    "altText": `${senderName} 邀請您加入厚安守護`,
-    "contents": {
+      // 2. 取得稱謂 (從網頁上的隱藏欄位抓取)
+      let targetTitle = document.getElementById('mem-uTitle').innerText;
+      
+      // 防呆：如果網頁還沒載入完，或是顯示預設值，就用「家人」代替
+      if (!targetTitle || targetTitle === "---" || targetTitle === "未填寫") {
+        targetTitle = "家人";
+      }
+
+      const inviteUrl = `https://liff.line.me/${liffId}?inviter=${userUid}`;
+
+      liff.shareTargetPicker([{
+      "type": "flex",
+      "altText": `${senderName} 邀請您加入厚安守護`,
+      "contents": {
       "type": "bubble",
       "styles": {
         "footer": { "separator": true }
@@ -266,14 +275,14 @@
         "contents": [
           {
             "type": "text",
-            "text": "厚安守護中心 🛡️",
+            "text": "厚安守護寶",
             "weight": "bold",
             "color": "#4A90E2",
             "size": "sm"
           },
           {
             "type": "text",
-            "text": "成為家人的溫暖依靠",
+            "text": "成為您與家人安心的依靠",
             "weight": "bold",
             "size": "xl",
             "margin": "md",
@@ -281,7 +290,7 @@
           },
           {
             "type": "text",
-            "text": `親愛的家人，我是 ${senderName}。我已為您申請了「厚安守護卡」。`,
+            "text": `親愛的${targetTitle}，我是 ${senderName}。我已為您申請「厚安守護」，邀請您每天打卡報平安。`,
             "size": "sm",
             "color": "#555555",
             "wrap": true,
@@ -289,7 +298,7 @@
           },
           {
             "type": "text",
-            "text": "邀請您點擊下方按鈕完成綁定，讓這份守護在日常中多一份安心。",
+            "text": "請您點擊下方按鈕完成綁定，讓我們每天日常多一份安心與溫暖。",
             "size": "sm",
             "color": "#555555",
             "wrap": true,
@@ -315,7 +324,7 @@
         "contents": [
           {
             "type": "text",
-            "text": "此連結僅限本人綁定使用",
+            "text": "此連結僅限本人綁定使用，請勿轉傳",
             "size": "xxs",
             "color": "#aaaaaa",
             "align": "center"
