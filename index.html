@@ -5,44 +5,60 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>厚安守護中心</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+  
   <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
     .card { border-radius: 15px; border: none; }
+    /* 會員卡漸層背景 */
     .bg-gradient-custom { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
+    /* 守護者卡漸層背景 */
     .bg-gradient-target { background: linear-gradient(135deg, #f6d365 0%, #fda085 100%); color: white; }
-    #loader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.8); z-index: 1000; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+    
+    /* 讀取動畫遮罩 */
+    #loader { 
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+      background: rgba(255,255,255,0.9); z-index: 9999; 
+      display: flex; flex-direction: column; justify-content: center; align-items: center; 
+    }
   </style>
 </head>
 <body class="bg-light">
 
   <div id="loader">
-    <div class="spinner-border text-primary"></div>
-    <p class="mt-3" id="loader-text">資料比對中...</p>
+    <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;"></div>
+    <p class="mt-3 text-secondary fw-bold" id="loader-text">系統連線中...</p>
   </div>
 
-  <div class="container p-4">
+  <div class="container p-4" style="max-width: 600px;">
+    
     <div id="register-page" style="display:none;">
       <div class="card shadow p-4">
-        <h3 class="text-center mb-4">加入厚安守護中心</h3>
+        <h3 class="text-center mb-4 fw-bold text-primary">加入厚安守護中心</h3>
+        <p class="text-muted text-center small mb-4">簡單幾步，讓家人更安心</p>
+        
         <div class="mb-3">
-          <label class="form-label">您的姓名</label>
-          <input type="text" id="reg-name" class="form-control" placeholder="請輸入真實姓名">
+          <label class="form-label fw-bold">您的姓名</label>
+          <input type="text" id="reg-name" class="form-control form-control-lg" placeholder="請輸入真實姓名">
         </div>
+        
         <div class="mb-3">
-          <label class="form-label">您的手機</label>
-          <input type="tel" id="reg-phone" class="form-control" placeholder="09xxxxxxxx (共10碼)">
+          <label class="form-label fw-bold">您的手機</label>
+          <input type="tel" id="reg-phone" class="form-control form-control-lg" placeholder="09xxxxxxxx (共10碼)">
         </div>
+        
         <div class="mb-3">
-          <label class="form-label">您要守護的對象是？</label>
-          <select id="reg-target" class="form-select" onchange="toggleFields()">
+          <label class="form-label fw-bold">您要守護的對象是？</label>
+          <select id="reg-target" class="form-select form-select-lg" onchange="toggleFields()">
             <option value="self">自己 (獨居/自住)</option>
             <option value="elder">親友 (長輩/子女)</option>
           </select>
         </div>
         
-        <div id="fields-self">
-          <div class="alert alert-light border small text-muted">
-            為確保安全，請務必填寫一位緊急聯絡人。
+        <div id="fields-self" class="bg-light p-3 rounded mb-3 border">
+          <div class="alert alert-warning border-0 small py-2">
+            <i class="bi bi-exclamation-circle-fill"></i> 為確保安全，請務必填寫一位緊急聯絡人。
           </div>
           <div class="mb-3">
             <label class="form-label">緊急聯絡人姓名</label>
@@ -54,85 +70,91 @@
           </div>
         </div>
 
-        <div id="fields-elder" style="display:none;">
+        <div id="fields-elder" style="display:none;" class="bg-light p-3 rounded mb-3 border">
           <div class="mb-3">
-            <label class="form-label">您如何稱呼守護對象？(如：爺爺)</label>
-            <input type="text" id="reg-uTitle" class="form-control" placeholder="爺爺、奶奶、爸爸...">
+            <label class="form-label">您如何稱呼守護對象？</label>
+            <input type="text" id="reg-uTitle" class="form-control" placeholder="例：爺爺、奶奶、爸爸">
+            <div class="form-text">這將顯示在給對方的邀請函中</div>
           </div>
           <div class="mb-3">
-            <label class="form-label">對方如何稱呼您？(如：乖孫小明)</label>
-            <input type="text" id="reg-sAlias" class="form-control">
+            <label class="form-label">對方如何稱呼您？</label>
+            <input type="text" id="reg-sAlias" class="form-control" placeholder="例：乖孫小明">
           </div>
         </div>
 
-        <button onclick="submitRegister()" class="btn btn-primary w-100 py-2 mt-3">完成註冊</button>
+        <button onclick="submitRegister()" class="btn btn-primary w-100 py-3 mt-2 fw-bold shadow-sm">完成註冊</button>
       </div>
     </div>
 
     <div id="member-page" style="display:none;">
-      <div id="member-card" class="card shadow bg-gradient-custom p-4">
-        <p id="card-type-label" class="small opacity-75 mb-2">MEMBER CARD</p>
-        <h2 id="mem-name" class="mb-1">載入中...</h2>
-        <p id="mem-phone" class="mb-3">---</p>
+      <div id="member-card" class="card shadow bg-gradient-custom p-4 text-white">
+        <div class="d-flex justify-content-between align-items-start">
+            <h2 id="mem-name" class="mb-1 fw-bold">載入中...</h2>
+            <span class="badge bg-white text-dark opacity-75">一般會員</span>
+        </div>
+        <p id="mem-phone" class="mb-3 opacity-75">---</p>
         
-        <div id="guardian-info-box" style="display:none; background: rgba(255,255,255,0.2); border-radius: 10px; padding: 10px; margin-top: 10px;">
-          <p class="mb-0 small">✨ 受守護中</p>
-          <h5 class="mb-0">守護者：<span id="guardian-name">---</span></h5>
+        <div id="guardian-info-box" style="display:none; background: rgba(255,255,255,0.2); border-radius: 10px; padding: 12px; margin-top: 10px;">
+          <p class="mb-0 small opacity-75">✨ 目前狀態：受守護中</p>
+          <h5 class="mb-1 mt-1">守護者：<span id="guardian-name">---</span></h5>
           <p class="small mb-0" id="guardian-relation-text"></p>
         </div>
 
-        <div id="emergency-info" style="border-top: 1px solid rgba(255,255,255,0.3); padding-top: 15px; display:none;">
-          <p class="small mb-1" style="opacity: 0.8;">緊急聯絡資訊</p>
+        <div id="emergency-info" style="border-top: 1px solid rgba(255,255,255,0.3); padding-top: 15px; margin-top: 15px; display:none;">
+          <p class="small mb-1 opacity-75">緊急聯絡資訊</p>
           <p class="mb-0">姓名：<span id="mem-eName">---</span></p>
           <p class="mb-0">電話：<span id="mem-ePhone">---</span></p>
         </div>
 
-        <div id="elder-info" style="border-top: 1px solid rgba(255,255,255,0.3); padding-top: 15px; display:none;">
-          <p class="small mb-1" style="opacity: 0.8;">守護資訊</p>
-          <p class="mb-0">對象：<span id="mem-uTitle">---</span></p>
-          <p class="mb-0">自稱：<span id="mem-sAlias">---</span></p>
-        </div>
-
-        <div class="text-end mt-3">
-          <span class="badge bg-white text-dark">一般會員</span>
+        <div id="elder-info" style="border-top: 1px solid rgba(255,255,255,0.3); padding-top: 15px; margin-top: 15px; display:none;">
+          <p class="small mb-1 opacity-75">守護資訊</p>
+          <p class="mb-0">對象稱謂：<span id="mem-uTitle">---</span></p>
+          <p class="mb-0">您的自稱：<span id="mem-sAlias">---</span></p>
         </div>
       </div>
       
-      <p class="text-center mt-3 small text-secondary">※ 如需修改會員資料，請與客服聯繫。</p>
-
       <div id="manager-actions" class="mt-4" style="display:none;">
-        <button onclick="sendInvite()" class="btn btn-success w-100 py-2">傳送守護卡給指定對象</button>
-        <p class="text-center small text-secondary mt-2">點擊傳送連結，讓守護對象綁定您的帳號</p>
+        <button onclick="sendInvite()" class="btn btn-success w-100 py-3 shadow-sm fw-bold">
+            <i class="bi bi-send-fill"></i> 傳送守護卡給指定對象
+        </button>
+        <p class="text-center small text-secondary mt-2">點擊上方按鈕，傳送 LINE 訊息邀請家人綁定</p>
       </div>
 
-      <div id="target-notice" class="alert alert-info mt-4" style="display:none;">
-        您的帳號已受守護，如有需求請點擊下方回報。
+      <div id="target-notice" class="alert alert-info mt-4 text-center shadow-sm border-0" style="display:none;">
+        🛡️ 您的帳號已受守護<br>如有需求請點擊 LINE 選單回報
       </div>
       
       <div class="mt-4">
-        <h6 class="text-secondary fw-bold">近 7 天回報紀錄</h6>
-        <div id="history-list" class="list-group shadow-sm">
-          <div class="list-group-item small text-center text-muted">讀取中...</div>
+        <h6 class="text-secondary fw-bold px-1">📅 近 7 天回報紀錄</h6>
+        <div id="history-list" class="list-group shadow-sm border-0">
+          <div class="list-group-item small text-center text-muted py-3">讀取中...</div>
         </div>
       </div>
     </div>
   </div>
 
   <script>
+    // ★★★ 設定區 ★★★
     const liffId = "2008912295-edmRNdOM"; 
-    // 請確認此網址是您最新的 GAS 部署網址
+    // 請確認這是不是您最新的 GAS 網址 (如果不對請自行替換)
     const gasUrl = "https://script.google.com/macros/s/AKfycbyBkgvbHViTf0oWj3K_TZvy7VPwZUQ3UAfvFQPt8U7FxCI1DMi-QIbEy3Epmol_8mWG/exec"; 
+    
     let userUid = "";
     let inviterId = "";
 
+    // 1. 初始化 LIFF
     async function init() {
       try {
         await liff.init({ liffId: liffId });
-        if (!liff.isLoggedIn()) { liff.login(); return; }
+        if (!liff.isLoggedIn()) { 
+            liff.login(); 
+            return; 
+        }
         
         const profile = await liff.getProfile();
         userUid = profile.userId;
 
+        // 取得 URL 參數 (檢查是否有邀請者)
         const urlParams = new URLSearchParams(window.location.search);
         inviterId = urlParams.get('inviter');
 
@@ -142,9 +164,10 @@
       }
     }
 
+    // 2. 檢查會員狀態
     function checkStatus(uid) {
       document.getElementById('loader').style.display = 'flex';
-      // 加上 mode: 'cors' 確保跨域請求更穩定
+      
       fetch(`${gasUrl}?action=query&uid=${uid}`, { method: 'GET', mode: 'cors' })
         .then(res => res.json())
         .then(data => {
@@ -153,26 +176,28 @@
           document.getElementById('member-page').style.display = 'none';
 
           if (data.exists) {
+            // === 顯示會員頁面 ===
             document.getElementById('member-page').style.display = 'block';
             document.getElementById('mem-name').innerText = data.name;
-            document.getElementById('mem-phone').innerText = "電話：" + data.phone;
+            document.getElementById('mem-phone').innerText = data.phone;
 
             const card = document.getElementById('member-card');
             
-            // --- 顯示邏輯 ---
+            // A. 如果我是「受守護者」 (被守護模式)
             if (data.isTarget) {
-              card.className = "card shadow bg-gradient-target p-4";
-              document.getElementById('card-type-label').innerText = "GUARDIAN CARD";
+              card.className = "card shadow bg-gradient-target p-4 text-white";
               document.getElementById('guardian-info-box').style.display = 'block';
               document.getElementById('guardian-name').innerText = data.guardianName;
               document.getElementById('guardian-relation-text').innerText = `${data.sAlias || '親友'} 正在守護您`;
+              
               document.getElementById('target-notice').style.display = 'block';
               document.getElementById('manager-actions').style.display = 'none';
               document.getElementById('emergency-info').style.display = 'none';
               document.getElementById('elder-info').style.display = 'none';
-            } else {
-              card.className = "card shadow bg-gradient-custom p-4";
-              document.getElementById('card-type-label').innerText = "MEMBER CARD";
+            } 
+            // B. 如果我是「守護者」或「自立自強」 (一般模式)
+            else {
+              card.className = "card shadow bg-gradient-custom p-4 text-white";
               document.getElementById('guardian-info-box').style.display = 'none';
               document.getElementById('target-notice').style.display = 'none';
               
@@ -188,31 +213,33 @@
                 document.getElementById('mem-uTitle').innerText = data.uTitle || "未填寫";
                 document.getElementById('mem-sAlias').innerText = data.sAlias || "未填寫";
                 
+                // 如果已經有綁定對象
                 if (data.hasManaged) {
-                  document.getElementById('manager-actions').innerHTML = `<button class="btn btn-info w-100 text-white py-2">查看受守護者狀態</button>`;
+                   // 顯示按鈕但改文字 (或維持邀請功能以便綁定第二人)
                 }
                 document.getElementById('manager-actions').style.display = 'block';
               }
             }
 
-            // --- 歷史紀錄 ---
+            // C. 顯示歷史紀錄
             const historyBox = document.getElementById('history-list');
             if (data.history && data.history.length > 0) {
               historyBox.innerHTML = data.history.map(item => `
                 <div class="list-group-item d-flex justify-content-between align-items-center">
-                  <span>${item.name} 報平安</span>
-                  <span class="badge bg-light text-secondary">${item.time}</span>
+                  <span><i class="bi bi-check-circle-fill text-success"></i> ${item.name} 報平安</span>
+                  <span class="badge bg-light text-secondary border">${item.time}</span>
                 </div>
               `).join('');
             } else {
-              historyBox.innerHTML = '<div class="list-group-item small text-center text-muted">目前尚無紀錄</div>';
+              historyBox.innerHTML = '<div class="list-group-item small text-center text-muted py-3">目前尚無紀錄</div>';
             }
 
           } else {
+            // === 顯示註冊頁面 ===
             document.getElementById('register-page').style.display = 'block';
           }
         })
-        .catch(err => showError("讀取失敗: " + err.message));
+        .catch(err => showError("讀取資料失敗: " + err.message));
     }
 
     function toggleFields() {
@@ -221,36 +248,35 @@
       document.getElementById('fields-elder').style.display = (target === 'elder') ? 'block' : 'none';
     }
 
-    // ★★★ 註冊資料防呆 (Regex 驗證) ★★★
+    // 3. 註冊資料送出 (GET + SweetAlert2 + Regex)
     function submitRegister() {
       const name = document.getElementById('reg-name').value.trim();
       const phone = document.getElementById('reg-phone').value.trim();
       const target = document.getElementById('reg-target').value;
       
-      // 1. 驗證姓名
-      if (!name) return alert("請輸入您的真實姓名");
+      // 表單驗證
+      if (!name) return Swal.fire({ icon: 'warning', title: '請輸入姓名', text: '我們需要知道您的真實姓名' });
 
-      // 2. 驗證手機格式 (09 開頭 + 8碼數字)
       const phoneRegex = /^09\d{8}$/;
       if (!phoneRegex.test(phone)) {
-        return alert("您的手機格式錯誤！\n請輸入 09 開頭的 10 碼數字，不含符號。");
+        return Swal.fire({ icon: 'error', title: '手機格式錯誤', text: '請輸入 09 開頭的 10 碼數字 (不含 - )' });
       }
 
-      // 3. 驗證緊急聯絡人 (若選擇守護自己)
+      // 緊急聯絡人驗證
       if (target === 'self') {
         const eName = document.getElementById('reg-eName').value.trim();
         const ePhone = document.getElementById('reg-ePhone').value.trim();
 
-        if (!eName) return alert("請輸入緊急聯絡人姓名");
+        if (!eName) return Swal.fire({ icon: 'warning', title: '未填寫聯絡人', text: '為了您的安全，請填寫緊急聯絡人' });
         if (!phoneRegex.test(ePhone)) {
-          return alert("緊急聯絡人手機格式錯誤！\n請輸入 09 開頭的 10 碼數字。");
+          return Swal.fire({ icon: 'error', title: '聯絡人電話錯誤', text: '請輸入 09 開頭的 10 碼數字' });
         }
         if (phone === ePhone) {
-          return alert("緊急聯絡人不能填寫您自己的號碼！");
+          return Swal.fire({ icon: 'error', title: '資料重複', text: '緊急聯絡人不能填寫您自己的號碼！' });
         }
       }
 
-      // 準備發送資料
+      // 準備參數
       let params = `action=register&uid=${userUid}&name=${encodeURIComponent(name)}&phone=${encodeURIComponent(phone)}&target=${target}`;
       if (inviterId) params += `&inviter=${inviterId}`;
 
@@ -261,25 +287,38 @@
       }
 
       document.getElementById('loader').style.display = 'flex';
-      fetch(`${gasUrl}?${params}`, { method: 'GET', mode: 'cors' }) // 使用 POST 或 GET 皆可，配合 GAS 設定
+      
+      // ★ 關鍵修正：使用 GET 方法避免 Load Failed ★
+      fetch(`${gasUrl}?${params}`, { method: 'GET', mode: 'cors' }) 
         .then(res => res.json())
         .then(data => {
           if (data.success) {
-            alert("註冊成功！");
-            location.href = window.location.pathname; // 重整頁面
+            Swal.fire({
+              icon: 'success',
+              title: '註冊成功！',
+              text: '歡迎加入厚安守護中心',
+              confirmButtonText: '開始使用',
+              confirmButtonColor: '#667eea'
+            }).then((result) => {
+              if (result.isConfirmed) {
+                location.href = window.location.pathname; // 重整頁面進入會員卡
+              }
+            });
+          } else {
+            throw new Error(data.error || "未知錯誤");
           }
         })
         .catch(err => showError("註冊失敗: " + err));
     }
 
-    // ★★★ 動態稱謂邀請函 ★★★
+    // 4. 發送邀請 (動態稱謂)
     function sendInvite() {
-      if (!liff.isApiAvailable('shareTargetPicker')) return alert("請在 LINE App 中開啟此功能");
+      if (!liff.isApiAvailable('shareTargetPicker')) return Swal.fire('功能不支援', '請在 LINE App 中開啟此頁面', 'warning');
       
       const senderName = document.getElementById('mem-name').innerText;
-      
-      // 抓取稱謂 (防止資料延遲，若無則預設為家人)
       let targetTitle = document.getElementById('mem-uTitle').innerText;
+      
+      // 防呆預設值
       if (!targetTitle || targetTitle === "---" || targetTitle === "未填寫") {
         targetTitle = "家人";
       }
@@ -298,7 +337,6 @@
             "contents": [
               { "type": "text", "text": "厚安守護寶", "weight": "bold", "color": "#4A90E2", "size": "sm" },
               { "type": "text", "text": "成為您與家人安心的依靠", "weight": "bold", "size": "xl", "margin": "md", "color": "#333333" },
-              // 動態稱謂在這
               { "type": "text", "text": `親愛的${targetTitle}，我是 ${senderName}。我已為您申請「厚安守護」，邀請您每天打卡報平安。`, "size": "sm", "color": "#555555", "wrap": true, "margin": "lg" },
               { "type": "text", "text": "邀請您點擊下方按鈕完成綁定，讓我們每天日常多一份安心與溫暖。", "size": "sm", "color": "#555555", "wrap": true, "margin": "sm" },
               {
@@ -320,15 +358,26 @@
           }
         }
       }])
-      .then(res => { if (res) { alert("守護邀請已送出！"); } })
+      .then(res => { 
+        if (res) { 
+           Swal.fire({ icon: 'success', title: '邀請已送出', text: '請等待對方點擊連結綁定', timer: 2000, showConfirmButton: false });
+        } 
+      })
       .catch(err => console.error("傳送失敗", err));
     }
 
+    // 5. 錯誤顯示函式
     function showError(msg) {
       document.getElementById('loader').style.display = 'none';
-      alert(msg);
+      Swal.fire({
+        icon: 'error',
+        title: '發生錯誤',
+        text: msg,
+        confirmButtonColor: '#d33'
+      });
     }
 
+    // 啟動
     window.onload = init;
   </script>
 </body>
