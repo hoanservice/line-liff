@@ -30,35 +30,41 @@
         </div>
         <div class="mb-3">
           <label class="form-label">您的手機</label>
-          <input type="tel" id="reg-phone" class="form-control" placeholder="09xxxxxxxx">
+          <input type="tel" id="reg-phone" class="form-control" placeholder="09xxxxxxxx (共10碼)">
         </div>
         <div class="mb-3">
           <label class="form-label">您要守護的對象是？</label>
           <select id="reg-target" class="form-select" onchange="toggleFields()">
-            <option value="self">自己</option>
-            <option value="elder">親友</option>
+            <option value="self">自己 (獨居/自住)</option>
+            <option value="elder">親友 (長輩/子女)</option>
           </select>
         </div>
+        
         <div id="fields-self">
+          <div class="alert alert-light border small text-muted">
+            為確保安全，請務必填寫一位緊急聯絡人。
+          </div>
           <div class="mb-3">
             <label class="form-label">緊急聯絡人姓名</label>
             <input type="text" id="reg-eName" class="form-control">
           </div>
           <div class="mb-3">
             <label class="form-label">緊急聯絡人電話</label>
-            <input type="tel" id="reg-ePhone" class="form-control">
+            <input type="tel" id="reg-ePhone" class="form-control" placeholder="09xxxxxxxx">
           </div>
         </div>
+
         <div id="fields-elder" style="display:none;">
           <div class="mb-3">
             <label class="form-label">您如何稱呼守護對象？(如：爺爺)</label>
-            <input type="text" id="reg-uTitle" class="form-control">
+            <input type="text" id="reg-uTitle" class="form-control" placeholder="爺爺、奶奶、爸爸...">
           </div>
           <div class="mb-3">
             <label class="form-label">對方如何稱呼您？(如：乖孫小明)</label>
             <input type="text" id="reg-sAlias" class="form-control">
           </div>
         </div>
+
         <button onclick="submitRegister()" class="btn btn-primary w-100 py-2 mt-3">完成註冊</button>
       </div>
     </div>
@@ -102,18 +108,20 @@
       <div id="target-notice" class="alert alert-info mt-4" style="display:none;">
         您的帳號已受守護，如有需求請點擊下方回報。
       </div>
+      
       <div class="mt-4">
-  <h6 class="text-secondary fw-bold">近 7 天回報紀錄</h6>
-  <div id="history-list" class="list-group shadow-sm">
-    <div class="list-group-item small text-center text-muted">讀取中...</div>
-  </div>
-</div>
+        <h6 class="text-secondary fw-bold">近 7 天回報紀錄</h6>
+        <div id="history-list" class="list-group shadow-sm">
+          <div class="list-group-item small text-center text-muted">讀取中...</div>
+        </div>
+      </div>
     </div>
   </div>
 
   <script>
     const liffId = "2008912295-edmRNdOM"; 
-    const gasUrl = "https://script.google.com/macros/s/AKfycbyBkgvbHViTf0oWj3K_TZvy7VPwZUQ3UAfvFQPt8U7FxCI1DMi-QIbEy3Epmol_8mWG/exec"; 
+    // 請確認此網址是您最新的 GAS 部署網址
+    const gasUrl = "https://script.google.com/macros/s/AKfycbyKRyr4OPVC1dln9SFNp2Cj9JCMFRrP-Vp6-dqjT9A-wDsicf1jANNnTCdFe9tDCYda6w/exec"; 
     let userUid = "";
     let inviterId = "";
 
@@ -136,10 +144,8 @@
 
     function checkStatus(uid) {
       document.getElementById('loader').style.display = 'flex';
-      fetch(`${gasUrl}?action=query&uid=${uid}`, {
-      method: 'GET',
-      mode: 'cors'
-      })
+      // 加上 mode: 'cors' 確保跨域請求更穩定
+      fetch(`${gasUrl}?action=query&uid=${uid}`, { method: 'GET', mode: 'cors' })
         .then(res => res.json())
         .then(data => {
           document.getElementById('loader').style.display = 'none';
@@ -153,7 +159,7 @@
 
             const card = document.getElementById('member-card');
             
-            // --- 判斷角色顯示邏輯 ---
+            // --- 顯示邏輯 ---
             if (data.isTarget) {
               card.className = "card shadow bg-gradient-target p-4";
               document.getElementById('card-type-label').innerText = "GUARDIAN CARD";
@@ -189,9 +195,7 @@
               }
             }
 
-            // ==========================================
-            // 這裡就是你要放「顯示紀錄」的地方！
-            // ==========================================
+            // --- 歷史紀錄 ---
             const historyBox = document.getElementById('history-list');
             if (data.history && data.history.length > 0) {
               historyBox.innerHTML = data.history.map(item => `
@@ -203,7 +207,6 @@
             } else {
               historyBox.innerHTML = '<div class="list-group-item small text-center text-muted">目前尚無紀錄</div>';
             }
-            // ==========================================
 
           } else {
             document.getElementById('register-page').style.display = 'block';
@@ -218,12 +221,36 @@
       document.getElementById('fields-elder').style.display = (target === 'elder') ? 'block' : 'none';
     }
 
+    // ★★★ 註冊資料防呆 (Regex 驗證) ★★★
     function submitRegister() {
-      const name = document.getElementById('reg-name').value;
-      const phone = document.getElementById('reg-phone').value;
+      const name = document.getElementById('reg-name').value.trim();
+      const phone = document.getElementById('reg-phone').value.trim();
       const target = document.getElementById('reg-target').value;
-      if (!name || !phone) return alert("請完整填寫基本資料");
+      
+      // 1. 驗證姓名
+      if (!name) return alert("請輸入您的真實姓名");
 
+      // 2. 驗證手機格式 (09 開頭 + 8碼數字)
+      const phoneRegex = /^09\d{8}$/;
+      if (!phoneRegex.test(phone)) {
+        return alert("您的手機格式錯誤！\n請輸入 09 開頭的 10 碼數字，不含符號。");
+      }
+
+      // 3. 驗證緊急聯絡人 (若選擇守護自己)
+      if (target === 'self') {
+        const eName = document.getElementById('reg-eName').value.trim();
+        const ePhone = document.getElementById('reg-ePhone').value.trim();
+
+        if (!eName) return alert("請輸入緊急聯絡人姓名");
+        if (!phoneRegex.test(ePhone)) {
+          return alert("緊急聯絡人手機格式錯誤！\n請輸入 09 開頭的 10 碼數字。");
+        }
+        if (phone === ePhone) {
+          return alert("緊急聯絡人不能填寫您自己的號碼！");
+        }
+      }
+
+      // 準備發送資料
       let params = `action=register&uid=${userUid}&name=${encodeURIComponent(name)}&phone=${encodeURIComponent(phone)}&target=${target}`;
       if (inviterId) params += `&inviter=${inviterId}`;
 
@@ -234,27 +261,25 @@
       }
 
       document.getElementById('loader').style.display = 'flex';
-      fetch(`${gasUrl}?${params}`)
+      fetch(`${gasUrl}?${params}`, { method: 'POST', mode: 'cors' }) // 使用 POST 或 GET 皆可，配合 GAS 設定
         .then(res => res.json())
         .then(data => {
           if (data.success) {
             alert("註冊成功！");
-            location.href = window.location.pathname; // 清除網址參數並重整
+            location.href = window.location.pathname; // 重整頁面
           }
         })
         .catch(err => showError("註冊失敗: " + err));
     }
 
-function sendInvite() {
-      if (!liff.isApiAvailable('shareTargetPicker')) return alert("請在 LINE App 中開啟");
+    // ★★★ 動態稱謂邀請函 ★★★
+    function sendInvite() {
+      if (!liff.isApiAvailable('shareTargetPicker')) return alert("請在 LINE App 中開啟此功能");
       
-      // 1. 取得發送者姓名
       const senderName = document.getElementById('mem-name').innerText;
-
-      // 2. 取得稱謂 (從網頁上的隱藏欄位抓取)
-      let targetTitle = document.getElementById('mem-uTitle').innerText;
       
-      // 防呆：如果網頁還沒載入完，或是顯示預設值，就用「家人」代替
+      // 抓取稱謂 (防止資料延遲，若無則預設為家人)
+      let targetTitle = document.getElementById('mem-uTitle').innerText;
       if (!targetTitle || targetTitle === "---" || targetTitle === "未填寫") {
         targetTitle = "家人";
       }
@@ -262,80 +287,42 @@ function sendInvite() {
       const inviteUrl = `https://liff.line.me/${liffId}?inviter=${userUid}`;
 
       liff.shareTargetPicker([{
-      "type": "flex",
-      "altText": `${senderName} 邀請您加入厚安守護`,
-      "contents": {
-      "type": "bubble",
-      "styles": {
-        "footer": { "separator": true }
-      },
-      "body": {
-        "type": "box",
-        "layout": "vertical",
-        "contents": [
-          {
-            "type": "text",
-            "text": "厚安守護寶",
-            "weight": "bold",
-            "color": "#4A90E2",
-            "size": "sm"
+        "type": "flex",
+        "altText": `${senderName} 邀請您加入厚安守護`,
+        "contents": {
+          "type": "bubble",
+          "styles": { "footer": { "separator": true } },
+          "body": {
+            "type": "box",
+            "layout": "vertical",
+            "contents": [
+              { "type": "text", "text": "厚安守護寶", "weight": "bold", "color": "#4A90E2", "size": "sm" },
+              { "type": "text", "text": "成為您與家人安心的依靠", "weight": "bold", "size": "xl", "margin": "md", "color": "#333333" },
+              // 動態稱謂在這
+              { "type": "text", "text": `親愛的${targetTitle}，我是 ${senderName}。我已為您申請「厚安守護」，邀請您每天打卡報平安。`, "size": "sm", "color": "#555555", "wrap": true, "margin": "lg" },
+              { "type": "text", "text": "邀請您點擊下方按鈕完成綁定，讓我們每天日常多一份安心與溫暖。", "size": "sm", "color": "#555555", "wrap": true, "margin": "sm" },
+              {
+                "type": "button",
+                "style": "primary",
+                "color": "#667eea",
+                "margin": "xxl",
+                "height": "sm",
+                "action": { "type": "uri", "label": "✨ 接受守護並綁定 ✨", "uri": inviteUrl }
+              }
+            ]
           },
-          {
-            "type": "text",
-            "text": "成為您與家人安心的依靠",
-            "weight": "bold",
-            "size": "xl",
-            "margin": "md",
-            "color": "#333333"
-          },
-          {
-            "type": "text",
-            "text": `親愛的${targetTitle}，我是 ${senderName}。我已為您申請「厚安守護」，邀請您每天打卡報平安。`,
-            "size": "sm",
-            "color": "#555555",
-            "wrap": true,
-            "margin": "lg"
-          },
-          {
-            "type": "text",
-            "text": "請您點擊下方按鈕完成綁定，讓我們每天日常多一份安心與溫暖。",
-            "size": "sm",
-            "color": "#555555",
-            "wrap": true,
-            "margin": "sm"
-          },
-          {
-            "type": "button",
-            "style": "primary",
-            "color": "#667eea",
-            "margin": "xxl",
-            "height": "sm",
-            "action": {
-              "type": "uri",
-              "label": "✨ 接受守護並綁定 ✨",
-              "uri": inviteUrl
-            }
+          "footer": {
+            "type": "box",
+            "layout": "vertical",
+            "contents": [
+              { "type": "text", "text": "此連結僅限本人綁定使用，請勿轉傳", "size": "xxs", "color": "#aaaaaa", "align": "center" }
+            ]
           }
-        ]
-      },
-      "footer": {
-        "type": "box",
-        "layout": "vertical",
-        "contents": [
-          {
-            "type": "text",
-            "text": "此連結僅限本人綁定使用，請勿轉傳",
-            "size": "xxs",
-            "color": "#aaaaaa",
-            "align": "center"
-          }
-        ]
-      }
+        }
+      }])
+      .then(res => { if (res) { alert("守護邀請已送出！"); } })
+      .catch(err => console.error("傳送失敗", err));
     }
-  }])
-  .then(res => { if (res) { alert("守護邀請已送出！"); } })
-  .catch(err => console.error("傳送失敗", err));
-}
 
     function showError(msg) {
       document.getElementById('loader').style.display = 'none';
