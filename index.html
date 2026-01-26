@@ -5,23 +5,62 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>厚安守護中心</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
   
   <style>
     body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
-    .card { border-radius: 15px; border: none; }
-    .bg-gradient-custom { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
-    .bg-gradient-target { background: linear-gradient(135deg, #f6d365 0%, #fda085 100%); color: white; }
     
+    /* === Pro 版樣式升級區 === */
+    
+    /* 卡片基礎：圓潤 + 深邃陰影 */
+    .card-premium {
+      border: none;
+      border-radius: 24px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* 背景漸層：更有流動感 */
+    .bg-gradient-custom { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+    .bg-gradient-target { background: linear-gradient(135deg, #FFC796 0%, #FF6B95 100%); }
+    .invite-card { background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%); color: #333; }
+
+    /* ★關鍵質感：毛玻璃效果★ */
+    .glass-box {
+      background: rgba(255, 255, 255, 0.15); /* 半透明白 */
+      backdrop-filter: blur(8px); /* 背景模糊 */
+      -webkit-backdrop-filter: blur(8px); /* Safari 支援 */
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 16px;
+      padding: 16px;
+      margin-top: 16px;
+    }
+
+    /* 狀態膠囊標籤 */
+    .badge-pill {
+      border-radius: 50rem;
+      padding: 0.5em 1em;
+      background: rgba(255, 255, 255, 0.9);
+      color: #333;
+      font-weight: 700;
+      font-size: 0.8rem;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    /* 文字與細節 */
+    .text-shadow { text-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    .opacity-80 { opacity: 0.8; }
+    .mono-font { font-family: 'Courier New', Courier, monospace; letter-spacing: 1px; }
+
+    /* 讀取遮罩 */
     #loader { 
       position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
       background: rgba(255,255,255,0.95); z-index: 9999; 
       display: flex; flex-direction: column; justify-content: center; align-items: center; 
     }
-    
-    /* 邀請卡專用樣式 */
-    .invite-card { background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%); color: #333; }
   </style>
 </head>
 <body class="bg-light">
@@ -34,8 +73,11 @@
   <div class="container p-4" style="max-width: 600px;">
     
     <div id="register-page" style="display:none;">
-      <div class="card shadow p-4">
-        <h3 class="text-center mb-4 fw-bold text-primary">加入厚安守護中心</h3>
+      <div class="card shadow p-4 border-0" style="border-radius: 20px;">
+        <div class="text-center mb-4">
+            <i class="bi bi-shield-lock-fill text-primary" style="font-size: 3rem;"></i>
+            <h3 class="fw-bold text-primary mt-2">加入厚安守護</h3>
+        </div>
         <div class="mb-3">
           <label class="form-label fw-bold">您的姓名</label>
           <input type="text" id="reg-name" class="form-control form-control-lg" placeholder="請輸入真實姓名">
@@ -52,36 +94,36 @@
           </select>
         </div>
         
-        <div id="fields-self" class="bg-light p-3 rounded mb-3 border">
-          <div class="alert alert-warning border-0 small py-2">請填寫緊急聯絡人</div>
+        <div id="fields-self" class="bg-light p-3 rounded-4 mb-3 border">
+          <div class="alert alert-warning border-0 small py-2"><i class="bi bi-exclamation-circle-fill"></i> 請填寫緊急聯絡人</div>
           <div class="mb-3"><label class="form-label">聯絡人姓名</label><input type="text" id="reg-eName" class="form-control"></div>
           <div class="mb-3"><label class="form-label">聯絡人電話</label><input type="tel" id="reg-ePhone" class="form-control"></div>
         </div>
 
-        <div id="fields-elder" style="display:none;" class="bg-light p-3 rounded mb-3 border">
+        <div id="fields-elder" style="display:none;" class="bg-light p-3 rounded-4 mb-3 border">
           <div class="mb-3"><label class="form-label">對象稱謂 (如:爺爺)</label><input type="text" id="reg-uTitle" class="form-control"></div>
           <div class="mb-3"><label class="form-label">您的自稱 (如:乖孫)</label><input type="text" id="reg-sAlias" class="form-control"></div>
         </div>
 
-        <button onclick="submitRegister()" class="btn btn-primary w-100 py-3 mt-2 fw-bold shadow-sm">完成註冊</button>
+        <button onclick="submitRegister()" class="btn btn-primary w-100 py-3 mt-2 fw-bold shadow-sm rounded-pill">完成註冊</button>
       </div>
     </div>
 
     <div id="invite-page" style="display:none;">
-      <div class="card shadow p-4 invite-card text-center">
+      <div class="card shadow p-4 invite-card text-center border-0" style="border-radius: 20px;">
         <div class="mb-4">
-          <img src="https://img.icons8.com/color/96/shield.png" alt="icon">
+          <i class="bi bi-envelope-heart-fill text-danger" style="font-size: 4rem; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));"></i>
         </div>
         <h3 class="fw-bold mb-3">來自家人的邀請</h3>
         <p class="fs-5">
-          <span id="inviter-name" class="fw-bold text-primary">---</span> 邀請您加入<br>
+          <span id="inviter-name" class="fw-bold text-primary bg-white px-2 py-1 rounded">---</span> 邀請您加入<br>
           「厚安守護中心」
         </p>
         <p class="text-secondary small">
           接受邀請後，系統將自動設定<br>對方為您的緊急聯絡人。
         </p>
         <div class="d-grid gap-2 mt-4">
-          <button onclick="acceptInvite()" class="btn btn-dark btn-lg py-3 shadow">
+          <button onclick="acceptInvite()" class="btn btn-dark btn-lg py-3 shadow rounded-pill">
             ✨ 接受並開啟守護卡
           </button>
         </div>
@@ -89,39 +131,69 @@
     </div>
 
     <div id="member-page" style="display:none;">
-      <div id="member-card" class="card shadow bg-gradient-custom p-4 text-white">
-        <div class="d-flex justify-content-between align-items-start">
-            <h2 id="mem-name" class="mb-1 fw-bold">載入中...</h2>
-            <span class="badge bg-white text-dark opacity-75">一般會員</span>
-        </div>
-        <p id="mem-phone" class="mb-3 opacity-75">---</p>
+      
+      <div id="member-card" class="card card-premium bg-gradient-custom p-4 text-white">
         
-        <div id="guardian-info-box" style="display:none; background: rgba(255,255,255,0.2); border-radius: 10px; padding: 12px; margin-top: 10px;">
-          <p class="mb-0 small opacity-75">✨ 目前狀態：受守護中</p>
-          <h5 class="mb-1 mt-1">守護者：<span id="guardian-name">---</span></h5>
-          <p class="small mb-0" id="guardian-relation-text"></p>
+        <div class="d-flex justify-content-between align-items-center mb-2">
+            <div>
+              <p class="mb-0 opacity-80 small"><i class="bi bi-person-circle me-1"></i> Member Profile</p>
+              <h2 id="mem-name" class="mb-0 fw-bold text-shadow" style="letter-spacing: 1px;">載入中...</h2>
+            </div>
+            <span class="badge-pill">
+              <i class="bi bi-star-fill text-warning me-1"></i>一般會員
+            </span>
+        </div>
+        
+        <p class="mb-3 opacity-80 fs-5">
+          <i class="bi bi-phone me-2"></i><span id="mem-phone" class="mono-font">---</span>
+        </p>
+        
+        <div id="guardian-info-box" class="glass-box" style="display:none;">
+          <div class="d-flex align-items-center mb-2">
+            <div class="bg-white rounded-circle d-flex justify-content-center align-items-center shadow-sm" style="width: 36px; height: 36px; color: #FF6B95;">
+              <i class="bi bi-shield-check-fill fs-5"></i>
+            </div>
+            <div class="ms-2">
+              <p class="mb-0 small fw-bold text-white opacity-80">安心守護中</p>
+            </div>
+          </div>
+          
+          <h4 class="mb-1 mt-2 fw-bold text-shadow ps-1">
+            <span id="guardian-name">---</span>
+          </h4>
+          <p class="small mb-0 opacity-80 border-top border-white border-opacity-25 pt-2 mt-2">
+            <i class="bi bi-heart-fill me-1 text-danger"></i> <span id="guardian-relation-text">正在守護您</span>
+          </p>
         </div>
 
-        <div id="manager-actions-box" style="display:none; border-top: 1px solid rgba(255,255,255,0.3); padding-top: 15px; margin-top: 15px;">
-           <p class="small mb-1 opacity-75">守護資訊</p>
-           <p class="mb-0">對象：<span id="mem-uTitle">---</span></p>
+        <div id="manager-actions-box" class="glass-box" style="display:none;">
+           <div class="d-flex align-items-center mb-2">
+             <i class="bi bi-gear-fill me-2 opacity-80"></i>
+             <span class="small fw-bold opacity-80">守護設定資訊</span>
+           </div>
+           <div class="d-flex justify-content-between align-items-center">
+             <span>守護對象稱謂</span>
+             <span id="mem-uTitle" class="fw-bold fs-5 text-shadow">---</span>
+           </div>
         </div>
+
+        <div style="position: absolute; top: -30px; right: -30px; width: 120px; height: 120px; background: rgba(255,255,255,0.1); border-radius: 50%;"></div>
       </div>
       
       <div id="manager-actions" class="mt-4" style="display:none;">
-        <button onclick="sendInvite()" class="btn btn-success w-100 py-3 shadow-sm fw-bold">
-            <i class="bi bi-send-fill"></i> 傳送守護卡給指定對象
+        <button onclick="sendInvite()" class="btn btn-success w-100 py-3 shadow fw-bold rounded-4 d-flex justify-content-center align-items-center">
+            <i class="bi bi-send-fill me-2"></i> 傳送守護卡給指定對象
         </button>
         <p class="text-center small text-secondary mt-2">點擊上方按鈕，傳送 LINE 訊息邀請家人綁定</p>
       </div>
 
-      <div id="target-notice" class="alert alert-info mt-4 text-center shadow-sm border-0" style="display:none;">
-        🛡️ 您的帳號已受守護<br>如有需求請點擊 LINE 選單回報
+      <div id="target-notice" class="alert alert-info mt-4 text-center shadow-sm border-0 rounded-4" style="display:none;">
+        🛡️ 您的帳號已受守護<br><span class="small">如有需求請點擊 LINE 下方選單回報</span>
       </div>
       
       <div class="mt-4">
-        <h6 class="text-secondary fw-bold px-1">📅 近 7 天回報紀錄</h6>
-        <div id="history-list" class="list-group shadow-sm border-0">
+        <h6 class="text-secondary fw-bold px-2 mb-3"><i class="bi bi-clock-history me-1"></i> 近 7 天回報紀錄</h6>
+        <div id="history-list" class="list-group shadow-sm border-0 rounded-4 overflow-hidden">
           <div class="list-group-item small text-center text-muted py-3">讀取中...</div>
         </div>
       </div>
@@ -134,7 +206,7 @@
     const gasUrl = "https://script.google.com/macros/s/AKfycbyBkgvbHViTf0oWj3K_TZvy7VPwZUQ3UAfvFQPt8U7FxCI1DMi-QIbEy3Epmol_8mWG/exec"; 
     
     let userUid = "";
-    let userName = ""; // 用來存 LIFF 抓到的名字
+    let userName = ""; 
     let inviterId = "";
 
     async function init() {
@@ -191,7 +263,7 @@
         const card = document.getElementById('member-card');
         
         if (data.isTarget) {
-            card.className = "card shadow bg-gradient-target p-4 text-white";
+            card.className = "card card-premium bg-gradient-target p-4 text-white";
             document.getElementById('guardian-info-box').style.display = 'block';
             document.getElementById('guardian-name').innerText = data.guardianName;
             document.getElementById('guardian-relation-text').innerText = `${data.sAlias || '親友'} 正在守護您`;
@@ -199,7 +271,7 @@
             document.getElementById('manager-actions').style.display = 'none';
             document.getElementById('manager-actions-box').style.display = 'none';
         } else {
-            card.className = "card shadow bg-gradient-custom p-4 text-white";
+            card.className = "card card-premium bg-gradient-custom p-4 text-white";
             document.getElementById('guardian-info-box').style.display = 'none';
             document.getElementById('target-notice').style.display = 'none';
             
@@ -223,7 +295,6 @@
         }
     }
 
-    // ★★★ 一鍵綁定函式 ★★★
     function acceptInvite() {
         document.getElementById('loader').style.display = 'flex';
         let params = `action=register&uid=${userUid}&name=${encodeURIComponent(userName)}&target=self&inviter=${inviterId}`;
@@ -288,7 +359,7 @@
         .catch(err => showError("註冊失敗: " + err));
     }
 
-    // ★★★ 傳送邀請函 (已更新您指定的內容) ★★★
+    // ★★★ 傳送邀請函 (文案已依照您的指定修改) ★★★
     function sendInvite() {
       if (!liff.isApiAvailable('shareTargetPicker')) return Swal.fire('請在 LINE 開啟', '', 'warning');
       
