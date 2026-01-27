@@ -12,9 +12,7 @@
   <style>
     body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
     
-    /* === Pro 版樣式升級區 === */
-    
-    /* 卡片基礎：圓潤 + 深邃陰影 */
+    /* === Pro 版樣式 === */
     .card-premium {
       border: none;
       border-radius: 24px;
@@ -23,23 +21,20 @@
       overflow: hidden;
     }
 
-    /* 背景漸層：更有流動感 */
     .bg-gradient-custom { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
     .bg-gradient-target { background: linear-gradient(135deg, #FFC796 0%, #FF6B95 100%); }
     .invite-card { background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%); color: #333; }
 
-    /* ★關鍵質感：毛玻璃效果★ */
     .glass-box {
-      background: rgba(255, 255, 255, 0.15); /* 半透明白 */
-      backdrop-filter: blur(8px); /* 背景模糊 */
-      -webkit-backdrop-filter: blur(8px); /* Safari 支援 */
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
       border: 1px solid rgba(255, 255, 255, 0.2);
       border-radius: 16px;
       padding: 16px;
       margin-top: 16px;
     }
 
-    /* 狀態膠囊標籤 */
     .badge-pill {
       border-radius: 50rem;
       padding: 0.5em 1em;
@@ -50,12 +45,10 @@
       box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     }
 
-    /* 文字與細節 */
     .text-shadow { text-shadow: 0 2px 4px rgba(0,0,0,0.1); }
     .opacity-80 { opacity: 0.8; }
     .mono-font { font-family: 'Courier New', Courier, monospace; letter-spacing: 1px; }
 
-    /* 讀取遮罩 */
     #loader { 
       position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
       background: rgba(255,255,255,0.95); z-index: 9999; 
@@ -136,7 +129,7 @@
         
         <div class="d-flex justify-content-between align-items-center mb-2">
             <div>
-              <p class="mb-0 opacity-80 small"><i class="bi bi-person-circle me-1"></i> Member Profile</p>
+              <p class="mb-0 opacity-80 small">Member Profile</p>
               <h2 id="mem-name" class="mb-0 fw-bold text-shadow" style="letter-spacing: 1px;">載入中...</h2>
             </div>
             <span class="badge-pill">
@@ -145,7 +138,7 @@
         </div>
         
         <p class="mb-3 opacity-80 fs-5">
-          <i class="bi bi-phone me-2"></i><span id="mem-phone" class="mono-font">---</span>
+          <span id="mem-phone" class="mono-font">---</span>
         </p>
         
         <div id="guardian-info-box" class="glass-box" style="display:none;">
@@ -162,7 +155,7 @@
             <span id="guardian-name">---</span>
           </h4>
           <p class="small mb-0 opacity-80 border-top border-white border-opacity-25 pt-2 mt-2">
-            <i class="bi bi-heart-fill me-1 text-danger"></i> <span id="guardian-relation-text">正在守護您</span>
+             <span id="guardian-relation-text">正在守護您</span>
           </p>
         </div>
 
@@ -188,7 +181,7 @@
       </div>
 
       <div id="target-notice" class="alert alert-success mt-4 text-center shadow-sm border-0 rounded-4" style="display:none;">
-         ✨ 您的帳號已受到守護 ✨<br><span class="small">點擊LINE下方選單，每天打卡報平安，讓家人安心</span>
+        🛡️ 您的帳號已受守護<br><span class="small">如有需求請點擊 LINE 下方選單回報</span>
       </div>
       
       <div class="mt-4">
@@ -203,7 +196,7 @@
   <script>
     const liffId = "2008912295-edmRNdOM"; 
     // ★★★ 請確認這是最新的 GAS 網址 ★★★
-    const gasUrl = "https://script.google.com/macros/s/AKfycbyBkgvbHViTf0oWj3K_TZvy7VPwZUQ3UAfvFQPt8U7FxCI1DMi-QIbEy3Epmol_8mWG/exec"; 
+    const gasUrl = "https://script.google.com/macros/s/AKfycbyKRyr4OPVC1dln9SFNp2Cj9JCMFRrP-Vp6-dqjT9A-wDsicf1jANNnTCdFe9tDCYda6w/exec"; 
     
     let userUid = "";
     let userName = ""; 
@@ -259,14 +252,24 @@
     function showMemberPage(data) {
         document.getElementById('member-page').style.display = 'block';
         document.getElementById('mem-name').innerText = data.name;
-        document.getElementById('mem-phone').innerText = data.phone;
+
+        // ★ 修改：如果電話是 "LINE綁定"，顯示 "已綁定LINE"
+        let displayPhone = data.phone;
+        if (displayPhone === "LINE綁定") displayPhone = "已綁定LINE";
+        document.getElementById('mem-phone').innerText = displayPhone;
+
         const card = document.getElementById('member-card');
         
         if (data.isTarget) {
             card.className = "card card-premium bg-gradient-target p-4 text-white";
             document.getElementById('guardian-info-box').style.display = 'block';
             document.getElementById('guardian-name').innerText = data.guardianName;
-            document.getElementById('guardian-relation-text').innerText = `${data.sAlias || '親友'} 正在守護您`;
+            
+            // ★ 修改：顯示 "管理者自稱 + 管理者名字"
+            // 若 GAS 還沒更新，guardianAlias 會是空的，就只顯示名字
+            let relationText = `${data.guardianAlias || ''} ${data.guardianName} 正在守護您`;
+            document.getElementById('guardian-relation-text').innerText = relationText;
+            
             document.getElementById('target-notice').style.display = 'block';
             document.getElementById('manager-actions').style.display = 'none';
             document.getElementById('manager-actions-box').style.display = 'none';
@@ -359,7 +362,6 @@
         .catch(err => showError("註冊失敗: " + err));
     }
 
-    // ★★★ 傳送邀請函 (文案已依照您的指定修改) ★★★
     function sendInvite() {
       if (!liff.isApiAvailable('shareTargetPicker')) return Swal.fire('請在 LINE 開啟', '', 'warning');
       
