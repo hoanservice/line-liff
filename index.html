@@ -55,6 +55,22 @@
     .opacity-80 { opacity: 0.8; }
     .mono-font { font-family: 'Courier New', Courier, monospace; letter-spacing: 1px; }
 
+    /* 免責聲明區塊樣式 */
+    .terms-box {
+      height: 140px; 
+      overflow-y: auto; 
+      font-size: 0.85rem; 
+      line-height: 1.5;
+      background-color: #fff;
+      border: 1px solid #dee2e6;
+    }
+    
+    /* 自訂捲軸樣式 */
+    .terms-box::-webkit-scrollbar { width: 6px; }
+    .terms-box::-webkit-scrollbar-track { background: #f1f1f1; }
+    .terms-box::-webkit-scrollbar-thumb { background: #ccc; border-radius: 10px; }
+    .terms-box::-webkit-scrollbar-thumb:hover { background: #aaa; }
+
     #loader { 
       position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
       background: rgba(255,255,255,0.95); z-index: 9999; 
@@ -104,6 +120,24 @@
           <div class="mb-3"><label class="form-label">您的自稱 (如:乖孫)</label><input type="text" id="reg-sAlias" class="form-control"></div>
         </div>
 
+        <div class="mb-4">
+          <label class="form-label fw-bold small text-secondary"><i class="bi bi-file-earmark-text"></i> 服務條款與免責聲明</label>
+          <div class="terms-box rounded p-3 mb-2 text-secondary">
+            <p class="mb-2 fw-bold text-dark">我已閱讀並同意以下服務條款與免責聲明：</p>
+            <ul class="ps-3 mb-0">
+              <li class="mb-2"><strong>非緊急救難系統：</strong>本服務僅為日常「狀態回報」之輔助工具，不具備連線 119、警察局或醫療機構之功能。如遇緊急危難，請務必優先撥打 119。</li>
+              <li class="mb-2"><strong>技術限制：</strong>系統運作依賴網際網路、LINE 平台、Google 服務及電信業者。若因天災、網路中斷、第三方平台故障或手機沒電等不可抗力因素，導致通知延遲或遺漏，本服務不負擔損害賠償責任。</li>
+              <li class="mb-2"><strong>使用者義務：</strong>本人確認已填寫正確之聯絡資訊，並承諾不會封鎖本服務帳號。若因資訊錯誤或封鎖帳號導致無法收到通知，後果由本人自行承擔。</li>
+              <li><strong>隱私權：</strong>本人同意本服務蒐集上述資料僅用於發送安全通知之目的。</li>
+            </ul>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="reg-agree">
+            <label class="form-check-label small fw-bold" for="reg-agree">
+              我已詳細閱讀並同意上述條款
+            </label>
+          </div>
+        </div>
         <button onclick="submitRegister()" class="btn btn-primary w-100 py-3 mt-2 fw-bold shadow-sm rounded-pill">完成註冊</button>
       </div>
     </div>
@@ -210,286 +244,5 @@
   </div>
 
   <script>
-    const liffId = "2008912295-edmRNdOM"; 
-    // ★★★ 請確認這是最新的 GAS 網址 ★★★
-    const gasUrl = "https://script.google.com/macros/s/AKfycbyBkgvbHViTf0oWj3K_TZvy7VPwZUQ3UAfvFQPt8U7FxCI1DMi-QIbEy3Epmol_8mWG/exec"; 
-    
-    let userUid = "";
-    let userName = ""; 
-    let inviterId = "";
-
-    async function init() {
-      try {
-        await liff.init({ liffId: liffId });
-        if (!liff.isLoggedIn()) { liff.login(); return; }
-        
-        const profile = await liff.getProfile();
-        userUid = profile.userId;
-        userName = profile.displayName; 
-
-        const urlParams = new URLSearchParams(window.location.search);
-        inviterId = urlParams.get('inviter');
-
-        checkStatus(userUid);
-      } catch (err) {
-        showError("LIFF 初始化失敗: " + err);
-      }
-    }
-
-    function checkStatus(uid) {
-      document.getElementById('loader').style.display = 'flex';
-      
-      let url = `${gasUrl}?action=query&uid=${uid}`;
-      if (inviterId) url += `&inviter=${inviterId}`; 
-
-      fetch(url, { method: 'GET', mode: 'cors' })
-        .then(res => res.json())
-        .then(data => {
-          document.getElementById('loader').style.display = 'none';
-          document.getElementById('register-page').style.display = 'none';
-          document.getElementById('invite-page').style.display = 'none';
-          document.getElementById('member-page').style.display = 'none';
-
-          if (data.exists) {
-            showMemberPage(data);
-          } else {
-            if (inviterId && data.inviterName) {
-              document.getElementById('invite-page').style.display = 'block';
-              document.getElementById('inviter-name').innerText = data.inviterName;
-            } else {
-              document.getElementById('register-page').style.display = 'block';
-              document.getElementById('reg-name').value = userName;
-            }
-          }
-        })
-        .catch(err => showError("讀取資料失敗: " + err.message));
-    }
-
-    // ★★★ 核心修改：會員頁面顯示邏輯 (含點數判斷) ★★★
-    function showMemberPage(data) {
-        document.getElementById('member-page').style.display = 'block';
-        document.getElementById('mem-name').innerText = data.name;
-
-        let displayPhone = data.phone;
-        if (displayPhone === "LINE綁定") displayPhone = "已綁定LINE";
-        document.getElementById('mem-phone').innerText = displayPhone;
-
-        const card = document.getElementById('member-card');
-        const creditsDiv = document.getElementById('credits-badge');
-        const creditCount = document.getElementById('credit-count');
-        const targetNotice = document.getElementById('target-notice');
-        
-        // --- 情境 A: 受守護者 (長輩/Target) ---
-        if (data.isTarget) {
-            creditsDiv.style.display = 'none'; // 長輩不用看點數
-            
-            // ★ 判斷：管理者還有沒有錢？ (預設為0以免錯誤)
-            let gCredits = (typeof data.guardianCredits !== 'undefined') ? data.guardianCredits : 99;
-
-            if (gCredits > 0) {
-                // [正常模式] - 金黃色
-                card.className = "card card-premium bg-gradient-target p-4 text-white";
-                document.getElementById('guardian-info-box').style.display = 'block';
-                document.getElementById('guardian-name').innerText = data.guardianName;
-                document.getElementById('guardian-relation-text').innerText = `${data.guardianAlias || ''} ${data.guardianName} 正在守護您`;
-                
-                targetNotice.className = "alert alert-success mt-4 text-center shadow-sm border-0 rounded-4";
-                targetNotice.innerHTML = `
-                    <i class="bi bi-heart-fill text-danger me-1"></i> 您的帳號已受守護<br>
-                    <span class="small">點擊 LINE 下方選單每日報平安，讓家人安心</span>
-                    <div class="mt-2 pt-2 border-top border-success border-opacity-25">
-                        <small class="text-muted" style="font-size: 0.75rem;">⚠️ 請勿封鎖本官方帳號，以免收不到緊急通知</small>
-                    </div>`;
-            } else {
-                // [欠費模式] - 灰色警告
-                card.className = "card card-premium bg-secondary p-4 text-white"; // 變灰
-                document.getElementById('guardian-info-box').style.display = 'block';
-                document.getElementById('guardian-name').innerText = "服務暫停中";
-                document.getElementById('guardian-relation-text').innerText = "管理者點數不足，請聯繫家人";
-                
-                targetNotice.className = "alert alert-danger mt-4 text-center shadow-sm border-0 rounded-4";
-                targetNotice.style.display = 'block';
-                targetNotice.innerHTML = `<i class="bi bi-exclamation-triangle-fill me-1"></i> 守護服務已暫停<br><span class="small">請聯繫您的管理者 (${data.guardianName}) 確認狀態</span>`;
-            }
-            
-            document.getElementById('target-notice').style.display = 'block';
-            document.getElementById('manager-actions').style.display = 'none';
-            document.getElementById('manager-actions-box').style.display = 'none';
-        } 
-        
-        // --- 情境 B: 管理者 (子女/Manager) ---
-        else {
-            creditsDiv.style.display = 'block';
-            let myCredits = (typeof data.credits !== 'undefined') ? data.credits : 0;
-            creditCount.innerText = myCredits;
-            
-            document.getElementById('guardian-info-box').style.display = 'none';
-            document.getElementById('target-notice').style.display = 'none';
-
-            // ★ 判斷：自己還有沒有錢？
-            if (myCredits > 0) {
-                // [正常/低水位]
-                card.className = "card card-premium bg-gradient-custom p-4 text-white";
-                
-                // 低水位警示 (<= 3點)
-                if (myCredits <= 3) {
-                   creditsDiv.innerHTML = `<span class="badge rounded-pill bg-warning text-dark shadow-sm animate__animated animate__pulse animate__infinite"><i class="bi bi-exclamation-circle-fill"></i> 剩餘 ${myCredits} 點 (請儲值)</span>`;
-                } else {
-                   creditsDiv.innerHTML = `<span class="badge rounded-pill bg-light text-dark shadow-sm"><i class="bi bi-coin text-warning"></i> 剩餘 ${myCredits} 點</span>`;
-                }
-
-                if (data.target === 'elder') {
-                    document.getElementById('manager-actions-box').style.display = 'block';
-                    document.getElementById('mem-uTitle').innerText = data.uTitle || "未填寫";
-                    document.getElementById('manager-actions').style.display = 'block';
-                }
-            } else {
-                // [欠費模式]
-                card.className = "card card-premium bg-secondary p-4 text-white"; // 變灰
-                creditsDiv.innerHTML = `<span class="badge rounded-pill bg-danger text-white shadow-sm"><i class="bi bi-x-circle-fill"></i> 點數已用盡</span>`;
-                
-                // 隱藏傳送按鈕，顯示儲值提示
-                document.getElementById('manager-actions').innerHTML = `
-                    <div class="alert alert-danger text-center border-0 rounded-4 shadow-sm">
-                        <h5 class="fw-bold"><i class="bi bi-wallet2"></i> 請先儲值</h5>
-                        <p class="small mb-0">您的安心點數不足，已暫停守護服務。<br>請匯款後聯繫官方帳號恢復服務。</p>
-                    </div>
-                `;
-                document.getElementById('manager-actions').style.display = 'block';
-                document.getElementById('manager-actions-box').style.display = 'none'; // 隱藏設定區
-            }
-        }
-
-        // 歷史紀錄 (不變)
-        const historyBox = document.getElementById('history-list');
-        if (data.history && data.history.length > 0) {
-            historyBox.innerHTML = data.history.map(item => `
-            <div class="list-group-item d-flex justify-content-between align-items-center">
-                <span><i class="bi bi-check-circle-fill text-success"></i> ${item.name} 報平安</span>
-                <span class="badge bg-light text-secondary border">${item.time}</span>
-            </div>
-            `).join('');
-        } else {
-            historyBox.innerHTML = '<div class="list-group-item small text-center text-muted py-3">目前尚無紀錄</div>';
-        }
-    }
-
-    function acceptInvite() {
-        document.getElementById('loader').style.display = 'flex';
-        let params = `action=register&uid=${userUid}&name=${encodeURIComponent(userName)}&target=self&inviter=${inviterId}`;
-        
-        fetch(`${gasUrl}?${params}`, { method: 'GET', mode: 'cors' })
-        .then(res => res.json())
-        .then(data => {
-            if (data.success) {
-                Swal.fire({
-                    icon: 'success',
-                    title: '綁定成功！',
-                    text: '您已正式加入守護',
-                    timer: 1500,
-                    showConfirmButton: false
-                }).then(() => {
-                    location.href = window.location.pathname; 
-                });
-            } else {
-                showError("綁定失敗：" + data.error);
-            }
-        })
-        .catch(err => showError("連線錯誤: " + err));
-    }
-
-    function toggleFields() {
-      const target = document.getElementById('reg-target').value;
-      document.getElementById('fields-self').style.display = (target === 'self') ? 'block' : 'none';
-      document.getElementById('fields-elder').style.display = (target === 'elder') ? 'block' : 'none';
-    }
-
-    function submitRegister() {
-      const name = document.getElementById('reg-name').value.trim();
-      const phone = document.getElementById('reg-phone').value.trim();
-      const target = document.getElementById('reg-target').value;
-      
-      if (!name) return Swal.fire({ icon: 'warning', title: '請輸入姓名' });
-      const phoneRegex = /^09\d{8}$/;
-      if (!phoneRegex.test(phone)) return Swal.fire({ icon: 'error', title: '手機格式錯誤' });
-
-      if (target === 'self') {
-        const eName = document.getElementById('reg-eName').value.trim();
-        const ePhone = document.getElementById('reg-ePhone').value.trim();
-        if (!eName || !phoneRegex.test(ePhone)) return Swal.fire({ icon: 'warning', title: '請完整填寫緊急聯絡人' });
-      }
-
-      let params = `action=register&uid=${userUid}&name=${encodeURIComponent(name)}&phone=${encodeURIComponent(phone)}&target=${target}`;
-      if (inviterId) params += `&inviter=${inviterId}`;
-      if (target === 'self') {
-        params += `&eName=${encodeURIComponent(document.getElementById('reg-eName').value)}&ePhone=${encodeURIComponent(document.getElementById('reg-ePhone').value)}`;
-      } else {
-        params += `&uTitle=${encodeURIComponent(document.getElementById('reg-uTitle').value)}&sAlias=${encodeURIComponent(document.getElementById('reg-sAlias').value)}`;
-      }
-
-      document.getElementById('loader').style.display = 'flex';
-      fetch(`${gasUrl}?${params}`, { method: 'GET', mode: 'cors' }) 
-        .then(res => res.json())
-        .then(data => {
-          if (data.success) {
-            Swal.fire({ icon: 'success', title: '註冊成功' }).then(() => location.href = window.location.pathname);
-          }
-        })
-        .catch(err => showError("註冊失敗: " + err));
-    }
-
-    function sendInvite() {
-      if (!liff.isApiAvailable('shareTargetPicker')) return Swal.fire('請在 LINE 開啟', '', 'warning');
-      
-      const senderName = document.getElementById('mem-name').innerText;
-      let targetTitle = document.getElementById('mem-uTitle').innerText;
-      if (!targetTitle || targetTitle === "---" || targetTitle === "未填寫") targetTitle = "家人";
-      
-      const inviteUrl = `https://liff.line.me/${liffId}?inviter=${userUid}`;
-
-      liff.shareTargetPicker([{
-        "type": "flex",
-        "altText": `${senderName} 邀請您加入厚安守護`,
-        "contents": {
-          "type": "bubble",
-          "styles": { "footer": { "separator": true } },
-          "body": {
-            "type": "box",
-            "layout": "vertical",
-            "contents": [
-              { "type": "text", "text": "厚安守護寶", "weight": "bold", "color": "#4A90E2", "size": "md" },
-              { "type": "text", "text": "您與家人安心的依靠", "weight": "bold", "size": "xl", "margin": "md", "color": "#333333" },
-              { "type": "text", "text": `親愛的 ${targetTitle}，我是 ${senderName}。我已申請「厚安守護」，邀請您每天打卡報平安。`, "size": "md", "color": "#555555", "wrap": true, "margin": "lg" },
-              { "type": "text", "text": "請點擊下方按鈕完成綁定，讓我們每天日常多一份安心。", "size": "md", "color": "#555555", "wrap": true, "margin": "md" },
-              {
-                "type": "button",
-                "style": "primary",
-                "color": "#667eea",
-                "margin": "xxl",
-                "height": "sm",
-                "action": { "type": "uri", "label": "✨ 接受守護並綁定 ✨", "uri": inviteUrl }
-              }
-            ]
-          },
-          "footer": {
-            "type": "box",
-            "layout": "vertical",
-            "contents": [
-              { "type": "text", "text": "此連結僅限本人綁定使用，請勿轉傳", "size": "xxs", "color": "#aaaaaa", "align": "center" }
-            ]
-          }
-        }
-      }]).then(res => { 
-        if (res) Swal.fire({ icon: 'success', title: '邀請已送出', timer: 2000, showConfirmButton: false }); 
-      }).catch(err => console.error(err));
-    }
-
-    function showError(msg) {
-      document.getElementById('loader').style.display = 'none';
-      Swal.fire({ icon: 'error', title: '發生錯誤', text: msg, confirmButtonColor: '#d33' });
-    }
-
-    window.onload = init;
-  </script>
 </body>
 </html>
