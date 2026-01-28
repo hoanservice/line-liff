@@ -6,6 +6,7 @@
   <title>厚安守護中心</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
   
@@ -19,6 +20,7 @@
       box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
       position: relative;
       overflow: hidden;
+      transition: all 0.3s ease;
     }
 
     /* 背景漸層 (管理者/一般) - 紫藍色 */
@@ -135,7 +137,14 @@
             <div>
               <p class="mb-0 opacity-80 small">Member Profile</p>
               <h2 id="mem-name" class="mb-0 fw-bold text-shadow" style="letter-spacing: 1px;">載入中...</h2>
+              
+              <div id="credits-badge" class="mt-1" style="display:none;">
+                 <span class="badge rounded-pill bg-light text-dark shadow-sm">
+                   <i class="bi bi-coin text-warning"></i> 剩餘 <span id="credit-count">0</span> 點
+                 </span>
+              </div>
             </div>
+            
             <span class="badge-pill">
               <i class="bi bi-star-fill text-warning me-1"></i>一般會員
             </span>
@@ -256,6 +265,7 @@
         .catch(err => showError("讀取資料失敗: " + err.message));
     }
 
+    // ★★★ 核心修改：會員頁面顯示邏輯 (含點數判斷) ★★★
     function showMemberPage(data) {
         document.getElementById('member-page').style.display = 'block';
         document.getElementById('mem-name').innerText = data.name;
@@ -265,32 +275,92 @@
         document.getElementById('mem-phone').innerText = displayPhone;
 
         const card = document.getElementById('member-card');
+        const creditsDiv = document.getElementById('credits-badge');
+        const creditCount = document.getElementById('credit-count');
+        const targetNotice = document.getElementById('target-notice');
         
+        // --- 情境 A: 受守護者 (長輩/Target) ---
         if (data.isTarget) {
-            // 受守護者：套用金黃色背景
-            card.className = "card card-premium bg-gradient-target p-4 text-white";
-            document.getElementById('guardian-info-box').style.display = 'block';
-            document.getElementById('guardian-name').innerText = data.guardianName;
+            creditsDiv.style.display = 'none'; // 長輩不用看點數
             
-            let relationText = `${data.guardianAlias || ''} ${data.guardianName} 正在守護您`;
-            document.getElementById('guardian-relation-text').innerText = relationText;
+            // ★ 判斷：管理者還有沒有錢？ (預設為0以免錯誤)
+            let gCredits = (typeof data.guardianCredits !== 'undefined') ? data.guardianCredits : 99;
+
+            if (gCredits > 0) {
+                // [正常模式] - 金黃色
+                card.className = "card card-premium bg-gradient-target p-4 text-white";
+                document.getElementById('guardian-info-box').style.display = 'block';
+                document.getElementById('guardian-name').innerText = data.guardianName;
+                document.getElementById('guardian-relation-text').innerText = `${data.guardianAlias || ''} ${data.guardianName} 正在守護您`;
+                
+                targetNotice.className = "alert alert-success mt-4 text-center shadow-sm border-0 rounded-4";
+                targetNotice.innerHTML = `
+                    <i class="bi bi-heart-fill text-danger me-1"></i> 您的帳號已受守護<br>
+                    <span class="small">點擊 LINE 下方選單每日報平安，讓家人安心</span>
+                    <div class="mt-2 pt-2 border-top border-success border-opacity-25">
+                        <small class="text-muted" style="font-size: 0.75rem;">⚠️ 請勿封鎖本官方帳號，以免收不到緊急通知</small>
+                    </div>`;
+            } else {
+                // [欠費模式] - 灰色警告
+                card.className = "card card-premium bg-secondary p-4 text-white"; // 變灰
+                document.getElementById('guardian-info-box').style.display = 'block';
+                document.getElementById('guardian-name').innerText = "服務暫停中";
+                document.getElementById('guardian-relation-text').innerText = "管理者點數不足，請聯繫家人";
+                
+                targetNotice.className = "alert alert-danger mt-4 text-center shadow-sm border-0 rounded-4";
+                targetNotice.style.display = 'block';
+                targetNotice.innerHTML = `<i class="bi bi-exclamation-triangle-fill me-1"></i> 守護服務已暫停<br><span class="small">請聯繫您的管理者 (${data.guardianName}) 確認狀態</span>`;
+            }
             
             document.getElementById('target-notice').style.display = 'block';
             document.getElementById('manager-actions').style.display = 'none';
             document.getElementById('manager-actions-box').style.display = 'none';
-        } else {
-            // 管理者：套用紫藍色背景
-            card.className = "card card-premium bg-gradient-custom p-4 text-white";
+        } 
+        
+        // --- 情境 B: 管理者 (子女/Manager) ---
+        else {
+            creditsDiv.style.display = 'block';
+            let myCredits = (typeof data.credits !== 'undefined') ? data.credits : 0;
+            creditCount.innerText = myCredits;
+            
             document.getElementById('guardian-info-box').style.display = 'none';
             document.getElementById('target-notice').style.display = 'none';
-            
-            if (data.target === 'elder') {
-                document.getElementById('manager-actions-box').style.display = 'block';
-                document.getElementById('mem-uTitle').innerText = data.uTitle || "未填寫";
+
+            // ★ 判斷：自己還有沒有錢？
+            if (myCredits > 0) {
+                // [正常/低水位]
+                card.className = "card card-premium bg-gradient-custom p-4 text-white";
+                
+                // 低水位警示 (<= 3點)
+                if (myCredits <= 3) {
+                   creditsDiv.innerHTML = `<span class="badge rounded-pill bg-warning text-dark shadow-sm animate__animated animate__pulse animate__infinite"><i class="bi bi-exclamation-circle-fill"></i> 剩餘 ${myCredits} 點 (請儲值)</span>`;
+                } else {
+                   creditsDiv.innerHTML = `<span class="badge rounded-pill bg-light text-dark shadow-sm"><i class="bi bi-coin text-warning"></i> 剩餘 ${myCredits} 點</span>`;
+                }
+
+                if (data.target === 'elder') {
+                    document.getElementById('manager-actions-box').style.display = 'block';
+                    document.getElementById('mem-uTitle').innerText = data.uTitle || "未填寫";
+                    document.getElementById('manager-actions').style.display = 'block';
+                }
+            } else {
+                // [欠費模式]
+                card.className = "card card-premium bg-secondary p-4 text-white"; // 變灰
+                creditsDiv.innerHTML = `<span class="badge rounded-pill bg-danger text-white shadow-sm"><i class="bi bi-x-circle-fill"></i> 點數已用盡</span>`;
+                
+                // 隱藏傳送按鈕，顯示儲值提示
+                document.getElementById('manager-actions').innerHTML = `
+                    <div class="alert alert-danger text-center border-0 rounded-4 shadow-sm">
+                        <h5 class="fw-bold"><i class="bi bi-wallet2"></i> 請先儲值</h5>
+                        <p class="small mb-0">您的安心點數不足，已暫停守護服務。<br>請匯款後聯繫官方帳號恢復服務。</p>
+                    </div>
+                `;
                 document.getElementById('manager-actions').style.display = 'block';
+                document.getElementById('manager-actions-box').style.display = 'none'; // 隱藏設定區
             }
         }
 
+        // 歷史紀錄 (不變)
         const historyBox = document.getElementById('history-list');
         if (data.history && data.history.length > 0) {
             historyBox.innerHTML = data.history.map(item => `
