@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>厚安守護寶</title>
+  <title>厚安守護中心</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
@@ -65,11 +65,9 @@
       border: 1px solid #dee2e6;
     }
     
-    /* 自訂捲軸樣式 */
     .terms-box::-webkit-scrollbar { width: 6px; }
     .terms-box::-webkit-scrollbar-track { background: #f1f1f1; }
     .terms-box::-webkit-scrollbar-thumb { background: #ccc; border-radius: 10px; }
-    .terms-box::-webkit-scrollbar-thumb:hover { background: #aaa; }
 
     #loader { 
       position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
@@ -138,6 +136,7 @@
             </label>
           </div>
         </div>
+
         <button onclick="submitRegister()" class="btn btn-primary w-100 py-3 mt-2 fw-bold shadow-sm rounded-pill">完成註冊</button>
       </div>
     </div>
@@ -194,7 +193,6 @@
               <p class="mb-0 small fw-bold text-white opacity-80">安心守護中</p>
             </div>
           </div>
-          
           <h4 class="mb-1 mt-2 fw-bold text-shadow ps-1">
             <span id="guardian-name">---</span>
           </h4>
@@ -214,6 +212,20 @@
            </div>
         </div>
 
+        <div id="self-guard-box" class="glass-box" style="display:none;">
+           <div class="d-flex align-items-center mb-2">
+             <i class="bi bi-shield-exclamation me-2 opacity-80"></i>
+             <span class="small fw-bold opacity-80">緊急聯絡人</span>
+           </div>
+           <div class="d-flex justify-content-between align-items-center mb-1">
+             <span class="opacity-80">姓名</span>
+             <span id="mem-eName" class="fw-bold text-shadow">---</span>
+           </div>
+           <div class="d-flex justify-content-between align-items-center">
+             <span class="opacity-80">電話</span>
+             <span id="mem-ePhone" class="mono-font fw-bold text-shadow">---</span>
+           </div>
+        </div>
         <div style="position: absolute; top: -30px; right: -30px; width: 120px; height: 120px; background: rgba(255,255,255,0.1); border-radius: 50%;"></div>
       </div>
       
@@ -245,6 +257,7 @@
 
   <script>
     const liffId = "2008912295-edmRNdOM"; 
+    // ★★★ 請確認這是最新的 GAS 網址 ★★★
     const gasUrl = "https://script.google.com/macros/s/AKfycbyBkgvbHViTf0oWj3K_TZvy7VPwZUQ3UAfvFQPt8U7FxCI1DMi-QIbEy3Epmol_8mWG/exec"; 
     
     let userUid = "";
@@ -269,31 +282,29 @@
       }
     }
 
-    // ★ 優化 1：先只查會員資料 (速度快)
     function checkStatus(uid) {
       document.getElementById('loader').style.display = 'flex';
       
-      // 改用 query_member
       let url = `${gasUrl}?action=query_member&uid=${uid}`;
       if (inviterId) url += `&inviter=${inviterId}`; 
 
       fetch(url, { method: 'GET', mode: 'cors' })
         .then(res => res.json())
         .then(data => {
-          document.getElementById('loader').style.display = 'none'; // 馬上關閉 Loading
+          document.getElementById('loader').style.display = 'none';
           document.getElementById('register-page').style.display = 'none';
           document.getElementById('invite-page').style.display = 'none';
           document.getElementById('member-page').style.display = 'none';
 
           if (data.exists) {
-            showMemberPage(data); // 顯示卡片
+            showMemberPage(data);
             
-            // ★ 優化 2：卡片出來後，才去背景載入歷史紀錄
-            // 判斷要查誰的紀錄：如果是受守護者(self/elder)查自己；如果是管理者查對方
+            // 背景載入歷史紀錄
             let searchTarget = uid; 
-            // 這裡簡化邏輯：如果是管理者，通常要查受守護對象的紀錄
-            // 但因為目前 query_member 回傳的結構，管理者要查 managedTargetUid 比較準
-            // 不過 MVP 階段，我們先讓歷史紀錄區塊顯示「讀取中...」
+            if (data.isTarget === false && data.target === 'elder' && data.managedTargetUid) {
+                 // 如果是守護長輩的管理者，優先載入長輩的紀錄 (目前 API 需支援)
+                 // 但因應 MVP，先載入自己的或預設的
+            }
             loadHistory(searchTarget); 
 
           } else {
@@ -309,13 +320,11 @@
         .catch(err => showError("讀取資料失敗: " + err.message));
     }
 
-    // ★ 優化 3：獨立載入歷史紀錄的函式
     function loadHistory(searchUid) {
         const historyBox = document.getElementById('history-list');
-        // 保持「讀取中...」的狀態，或是顯示一個小的 spinner
         historyBox.innerHTML = '<div class="list-group-item small text-center text-muted py-3"><div class="spinner-border spinner-border-sm text-secondary" role="status"></div> 更新紀錄中...</div>';
 
-        let url = `${gasUrl}?action=query_history&uid=${userUid}&searchUid=${searchUid}`; // 注意：這裡多傳一個 searchUid
+        let url = `${gasUrl}?action=query_history&uid=${userUid}&searchUid=${searchUid}`;
 
         fetch(url, { method: 'GET', mode: 'cors' })
         .then(res => res.json())
@@ -331,7 +340,7 @@
                 historyBox.innerHTML = '<div class="list-group-item small text-center text-muted py-3">目前尚無紀錄</div>';
             }
         })
-        .catch(console.error); // 歷史紀錄讀取失敗不需阻擋使用者操作，console紀錄即可
+        .catch(console.error);
     }
 
     function showMemberPage(data) {
@@ -350,6 +359,7 @@
         // --- 情境 A: 受守護者 (長輩/Target) ---
         if (data.isTarget) {
             creditsDiv.style.display = 'none'; 
+            document.getElementById('self-guard-box').style.display = 'none'; // 隱藏自救
             
             let gCredits = (typeof data.guardianCredits !== 'undefined') ? data.guardianCredits : 99;
 
@@ -394,18 +404,31 @@
             if (myCredits > 0) {
                 card.className = "card card-premium bg-gradient-custom p-4 text-white";
                 
+                // 低水位
                 if (myCredits <= 3) {
                    creditsDiv.innerHTML = `<span class="badge rounded-pill bg-warning text-dark shadow-sm animate__animated animate__pulse animate__infinite"><i class="bi bi-exclamation-circle-fill"></i> 剩餘 ${myCredits} 點 (請儲值)</span>`;
                 } else {
                    creditsDiv.innerHTML = `<span class="badge rounded-pill bg-light text-dark shadow-sm"><i class="bi bi-coin text-warning"></i> 剩餘 ${myCredits} 點</span>`;
                 }
 
+                // ★★★ 區分顯示：是守護長輩 還是 守護自己？ ★★★
                 if (data.target === 'elder') {
+                    // 守護長輩：顯示設定框、邀請按鈕
                     document.getElementById('manager-actions-box').style.display = 'block';
+                    document.getElementById('self-guard-box').style.display = 'none'; // 隱藏自救
                     document.getElementById('mem-uTitle').innerText = data.uTitle || "未填寫";
                     document.getElementById('manager-actions').style.display = 'block';
+                } else {
+                    // 守護自己：顯示緊急聯絡人資訊 (New!)
+                    document.getElementById('manager-actions-box').style.display = 'none';
+                    document.getElementById('self-guard-box').style.display = 'block'; // 顯示自救
+                    document.getElementById('mem-eName').innerText = data.eName || "未設定";
+                    document.getElementById('mem-ePhone').innerText = data.ePhone || "未設定";
+                    document.getElementById('manager-actions').style.display = 'none'; // 隱藏邀請
                 }
+
             } else {
+                // [欠費模式]
                 card.className = "card card-premium bg-secondary p-4 text-white"; 
                 creditsDiv.innerHTML = `<span class="badge rounded-pill bg-danger text-white shadow-sm"><i class="bi bi-x-circle-fill"></i> 點數已用盡</span>`;
                 
@@ -417,12 +440,12 @@
                 `;
                 document.getElementById('manager-actions').style.display = 'block';
                 document.getElementById('manager-actions-box').style.display = 'none'; 
+                document.getElementById('self-guard-box').style.display = 'none';
             }
         }
-        // 注意：這裡移除了原本的 historyBox 處理，因為移到 loadHistory 去了
     }
 
-    function acceptInvite() { /* 維持原樣 */
+    function acceptInvite() {
         document.getElementById('loader').style.display = 'flex';
         let params = `action=register&uid=${userUid}&name=${encodeURIComponent(userName)}&target=self&inviter=${inviterId}`;
         fetch(`${gasUrl}?${params}`, { method: 'GET', mode: 'cors' })
@@ -435,13 +458,13 @@
         }).catch(err => showError("連線錯誤: " + err));
     }
 
-    function toggleFields() { /* 維持原樣 */
+    function toggleFields() {
       const target = document.getElementById('reg-target').value;
       document.getElementById('fields-self').style.display = (target === 'self') ? 'block' : 'none';
       document.getElementById('fields-elder').style.display = (target === 'elder') ? 'block' : 'none';
     }
 
-    function submitRegister() { /* 維持原樣 */
+    function submitRegister() {
       const agreeCheckbox = document.getElementById('reg-agree');
       if (!agreeCheckbox.checked) {
         return Swal.fire({ icon: 'warning', title: '請同意服務條款', text: '為了您的權益，請勾選同意「服務條款與免責聲明」才能繼續。', confirmButtonColor: '#667eea' });
@@ -479,7 +502,7 @@
         .catch(err => showError("註冊失敗: " + err));
     }
 
-    function sendInvite() { /* 維持原樣 */
+    function sendInvite() {
       if (!liff.isApiAvailable('shareTargetPicker')) return Swal.fire('請在 LINE 開啟', '', 'warning');
       const senderName = document.getElementById('mem-name').innerText;
       let targetTitle = document.getElementById('mem-uTitle').innerText;
