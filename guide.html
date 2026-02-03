@@ -26,8 +26,16 @@
         }
         .hero-title {
             font-weight: 700;
-            margin-bottom: 8px;
+            margin-bottom: 5px;
             letter-spacing: 1px;
+        }
+        .hero-slogan {
+            font-size: 1.2rem;
+            font-weight: 500;
+            color: #ffc107; /* 黃色強調 */
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.1);
         }
         /* 卡片通用樣式 */
         .card-custom {
@@ -153,7 +161,8 @@
             <i class="fa-solid fa-shield-heart fa-3x"></i>
         </div>
         <h1 class="hero-title">厚安守護寶</h1>
-        <p class="mb-0 opacity-75">定時回報，即時守護</p>
+        <div class="hero-slogan">厚哩心安</div>
+        <p class="mb-0 opacity-75 small">一鍵報平安，全家都心安<br>定時回報，即時守護</p>
     </div>
 
     <div class="container mt-n4 position-relative" style="max-width: 600px; margin-top: -20px;">
@@ -176,8 +185,8 @@
         <div class="card card-custom p-3">
             <h5 class="fw-bold mb-2">🌟 這是什麼服務？</h5>
             <p class="text-secondary mb-0 small">
-                這是一個基於 LINE 的自動化守護系統。<br>
-                使用者<strong>超過 49 小時</strong>未點擊回報，系統將視為異常，自動發送 LINE 訊息或簡訊通知緊急聯絡人，確保意外發生時有人知道。
+                這是一個基於 LINE 的自動化守護系統，專為台灣人設計。<br>
+                若使用者<strong>超過 49 小時</strong>未點擊回報，系統將視為異常，自動發送LINE訊息或手機簡訊通知緊急聯絡人，確保意外發生時有人知道。
             </p>
         </div>
 
@@ -293,14 +302,14 @@
                 </ul>
                 
                 <div class="highlight-box">
-                    <small class="fw-bold text-dark d-block mb-1">💡 誤觸警報怎麼辦？</small>
+                    <small class="fw-bold text-dark d-block mb-1">💡 誤啟動警報怎麼辦？</small>
                     <small class="text-secondary">只要在緊急通知發送前，趕快補按一下「報平安」，流程就會馬上取消！</small>
                 </div>
             </div>
         </div>
 
         <div class="mt-4 mb-4">
-            <a href="https://liff.line.me/2008912295-edmRNdOM" class="btn btn-cta btn-success w-100 btn-lg shadow rounded-pill py-3 fw-bold text-white text-decoration-none d-block text-center">
+            <a href="#" class="btn btn-cta btn-success w-100 btn-lg shadow rounded-pill py-3 fw-bold text-white text-decoration-none d-block text-center">
                 <i class="fa-solid fa-right-to-bracket me-2"></i> 立即使用 (前往註冊)
             </a>
             <p class="text-center text-muted small mt-2">新會員註冊即贈 10 點安心點數</p>
@@ -311,24 +320,21 @@
                 1. <strong>非緊急救難系統</strong>：本服務為日常輔助性質，不具備緊急醫療或報警功能。若遇緊急危難（如身體嚴重不適、火災），請務必優先撥打 <strong>119</strong>。
             </p>
             <p class="mb-0">
-                2. <strong>服務限制</strong>：系統運作依賴網路環境與第三方平台（LINE/Google/電信業者）。若因天災、網路中斷等不可抗力因素導致通知延遲或遺漏，本服務不負擔連帶責任。
+                2. <strong>服務限制</strong>：系統運作依賴網路環境與第三方平台（LINE/Google/電信商）。若因天災、網路中斷等不可抗力因素導致通知延遲或遺漏，本服務不負擔連帶責任。
             </p>
         </div>
         
-        <div class="text-center mt-4 mb-4 text-muted small">
-            &copy; 2026 Hoan Service 厚安守護寶
+        <div class="text-center mt-5 mb-5 text-muted small">
+            <p class="mb-2">&copy; 2026 Hoan Service 厚安守護寶</p>
+            <div>
+                <a href="privacy.html" class="text-decoration-none text-secondary me-3">隱私權政策</a>
+                <span class="text-secondary">|</span>
+                <a href="#" class="text-decoration-none text-secondary ms-3">聯絡我們</a>
+            </div>
         </div>
 
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <div class="text-center mt-5 mb-5 text-muted small">
-    <p class="mb-2">&copy; 2026 Hoan Service 厚安守護寶</p>
-    <div>
-        <a href="privacy.html" class="text-decoration-none text-secondary me-3">隱私權政策</a>
-        <span class="text-secondary">|</span>
-        <a href="#" class="text-decoration-none text-secondary ms-3">聯絡我們</a>
-    </div>
-</div>
 </body>
 </html>
