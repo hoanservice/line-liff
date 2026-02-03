@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>使用說明 | 厚安守護寶</title>
+    <title>隱私權政策 | 厚安守護寶</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -12,329 +12,151 @@
         body {
             font-family: 'Noto Sans TC', sans-serif;
             background-color: #f8f9fa;
-            color: #333;
-            line-height: 1.6;
+            color: #444;
+            line-height: 1.7;
             padding-bottom: 40px;
         }
-        .hero-section {
-            background: linear-gradient(135deg, #198754 0%, #20c997 100%);
-            color: white;
-            padding: 40px 20px;
-            border-radius: 0 0 25px 25px;
+        .header-section {
+            background-color: #fff;
+            border-bottom: 1px solid #e9ecef;
+            padding: 30px 20px;
             text-align: center;
-            box-shadow: 0 4px 15px rgba(25, 135, 84, 0.2);
+            margin-bottom: 30px;
         }
-        .hero-title {
+        .header-title {
+            color: #198754;
             font-weight: 700;
             margin-bottom: 5px;
-            letter-spacing: 1px;
         }
-        .hero-slogan {
-            font-size: 1.2rem;
-            font-weight: 500;
-            color: #ffc107; /* 黃色強調 */
-            margin-bottom: 10px;
-            letter-spacing: 2px;
-            text-shadow: 0 1px 2px rgba(0,0,0,0.1);
-        }
-        /* 卡片通用樣式 */
-        .card-custom {
-            border: none;
-            border-radius: 16px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
-            margin-bottom: 20px;
-            overflow: hidden;
-            background: white;
-        }
-        .card-header-custom {
-            background-color: #fff;
-            border-bottom: 1px solid #f0f0f0;
-            font-weight: 700;
-            color: #198754;
-            padding: 16px 20px;
-            display: flex;
-            align-items: center;
-        }
-        /* 點數卡片樣式 */
-        .points-card {
-            background: linear-gradient(to right, #fff8e1, #fff);
-            border: 1px solid #ffeec0;
-        }
-        /* 步驟圖示 */
-        .step-icon {
-            background-color: #e8f5e9;
-            color: #198754;
-            width: 48px;
-            height: 48px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            margin-right: 15px;
-            font-size: 1.2rem;
-            flex-shrink: 0;
-        }
-        /* Tabs 切換樣式 */
-        .nav-pills .nav-link {
-            color: #6c757d;
-            background-color: #f8f9fa;
-            border: 1px solid #dee2e6;
-            margin: 0 5px;
-            border-radius: 20px;
-            font-size: 0.95rem;
-        }
-        .nav-pills .nav-link.active {
-            background-color: #198754;
-            color: white;
-            border-color: #198754;
-        }
-        .tab-content-box {
-            background-color: #f8f9fa;
-            border-radius: 12px;
-            padding: 15px;
-            margin-top: 15px;
-            border: 1px dashed #ced4da;
-        }
-
-        /* 時間軸樣式 */
-        .timeline-item {
-            position: relative;
-            padding-left: 40px;
-            margin-bottom: 25px;
-        }
-        .timeline-item::before {
-            content: '';
-            position: absolute;
-            left: 10px;
-            top: 5px;
-            bottom: -25px;
-            width: 2px;
-            background-color: #eee;
-        }
-        .timeline-item:last-child::before {
-            display: none;
-        }
-        .timeline-marker {
-            position: absolute;
-            left: 0;
-            top: 6px;
-            width: 22px;
-            height: 22px;
-            border-radius: 50%;
-            border: 3px solid #fff;
-        }
-        .marker-yellow { background-color: #ffc107; box-shadow: 0 0 0 2px #ffc107; }
-        .marker-orange { background-color: #fd7e14; box-shadow: 0 0 0 2px #fd7e14; }
-        .marker-red { background-color: #dc3545; box-shadow: 0 0 0 2px #dc3545; }
-        
-        /* 免責聲明區塊 */
-        .disclaimer-section {
-            font-size: 0.8rem;
+        .update-date {
+            font-size: 0.85rem;
             color: #888;
-            background-color: #f1f3f5;
-            padding: 20px;
-            border-radius: 12px;
-            margin-top: 30px;
         }
-        .highlight-box {
-            background-color: #fff3cd;
-            border-left: 4px solid #ffc107;
-            padding: 12px 16px;
-            border-radius: 4px;
-            font-size: 0.95rem;
-        }
-        /* 按鈕特效 */
-        .btn-cta {
-            background: linear-gradient(45deg, #198754, #20c997);
+        .policy-card {
+            background: #fff;
             border: none;
-            transition: all 0.3s ease;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+            margin-bottom: 20px;
+            padding: 25px;
         }
-        .btn-cta:active {
-            transform: scale(0.98);
+        h3 {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-top: 5px;
+            margin-bottom: 15px;
+            border-left: 4px solid #198754;
+            padding-left: 10px;
+        }
+        p, li {
+            font-size: 0.95rem;
+            text-align: justify;
+        }
+        ul {
+            padding-left: 20px;
+        }
+        li {
+            margin-bottom: 8px;
+        }
+        .footer {
+            text-align: center;
+            font-size: 0.85rem;
+            color: #999;
+            margin-top: 40px;
+            padding: 20px;
+            border-top: 1px solid #eee;
         }
     </style>
 </head>
 <body>
 
-    <div class="hero-section">
-        <div class="mb-2">
-            <i class="fa-solid fa-shield-heart fa-3x"></i>
-        </div>
-        <h1 class="hero-title">厚安守護寶</h1>
-        <div class="hero-slogan">厚哩心安</div>
-        <p class="mb-0 opacity-75 small">一鍵報平安，全家都心安<br>定時回報，即時守護</p>
+    <div class="header-section">
+        <h2 class="header-title"><i class="fa-solid fa-file-shield me-2"></i>隱私權保護政策</h2>
+        <div class="update-date">Privacy Policy | 最後更新日期：2026年2月</div>
     </div>
 
-    <div class="container mt-n4 position-relative" style="max-width: 600px; margin-top: -20px;">
-        
-        <div class="card card-custom points-card">
-            <div class="card-body p-3 d-flex align-items-center">
-                <div class="me-3 text-warning">
-                    <i class="fa-solid fa-gift fa-2x"></i>
-                </div>
-                <div>
-                    <h6 class="fw-bold mb-1 text-dark">新會員見面禮 🎁</h6>
-                    <p class="mb-0 small text-secondary">
-                        註冊即贈 <span class="badge bg-warning text-dark">10點</span> 安心點數<br>
-                        <span class="text-muted" style="font-size: 0.8rem;">(每日扣除 1 點，免費體驗完整功能)</span>
-                    </p>
-                </div>
-            </div>
-        </div>
+    <div class="container" style="max-width: 800px;">
 
-        <div class="card card-custom p-3">
-            <h5 class="fw-bold mb-2">🌟 這是什麼服務？</h5>
-            <p class="text-secondary mb-0 small">
-                這是一個基於 LINE 的自動化守護系統，專為台灣人設計。<br>
-                若使用者<strong>超過 49 小時</strong>未點擊回報，系統將視為異常，自動發送LINE訊息或手機簡訊通知緊急聯絡人，確保意外發生時有人知道。
+        <div class="policy-card">
+            <p>
+                非常歡迎您使用<strong>「厚安守護寶」</strong>（以下簡稱本服務）。為了讓您能夠安心的使用本服務的各項功能（包含 LINE 官方帳號互動與 LIFF 網頁服務），特此向您說明本服務的隱私權保護政策，以保障您的權益，請您詳閱下列內容：
             </p>
         </div>
 
-        <div class="card card-custom">
-            <div class="card-header-custom">
-                <i class="fa-solid fa-rocket me-2"></i> 如何開始
-            </div>
-            <div class="card-body">
-                <div class="d-flex align-items-start mb-4">
-                    <div class="step-icon"><i class="fa-solid fa-user-pen"></i></div>
-                    <div>
-                        <h6 class="fw-bold mb-1">1. 會員註冊</h6>
-                        <small class="text-secondary">點擊LINE選單【註冊/服務】，填寫您的真實姓名與手機號碼。</small>
-                    </div>
-                </div>
-
-                <div class="d-flex align-items-start mb-4">
-                    <div class="step-icon"><i class="fa-solid fa-sliders"></i></div>
-                    <div class="w-100">
-                        <h6 class="fw-bold mb-2">2. 選擇守護對象</h6>
-                        <small class="text-secondary d-block mb-2">請依照您的需求選擇不同模式：</small>
-                        
-                        <ul class="nav nav-pills mb-2" id="pills-tab" role="tablist">
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link active" id="pills-self-tab" data-bs-toggle="pill" data-bs-target="#pills-self" type="button" role="tab">
-                                    <i class="fa-solid fa-user-shield me-1"></i> 守護自己
-                                </button>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="pills-family-tab" data-bs-toggle="pill" data-bs-target="#pills-family" type="button" role="tab">
-                                    <i class="fa-solid fa-hands-holding-child me-1"></i> 守護親友
-                                </button>
-                            </li>
-                        </ul>
-
-                        <div class="tab-content" id="pills-tabContent">
-                            <div class="tab-pane fade show active" id="pills-self" role="tabpanel">
-                                <div class="tab-content-box">
-                                    <h6 class="fw-bold text-success"><i class="fa-solid fa-check-circle me-1"></i>獨居/單身族群適用</h6>
-                                    <p class="small text-secondary mb-0">
-                                        請在註冊時填寫<strong>「緊急聯絡人」</strong>的姓名與手機。<br>
-                                        <span class="text-danger mt-1 d-block" style="font-size:0.8rem;">*若發生緊急狀況，系統將發送簡訊通知此人。</span>
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="tab-pane fade" id="pills-family" role="tabpanel">
-                                <div class="tab-content-box">
-                                    <h6 class="fw-bold text-primary"><i class="fa-solid fa-check-circle me-1"></i>子女守護父母適用</h6>
-                                    <p class="small text-secondary mb-0">
-                                        1. 註冊完成後，點擊<strong>傳送守護卡</strong>。<br>
-                                        2. 透過 LINE 選擇您的好友，傳送專屬連結給守護對象 (如父母)。<br>
-                                        3. 邀請對方點擊守護卡，完成<strong>「確認綁定」</strong>。
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="d-flex align-items-start">
-                    <div class="step-icon"><i class="fa-regular fa-calendar-check"></i></div>
-                    <div>
-                        <h6 class="fw-bold mb-1">3. 每日報平安</h6>
-                        <small class="text-secondary">
-                            <strong>被守護的對象</strong> (您本人或守護的親友)<br>
-                            每天點擊 LINE 選單上的【🟢我平安】按鈕。
-                        </small>
-                    </div>
-                </div>
-            </div>
+        <div class="policy-card">
+            <h3>一、隱私權保護政策的適用範圍</h3>
+            <p>隱私權保護政策內容，包括本服務如何處理在您使用 LINE 官方帳號互動、網頁服務時收集到的個人識別資料。隱私權保護政策不適用於本服務以外的相關連結網站，也不適用於非本服務所委託或參與管理的人員。</p>
         </div>
 
-        <div class="card card-custom border-danger border-top border-3" style="border-top-width: 4px !important;">
-            <div class="card-header-custom text-danger bg-white">
-                <i class="fa-solid fa-bell me-2"></i> 如果忘記報平安...
-            </div>
-            <div class="card-body">
-                <p class="small text-muted mb-4">系統依據最後回報時間計算，自動升級警報：</p>
-                
-                <div class="timeline-item">
-                    <div class="timeline-marker marker-yellow"></div>
-                    <h6 class="fw-bold text-dark">超過 47 小時 (溫馨提醒)</h6>
-                    <p class="small text-muted mb-0">LINE 通知本人：快點報平安喔！</p>
-                </div>
-
-                <div class="timeline-item">
-                    <div class="timeline-marker marker-orange"></div>
-                    <h6 class="fw-bold text-dark">超過 48 小時 (嚴重警報)</h6>
-                    <p class="small text-muted mb-0">LINE 通知本人：<strong>1小時後</strong>將發送緊急簡訊。</p>
-                </div>
-
-                <div class="timeline-item">
-                    <div class="timeline-marker marker-red"></div>
-                    <h6 class="fw-bold text-danger">超過 49 小時 (緊急通報)</h6>
-                    <p class="small text-muted mb-0">LINE 通知綁定的守護者 或 發送手機簡訊給緊急聯絡人！</p>
-                </div>
-            </div>
+        <div class="policy-card">
+            <h3>二、個人資料的蒐集、處理及利用方式</h3>
+            <ul>
+                <li>當您註冊或使用本服務時，我們將視功能性質請您提供必要的個人資料。</li>
+                <li><strong>蒐集目的：</strong>包含但不限於身份確認、安全回報監測、緊急聯繫通知、<strong>客戶管理與服務、行銷與推廣活動、製作統計數據與分析報告</strong>、以及其他合於營業登記項目或章程所定業務之需要。</li>
+                <li><strong>蒐集類別：</strong>
+                    <ul>
+                        <li>識別類：姓名、電話、LINE User ID (UID)、顯示圖片等。</li>
+                        <li>特徵類：個人描述（如緊急聯絡人關係）。</li>
+                        <li>其他：系統自動紀錄之軌跡資訊（如報平安時間、IP位址）。</li>
+                    </ul>
+                </li>
+                <li><strong>利用期間與地區：</strong>除法令另有規定外，將於本服務營運期間及服務地區內利用您的資料。</li>
+                <li><strong>去識別化數據：</strong>本服務有權將蒐集之數據進行去識別化處理（無法辨識特定個人），並將該統計數據用於<strong>商業分析、學術研究或出版市場調查報告</strong>，無需另行通知。</li>
+            </ul>
         </div>
 
-        <div class="card card-custom">
-            <div class="card-body">
-                <h5 class="fw-bold mb-3"><i class="fa-solid fa-circle-exclamation text-warning me-2"></i>重要須知</h5>
-                
-                <ul class="list-unstyled small text-secondary">
-                    <li class="mb-3 d-flex">
-                        <i class="fa-solid fa-user-slash text-danger me-2 mt-1"></i>
-                        <span><strong>請勿封鎖本帳號</strong><br>封鎖將導致無法收到「報平安提醒」，可能造成系統誤判而發送緊急簡訊。</span>
-                    </li>
-                    <li class="mb-3 d-flex">
-                        <i class="fa-solid fa-mobile-screen text-dark me-2 mt-1"></i>
-                        <span><strong>簡訊號碼顯示</strong><br>緊急簡訊可能顯示為國際號碼 (如 +1 開頭)，請告知親友<strong>不要封鎖</strong>。</span>
-                    </li>
-                </ul>
-                
-                <div class="highlight-box">
-                    <small class="fw-bold text-dark d-block mb-1">💡 誤啟動警報怎麼辦？</small>
-                    <small class="text-secondary">只要在緊急通知發送前，趕快補按一下「報平安」，流程就會馬上取消！</small>
-                </div>
-            </div>
+        <div class="policy-card">
+            <h3>三、資料之保護與儲存</h3>
+            <ul>
+                <li>本服務之資料庫託管於<strong>國際級雲端服務供應商（如 Google Cloud Platform 等）</strong>，採用符合業界標準之資訊安全防護措施。</li>
+                <li>我們嚴格限制資料存取權限，僅授權人員可接觸，並負有保密義務。</li>
+                <li>如因業務需要委託第三方提供服務（如系統維護、資安檢測），本服務將嚴格要求其遵守保密義務。</li>
+            </ul>
         </div>
 
-        <div class="mt-4 mb-4">
-            <a href="#" class="btn btn-cta btn-success w-100 btn-lg shadow rounded-pill py-3 fw-bold text-white text-decoration-none d-block text-center">
-                <i class="fa-solid fa-right-to-bracket me-2"></i> 立即使用 (前往註冊)
-            </a>
-            <p class="text-center text-muted small mt-2">新會員註冊即贈 10 點安心點數</p>
+        <div class="policy-card">
+            <h3>四、網站對外的相關連結</h3>
+            <p>本服務的網頁可能提供其他網站的網路連結，您也可經由本服務所提供的連結，點選進入其他網站。但該連結網站不適用本服務的隱私權保護政策，您必須參考該連結網站中的隱私權保護政策。</p>
         </div>
-        <div class="disclaimer-section">
-            <h6 class="fw-bold mb-2"><i class="fa-solid fa-scale-balanced me-1"></i> 免責聲明</h6>
-            <p class="mb-2">
-                1. <strong>非緊急救難系統</strong>：本服務為日常輔助性質，不具備緊急醫療或報警功能。若遇緊急危難（如身體嚴重不適、火災），請務必優先撥打 <strong>119</strong>。
-            </p>
-            <p class="mb-0">
-                2. <strong>服務限制</strong>：系統運作依賴網路環境與第三方平台（LINE/Google/電信商）。若因天災、網路中斷等不可抗力因素導致通知延遲或遺漏，本服務不負擔連帶責任。
-            </p>
+
+        <div class="policy-card">
+            <h3>五、與第三人共用個人資料之政策</h3>
+            <p>本服務絕不會出售、交換或出租您的個人資料給其他團體或個人，但下列狀況除外：</p>
+            <ul>
+                <li><strong>法律與安全需求：</strong>配合司法單位調查、或為免除您生命與財產上之急迫危險（例如：緊急狀況發送求救簡訊）。</li>
+                <li><strong>協力廠商：</strong>為了提供完整功能，我們需與第三方服務供應商（包含但不限於<strong>簡訊發送商、雲端主機商、金流服務商</strong>）合作。我們僅會提供「執行該項業務所需」的最小化資料。</li>
+                <li><strong>行銷推廣：</strong>在您同意的前提下（註冊即視為同意），我們可能發送本服務或合作夥伴之優惠資訊、電子報。您可隨時選擇取消訂閱。</li>
+                <li><strong>商業轉讓：</strong>若本服務發生合併、收購或資產轉讓情事，您的個人資料可能作為資產的一部分進行移轉。我們將在移轉前通知您，並確保您的資料持續受隱私權政策保護。</li>
+            </ul>
+            <p>本服務委託廠商協助蒐集、處理或利用您的個人資料時，將對委外廠商或個人善盡監督管理之責。</p>
         </div>
-        
-        <div class="text-center mt-5 mb-5 text-muted small">
-            <p class="mb-2">&copy; 2026 Hoan Service 厚安守護寶</p>
-            <div>
-                <a href="privacy.html" class="text-decoration-none text-secondary me-3">隱私權政策</a>
-                <span class="text-secondary">|</span>
-                <a href="#" class="text-decoration-none text-secondary ms-3">聯絡我們</a>
-            </div>
+
+        <div class="policy-card">
+            <h3>六、Cookie 之使用</h3>
+            <p>為了提供您最佳的服務，本服務網頁會在您的電腦或手機中放置並取用我們的 Cookie（或 Local Storage），若您不願接受，您可在瀏覽器功能項中設定隱私權等級為高，但可能會導致服務某些功能（如自動登入）無法正常執行。</p>
+        </div>
+
+        <div class="policy-card">
+            <h3>七、隱私權保護政策之修正</h3>
+            <p>本服務隱私權保護政策將因應需求隨時進行修正，修正後的條款將刊登於本網頁上。</p>
+        </div>
+
+        <div class="policy-card">
+            <h3>八、聯繫管道</h3>
+            <p>對於本站之隱私權政策有任何疑問，或者想提出變更、移除個人資料之請求，請直接於 LINE 官方帳號留言。</p>
+            <p>或者 Email 至：<a href="mailto:您的Email@gmail.com" class="text-success fw-bold">您的Email@gmail.com</a></p>
         </div>
 
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <div class="footer">
+        <div class="container">
+            <p class="mb-1">&copy; 2026 Hoan Service 厚安守護寶</p>
+            <a href="guide.html" class="text-decoration-none text-secondary small me-2">使用說明</a> | 
+            <a href="#" class="text-decoration-none text-success small ms-2 fw-bold">隱私權政策</a>
+        </div>
+    </div>
+
 </body>
 </html>
