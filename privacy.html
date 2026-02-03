@@ -40,19 +40,18 @@
             margin-bottom: 20px;
             padding: 25px;
         }
-        .section-title {
-            font-size: 1.1rem;
+        h3 {
+            font-size: 1.2rem;
             font-weight: 700;
             color: #2c3e50;
+            margin-top: 10px;
             margin-bottom: 15px;
-            display: flex;
-            align-items: center;
+            border-left: 4px solid #198754;
+            padding-left: 10px;
         }
-        .section-icon {
-            color: #198754;
-            margin-right: 10px;
-            width: 24px;
-            text-align: center;
+        p, li {
+            font-size: 0.95rem;
+            text-align: justify;
         }
         .footer {
             text-align: center;
@@ -62,79 +61,86 @@
             padding: 20px;
             border-top: 1px solid #eee;
         }
-        ul {
-            padding-left: 20px;
-            margin-bottom: 0;
-        }
-        li {
-            margin-bottom: 8px;
-        }
     </style>
 </head>
 <body>
 
     <div class="header-section">
-        <h2 class="header-title"><i class="fa-solid fa-file-shield me-2"></i>隱私權政策</h2>
-        <div class="update-date">Privacy Policy | 最後更新日期：2026年1月</div>
+        <h2 class="header-title"><i class="fa-solid fa-file-shield me-2"></i>隱私權保護政策</h2>
+        <div class="update-date">Privacy Policy | 最後更新日期：2026年2月</div>
     </div>
 
     <div class="container" style="max-width: 800px;">
 
         <div class="policy-card">
-            <p class="mb-0">
-                歡迎使用「厚安守護寶」（以下簡稱本服務）。我們非常重視您的隱私權。本政策旨在說明我們如何蒐集、使用、揭露及保護您的個人資訊。當您註冊或使用本服務時，即表示您同意本隱私權政策的內容。
+            <p>
+                非常歡迎您使用<strong>「厚安守護寶」</strong>（以下簡稱本服務）。為了讓您能夠安心的使用本服務的各項功能（包含 LINE 官方帳號互動與 LIFF 網頁服務），特此向您說明本服務的隱私權保護政策，以保障您的權益，請您詳閱下列內容：
             </p>
         </div>
 
         <div class="policy-card">
-            <h4 class="section-title"><i class="fa-solid fa-database section-icon"></i>我們蒐集的資料</h4>
-            <p>為了提供安全回報與緊急通知功能，我們會蒐集以下必要的個人資訊：</p>
+            <h3>一、隱私權保護政策的適用範圍</h3>
+            <p>隱私權保護政策內容，包括本服務如何處理在您使用 LINE 官方帳號互動、網頁服務時收集到的個人識別資料。隱私權保護政策不適用於本服務以外的相關連結網站，也不適用於非本服務所委託或參與管理的人員。</p>
+        </div>
+
+        <div class="policy-card">
+            <h3>二、個人資料的蒐集、處理及利用方式</h3>
             <ul>
-                <li><strong>LINE 帳號資訊：</strong>包含您的 LINE User ID (UID)、顯示名稱 (Display Name) 及大頭貼連結。</li>
-                <li><strong>聯絡電話：</strong>您主動填寫的手機號碼，用於身份驗證與接收系統通知。</li>
-                <li><strong>緊急聯絡人資訊：</strong>您指定的緊急聯絡人姓名與電話號碼（僅用於緊急通報）。</li>
-                <li><strong>活動紀錄：</strong>您點擊「報平安」的時間戳記 (Timestamp) 與系統互動紀錄。</li>
+                <li>當您註冊「厚安守護寶」或使用本服務所提供之功能時，我們將視該服務功能性質，請您提供必要的個人資料，並在該特定目的範圍內處理及利用您的個人資料；非經您書面同意，本服務不會將個人資料用於其他用途。</li>
+                <li>本服務蒐集的必要資料包含但不限於：
+                    <ul>
+                        <li><strong>會員本人資料：</strong>姓名、手機號碼、LINE User ID (UID)、顯示圖片。</li>
+                        <li><strong>緊急聯絡人資料：</strong>您主動填寫的緊急聯絡對象之姓名與手機號碼。</li>
+                        <li><strong>活動紀錄：</strong>您點擊「報平安」的時間戳記與系統互動歷程。</li>
+                    </ul>
+                </li>
+                <li>伺服器會自行記錄相關行徑，包括您使用連線設備的 IP 位址、使用時間、使用的瀏覽器、瀏覽及點選資料記錄等，做為我們增進服務的參考依據，此記錄為內部應用，決不對外公佈。</li>
+                <li>您可以隨時向我們提出請求，以更正或刪除您的帳戶或本服務所蒐集的個人資料等隱私資訊。聯繫方式請見最下方聯繫管道。</li>
             </ul>
         </div>
 
         <div class="policy-card">
-            <h4 class="section-title"><i class="fa-solid fa-bullseye section-icon"></i>資料使用目的</h4>
-            <p>我們蒐集的資料僅用於以下特定用途，絕不會用於廣告行銷或出售給第三方：</p>
+            <h3>三、資料之保護</h3>
             <ul>
-                <li><strong>安全監測：</strong>計算您的最後回報時間，判斷是否發送警報。</li>
-                <li><strong>緊急通報：</strong>當系統判定您長時間失聯（超過49小時），自動發送簡訊給您的緊急聯絡人。</li>
-                <li><strong>系統通知：</strong>透過 LINE 推播訊息提醒您報平安。</li>
-                <li><strong>身分識別：</strong>防止惡意註冊與確保帳號安全性。</li>
+                <li>本服務之資料庫託管於 <strong>Google Cloud Platform (Google Sheets/Apps Script)</strong>，均受 Google 高規格之防火牆、防毒系統等資訊安全設備及必要的安全防護措施保護。</li>
+                <li>我們採用嚴格的保護措施，只由經過授權的人員才能接觸您的個人資料，相關處理人員皆負有保密義務，如有違反保密義務者，將會受到相關的法律處分。</li>
+                <li>如因業務需要有必要委託其他單位提供服務時，本服務亦會嚴格要求其遵守保密義務，並且採取必要檢查程序以確定其將確實遵守。</li>
             </ul>
         </div>
 
         <div class="policy-card">
-            <h4 class="section-title"><i class="fa-solid fa-share-nodes section-icon"></i>資料分享與第三方服務</h4>
-            <p>本服務運用以下第三方技術平台，您的部分資料將依據服務需求流經這些平台：</p>
-            <ul>
-                <li><strong>Google Cloud Platform (Google Sheets/Apps Script)：</strong>作為本服務的後端資料庫與運算核心。</li>
-                <li><strong>LINE Messaging API：</strong>用於處理您的訊息互動與身分驗證。</li>
-                <li><strong>Twilio：</strong>僅在觸發緊急警報時，將您的姓名與預設訊息傳送給電信商以發送 SMS 簡訊。</li>
-            </ul>
+            <h3>四、網站對外的相關連結</h3>
+            <p>本服務的網頁可能提供其他網站的網路連結，您也可經由本服務所提供的連結，點選進入其他網站。但該連結網站不適用本服務的隱私權保護政策，您必須參考該連結網站中的隱私權保護政策。</p>
         </div>
 
         <div class="policy-card">
-            <h4 class="section-title"><i class="fa-solid fa-user-xmark section-icon"></i>資料保存與刪除權利</h4>
+            <h3>五、與第三人共用個人資料之政策</h3>
+            <p>本服務絕不會提供、交換、出租或出售任何您的個人資料給其他個人、團體、私人企業或公務機關，但有法律依據或合約義務者，不在此限。</p>
+            <p>前項但書之情形包括不限於：</p>
             <ul>
-                <li><strong>資料安全：</strong>您的資料儲存於受保護的 Google 雲端資料庫，僅授權管理員存取。</li>
-                <li><strong>刪除權利：</strong>您隨時可以要求刪除您的帳號與所有紀錄。</li>
-                <li><strong>刪除方式：</strong>請直接在官方帳號中輸入或留言「刪除帳號」，或透過電子郵件聯繫管理員，我們將在 7 個工作天內完全移除您的個人資料。</li>
+                <li>經由您書面同意。</li>
+                <li>法律明文規定。</li>
+                <li>為免除您生命、身體、自由或財產上之危險（例如：緊急狀況通報）。</li>
+                <li><strong>第三方服務供應商：</strong>為了執行緊急簡訊通知功能，本服務需將您的姓名與手機號碼傳輸至簡訊服務供應商（如 Twilio），以確保能發送 SMS 至您的手機或緊急聯絡人。</li>
+                <li>當您在網站的行為，違反服務條款或可能損害或妨礙網站與其他使用者權益或導致任何人遭受損害時，經網站管理單位研析揭露您的個人資料是為了辨識、聯絡或採取法律行動所必要者。</li>
+                <li>有利於您的權益。</li>
             </ul>
+            <p>本服務委託廠商協助蒐集、處理或利用您的個人資料時，將對委外廠商或個人善盡監督管理之責。</p>
         </div>
 
         <div class="policy-card">
-            <h4 class="section-title"><i class="fa-solid fa-envelope section-icon"></i>聯絡開發團隊</h4>
-            <p class="mb-0">
-                如果您對本隱私權政策有任何疑問，或希望行使您的資料權利，請透過以下方式聯繫：<br><br>
-                <strong>厚安守護中心 開發團隊</strong><br>
-                Email: <a href="mailto:hoan.guardian@gmail.com" class="text-success">hoan.guardian@gmail.com</a><br>
-                <small class="text-muted">(或直接於 LINE 官方帳號留言)</small>
-            </p>
+            <h3>六、Cookie 之使用</h3>
+            <p>為了提供您最佳的服務，本服務網頁會在您的電腦或手機中放置並取用我們的 Cookie（或 Local Storage），若您不願接受，您可在瀏覽器功能項中設定隱私權等級為高，但可能會導致服務某些功能（如自動登入）無法正常執行。</p>
+        </div>
+
+        <div class="policy-card">
+            <h3>七、隱私權保護政策之修正</h3>
+            <p>本服務隱私權保護政策將因應需求隨時進行修正，修正後的條款將刊登於本網頁上。</p>
+        </div>
+
+        <div class="policy-card">
+            <h3>八、聯繫管道</h3>
+            <p>對於本站之隱私權政策有任何疑問，或者想提出變更、移除個人資料之請求，請 Email 至：<a href="mailto:hoan.guardian@gmail.com" class="text-success fw-bold">hoan.guardian@gmail.com</a></p>
         </div>
 
     </div>
