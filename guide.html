@@ -19,6 +19,10 @@
             --bg-grey: #f8f9fa;
             --card-radius: 16px;
         }
+        
+        html {
+            scroll-behavior: smooth; /* 讓點擊連結時有滑動效果 */
+        }
 
         body {
             font-family: 'Noto Sans TC', sans-serif;
@@ -251,7 +255,7 @@
 </head>
 <body>
 
-    <div class="header-section">
+    <div class="header-section" id="top">
         <div class="mb-2">
             <span class="pill-tag">LINE官方帳號</span>
             <span class="pill-tag">一鍵報平安</span>
@@ -359,7 +363,7 @@
             </div>
         </div>
 
-        <div class="card-custom">
+        <div class="card-custom" id="faq">
             <div class="card-body-custom">
                 <h5 class="fw-bold mb-3" style="color: var(--mint-teal);"><i class="fa-regular fa-circle-question me-2"></i>常見問題 Q&A</h5>
                 
@@ -428,7 +432,7 @@
     </div>
 
     <div class="bottom-nav shadow-sm">
-        <a href="#" class="nav-item-app active">
+        <a href="#top" class="nav-item-app active">
             <i class="fa-solid fa-book-open"></i>
             使用說明
         </a>
@@ -436,7 +440,7 @@
             <i class="fa-solid fa-user-gear"></i>
             註冊/設定
         </a>
-        <a href="#" class="nav-item-app">
+        <a href="#faq" class="nav-item-app">
             <i class="fa-regular fa-circle-question"></i>
             常見問題
         </a>
