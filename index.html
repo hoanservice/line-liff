@@ -13,7 +13,6 @@
   <style>
     body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
     
-    /* === Pro 版樣式 === */
     .card-premium {
       border: none;
       border-radius: 24px;
@@ -22,15 +21,9 @@
       overflow: hidden;
       transition: all 0.3s ease;
     }
-
-    /* 背景漸層 (管理者/一般) - 紫藍色 */
     .bg-gradient-custom { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
-
-    /* 背景漸層 (受守護者) - 溫暖金黃色 */
     .bg-gradient-target { background: linear-gradient(135deg, #FFC796 0%, #FDA085 100%); }
-    
     .invite-card { background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%); color: #333; }
-
     .glass-box {
       background: rgba(255, 255, 255, 0.15);
       backdrop-filter: blur(8px);
@@ -40,7 +33,6 @@
       padding: 16px;
       margin-top: 16px;
     }
-
     .badge-pill {
       border-radius: 50rem;
       padding: 0.5em 1em;
@@ -50,12 +42,10 @@
       font-size: 0.8rem;
       box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     }
-
     .text-shadow { text-shadow: 0 2px 4px rgba(0,0,0,0.1); }
     .opacity-80 { opacity: 0.8; }
     .mono-font { font-family: 'Courier New', Courier, monospace; letter-spacing: 1px; }
 
-    /* 免責聲明區塊樣式 */
     .terms-box {
       height: 140px; 
       overflow-y: auto; 
@@ -64,7 +54,6 @@
       background-color: #fff;
       border: 1px solid #dee2e6;
     }
-    
     .terms-box::-webkit-scrollbar { width: 6px; }
     .terms-box::-webkit-scrollbar-track { background: #f1f1f1; }
     .terms-box::-webkit-scrollbar-thumb { background: #ccc; border-radius: 10px; }
@@ -227,8 +216,13 @@
            </div>
         </div>
         <div style="position: absolute; top: -30px; right: -30px; width: 120px; height: 120px; background: rgba(255,255,255,0.1); border-radius: 50%;"></div>
+      </div> 
+      <div class="d-grid mt-3 px-1">
+        <button id="btn-pause" onclick="togglePause()" class="btn btn-outline-secondary rounded-pill fw-bold" style="display:none;">
+            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> 載入狀態中...
+        </button>
       </div>
-      
+
       <div id="manager-actions" class="mt-4" style="display:none;">
         <button onclick="sendInvite()" class="btn btn-success w-100 py-3 shadow fw-bold rounded-4 d-flex justify-content-center align-items-center">
             <i class="bi bi-send-fill me-2"></i> 傳送守護卡給指定對象
@@ -246,15 +240,6 @@
         </div>
       </div>
 
-      <div style="position: absolute; top: -30px; right: -30px; width: 120px; height: 120px; background: rgba(255,255,255,0.1); border-radius: 50%;"></div>
-      </div> 
-      <div class="d-grid mt-3 px-1">
-        <button id="btn-pause" onclick="togglePause()" class="btn btn-outline-secondary rounded-pill fw-bold" style="display:none;">
-            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> 載入狀態中...
-        </button>
-      </div>
-      <div id="manager-actions" class="mt-4" style="display:none;">
-      
       <div class="mt-4">
         <h6 class="text-secondary fw-bold px-2 mb-3"><i class="bi bi-clock-history me-1"></i> 近 7 天回報紀錄</h6>
         <div id="history-list" class="list-group shadow-sm border-0 rounded-4 overflow-hidden">
@@ -320,7 +305,6 @@
           // 如果有快取，直接顯示卡片 (不顯示 loader)
           console.log("載入快取資料");
           showMemberPage(cachedData); 
-          // 可以在畫面上加一個小小的 "更新中..." 提示，這裡先省略保持介面乾淨
       } else {
           // 只有完全沒快取的新客人才顯示 Loading
           document.getElementById('loader').style.display = 'flex';
@@ -348,9 +332,7 @@
             showMemberPage(data);
             
             // 載入歷史紀錄 (這部分不快取，保持實時性)
-            // 判斷是否需要載入長輩紀錄 (若是管理者且有管理對象)
             let searchTarget = uid;
-            // 簡單判斷：如果是管理者且目標是長輩，目前 MVP 先載入預設(自己)或可擴充
             loadHistory(searchTarget); 
 
           } else {
@@ -375,8 +357,6 @@
 
     function loadHistory(searchUid) {
         const historyBox = document.getElementById('history-list');
-        // 為了避免畫面閃爍，如果已經有內容(例如快取造成的)，可以保留或顯示更新中
-        // 這裡選擇覆蓋為 spinner
         historyBox.innerHTML = '<div class="list-group-item small text-center text-muted py-3"><div class="spinner-border spinner-border-sm text-secondary" role="status"></div> 更新紀錄中...</div>';
 
         let url = `${gasUrl}?action=query_history&uid=${userUid}&searchUid=${searchUid}`;
@@ -398,7 +378,7 @@
         .catch(console.error);
     }
 
-function showMemberPage(data) {
+    function showMemberPage(data) {
         document.getElementById('member-page').style.display = 'block';
         document.getElementById('mem-name').innerText = data.name;
 
@@ -643,7 +623,7 @@ function showMemberPage(data) {
                         Swal.fire({
                             icon: 'success',
                             title: '狀態已更新',
-                            text: data.status === 'Pause' ? '服務已暫停 💤' : '服務已恢復 🛡️',
+                            text: data.status === 'Pause' ? '守護服務已暫停 💤' : '守護服務已恢復✅️ ',
                             timer: 1500,
                             showConfirmButton: false
                         }).then(() => {
