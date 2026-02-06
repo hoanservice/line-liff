@@ -257,7 +257,7 @@
 
   <script>
     const liffId = "2008912295-edmRNdOM"; 
-    // ★★★ 請確認這是最新的 GAS 網址 ★★★
+    // ★★★ 請確認這是您的 GAS 網址 ★★★
     const gasUrl = "https://script.google.com/macros/s/AKfycbyBkgvbHViTf0oWj3K_TZvy7VPwZUQ3UAfvFQPt8U7FxCI1DMi-QIbEy3Epmol_8mWG/exec"; 
     
     let userUid = "";
@@ -282,9 +282,42 @@
       }
     }
 
+    // ★★★ 優化核心：快取機制 ★★★
+    const CACHE_KEY_PREFIX = "hoan_member_";
+
+    function loadFromCache(uid) {
+        const cachedStr = localStorage.getItem(CACHE_KEY_PREFIX + uid);
+        if (!cachedStr) return null;
+        try {
+            return JSON.parse(cachedStr);
+        } catch (e) {
+            return null;
+        }
+    }
+
+    function saveToCache(uid, data) {
+        try {
+            localStorage.setItem(CACHE_KEY_PREFIX + uid, JSON.stringify(data));
+        } catch (e) {
+            console.error("Cache save failed", e);
+        }
+    }
+
+    // ★ 優化版 checkStatus
     function checkStatus(uid) {
-      document.getElementById('loader').style.display = 'flex';
+      // 1. [極速] 先嘗試從快取讀取並顯示
+      const cachedData = loadFromCache(uid);
+      if (cachedData && cachedData.exists) {
+          // 如果有快取，直接顯示卡片 (不顯示 loader)
+          console.log("載入快取資料");
+          showMemberPage(cachedData); 
+          // 可以在畫面上加一個小小的 "更新中..." 提示，這裡先省略保持介面乾淨
+      } else {
+          // 只有完全沒快取的新客人才顯示 Loading
+          document.getElementById('loader').style.display = 'flex';
+      }
       
+      // 2. [背景] 依然去 GAS 抓最新資料
       let url = `${gasUrl}?action=query_member&uid=${uid}`;
       if (inviterId) url += `&inviter=${inviterId}`; 
 
@@ -292,22 +325,29 @@
         .then(res => res.json())
         .then(data => {
           document.getElementById('loader').style.display = 'none';
+          
+          // 隱藏所有頁面，準備重新渲染
           document.getElementById('register-page').style.display = 'none';
           document.getElementById('invite-page').style.display = 'none';
           document.getElementById('member-page').style.display = 'none';
 
           if (data.exists) {
+            // 資料有更新，寫入快取
+            saveToCache(uid, data);
+            
+            // 重新渲染頁面 (確保點數、狀態是最新的)
             showMemberPage(data);
             
-            // 背景載入歷史紀錄
-            let searchTarget = uid; 
-            if (data.isTarget === false && data.target === 'elder' && data.managedTargetUid) {
-                 // 如果是守護長輩的管理者，優先載入長輩的紀錄 (目前 API 需支援)
-                 // 但因應 MVP，先載入自己的或預設的
-            }
+            // 載入歷史紀錄 (這部分不快取，保持實時性)
+            // 判斷是否需要載入長輩紀錄 (若是管理者且有管理對象)
+            let searchTarget = uid;
+            // 簡單判斷：如果是管理者且目標是長輩，目前 MVP 先載入預設(自己)或可擴充
             loadHistory(searchTarget); 
 
           } else {
+            // 沒註冊過，清除舊快取以免誤判
+            localStorage.removeItem(CACHE_KEY_PREFIX + uid);
+
             if (inviterId && data.inviterName) {
               document.getElementById('invite-page').style.display = 'block';
               document.getElementById('inviter-name').innerText = data.inviterName;
@@ -317,11 +357,17 @@
             }
           }
         })
-        .catch(err => showError("讀取資料失敗: " + err.message));
+        .catch(err => {
+            console.error(err);
+            // 如果連線失敗但有快取，至少使用者還看得到舊卡片，不會一片白
+            if (!cachedData) showError("讀取資料失敗: " + err.message);
+        });
     }
 
     function loadHistory(searchUid) {
         const historyBox = document.getElementById('history-list');
+        // 為了避免畫面閃爍，如果已經有內容(例如快取造成的)，可以保留或顯示更新中
+        // 這裡選擇覆蓋為 spinner
         historyBox.innerHTML = '<div class="list-group-item small text-center text-muted py-3"><div class="spinner-border spinner-border-sm text-secondary" role="status"></div> 更新紀錄中...</div>';
 
         let url = `${gasUrl}?action=query_history&uid=${userUid}&searchUid=${searchUid}`;
@@ -359,7 +405,7 @@
         // --- 情境 A: 受守護者 (長輩/Target) ---
         if (data.isTarget) {
             creditsDiv.style.display = 'none'; 
-            document.getElementById('self-guard-box').style.display = 'none'; // 隱藏自救
+            document.getElementById('self-guard-box').style.display = 'none'; 
             
             let gCredits = (typeof data.guardianCredits !== 'undefined') ? data.guardianCredits : 99;
 
@@ -404,31 +450,26 @@
             if (myCredits > 0) {
                 card.className = "card card-premium bg-gradient-custom p-4 text-white";
                 
-                // 低水位
                 if (myCredits <= 3) {
                    creditsDiv.innerHTML = `<span class="badge rounded-pill bg-warning text-dark shadow-sm animate__animated animate__pulse animate__infinite"><i class="bi bi-exclamation-circle-fill"></i> 剩餘 ${myCredits} 點 (請儲值)</span>`;
                 } else {
                    creditsDiv.innerHTML = `<span class="badge rounded-pill bg-light text-dark shadow-sm"><i class="bi bi-coin text-warning"></i> 剩餘 ${myCredits} 點</span>`;
                 }
 
-                // ★★★ 區分顯示：是守護長輩 還是 守護自己？ ★★★
                 if (data.target === 'elder') {
-                    // 守護長輩：顯示設定框、邀請按鈕
                     document.getElementById('manager-actions-box').style.display = 'block';
-                    document.getElementById('self-guard-box').style.display = 'none'; // 隱藏自救
+                    document.getElementById('self-guard-box').style.display = 'none'; 
                     document.getElementById('mem-uTitle').innerText = data.uTitle || "未填寫";
                     document.getElementById('manager-actions').style.display = 'block';
                 } else {
-                    // 守護自己：顯示緊急聯絡人資訊 (New!)
                     document.getElementById('manager-actions-box').style.display = 'none';
-                    document.getElementById('self-guard-box').style.display = 'block'; // 顯示自救
+                    document.getElementById('self-guard-box').style.display = 'block'; 
                     document.getElementById('mem-eName').innerText = data.eName || "未設定";
                     document.getElementById('mem-ePhone').innerText = data.ePhone || "未設定";
-                    document.getElementById('manager-actions').style.display = 'none'; // 隱藏邀請
+                    document.getElementById('manager-actions').style.display = 'none'; 
                 }
 
             } else {
-                // [欠費模式]
                 card.className = "card card-premium bg-secondary p-4 text-white"; 
                 creditsDiv.innerHTML = `<span class="badge rounded-pill bg-danger text-white shadow-sm"><i class="bi bi-x-circle-fill"></i> 點數已用盡</span>`;
                 
@@ -452,6 +493,7 @@
         .then(res => res.json())
         .then(data => {
             if (data.success) {
+                // 註冊成功後，寫入快取 (這裡簡單重整即可)
                 Swal.fire({ icon: 'success', title: '綁定成功！', timer: 1500, showConfirmButton: false })
                 .then(() => { location.href = window.location.pathname; });
             } else { showError("綁定失敗：" + data.error); }
@@ -511,7 +553,7 @@
 
       liff.shareTargetPicker([{
         "type": "flex",
-        "altText": `${senderName} 邀請您加入厚安守護寶`,
+        "altText": `${senderName} 邀請您加入厚安守護`,
         "contents": {
           "type": "bubble",
           "styles": { "footer": { "separator": true } },
