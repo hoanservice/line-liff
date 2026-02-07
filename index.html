@@ -292,17 +292,16 @@
     }
 
     // --- 讀取會員狀態 (含快取) ---
+    // ★ 優化版 checkStatus (含防呆與正確查詢對象)
     function checkStatus(uid) {
-      // 1. 先查快取
       const cachedData = loadFromCache(uid);
       if (cachedData && cachedData.exists) {
           console.log("載入快取資料");
-          showMemberPage(cachedData); 
+          try { showMemberPage(cachedData); } catch(e) { console.error("Cache Render Error", e); }
       } else {
           document.getElementById('loader').style.display = 'flex';
       }
       
-      // 2. 背景更新
       let url = `${gasUrl}?action=query_member&uid=${uid}`;
       if (inviterId) url += `&inviter=${inviterId}`; 
 
@@ -311,18 +310,31 @@
         .then(data => {
           document.getElementById('loader').style.display = 'none';
           
-          // 隱藏所有頁面
           document.getElementById('register-page').style.display = 'none';
           document.getElementById('invite-page').style.display = 'none';
           document.getElementById('member-page').style.display = 'none';
 
           if (data.exists) {
             saveToCache(uid, data);
-            showMemberPage(data);
             
-            // 載入歷史紀錄
-            let searchTarget = uid; 
-            // 若為管理者且對象是長輩，邏輯上可優化為查對方ID，目前先查自己
+            // ★ 保險絲：用 try-catch 包住介面渲染，避免 UI 錯誤卡死後面的歷史紀錄
+            try {
+                showMemberPage(data);
+            } catch (e) {
+                console.error("UI Render Error:", e);
+                // 就算介面壞了，我們還是嘗試讓使用者看到基本內容
+                document.getElementById('member-page').style.display = 'block';
+            }
+            
+            // ★ 關鍵修正：決定要查誰的紀錄？
+            let searchTarget = uid; // 預設查自己
+            
+            // 如果我是管理者(isTarget=false)，而且我守護的是長輩(target=elder)，且我有抓到長輩UID
+            if (!data.isTarget && data.target === 'elder' && data.managedTargetUid) {
+                searchTarget = data.managedTargetUid; // 改為查長輩的紀錄
+                console.log("切換查詢對象為長輩:", searchTarget);
+            }
+            
             loadHistory(searchTarget); 
 
           } else {
