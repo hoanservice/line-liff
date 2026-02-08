@@ -519,7 +519,7 @@
 
     // --- 切換服務狀態 (呼叫後端 API) ---
     // 需搭配後端 GAS: action=update_status&status=Pause/Active
-    function toggleServiceStatus(targetStatus) {
+  function toggleServiceStatus(targetStatus) {
         let title, text, icon, confirmColor, confirmText;
 
         if (targetStatus === 'Pause') {
@@ -543,18 +543,20 @@
             confirmButtonText: confirmText, cancelButtonText: '取消'
         }).then((result) => {
             if (result.isConfirmed) {
+                // 1. 開啟遮罩 (Loading)
                 document.getElementById('loader').style.display = 'flex';
-                // 這裡假設後端已支援 toggle_pause 或 update_status
-                // 為了相容您之前的 toggle_pause，這裡做一個簡單的切換
-                // 建議後端統一用 update_status 較佳，目前維持您代碼中的邏輯:
-                // 若後端是 toggle 邏輯，則不需要傳 status 參數，直接 call toggle
+                
                 let url = `${gasUrl}?action=toggle_pause&uid=${userUid}`;
                 
                 fetch(url, { method: 'GET', mode: 'cors' })
                 .then(res => res.json())
                 .then(data => {
+                    // ★★★ 關鍵修正：收到回應後，第一件事就是關閉遮罩！ ★★★
+                    document.getElementById('loader').style.display = 'none';
+
                     if (data.success) {
                         Swal.fire('設定已更新', '', 'success').then(() => {
+                            // 清除快取，強制重整以顯示最新狀態
                             localStorage.removeItem(CACHE_KEY_PREFIX + userUid);
                             location.reload();
                         });
@@ -562,7 +564,11 @@
                         showError("更新失敗: " + (data.error || "未知錯誤"));
                     }
                 })
-                .catch(err => showError("連線錯誤: " + err));
+                .catch(err => {
+                    // ★★★ 關鍵修正：連線失敗也要關閉遮罩，不然會卡死 ★★★
+                    document.getElementById('loader').style.display = 'none';
+                    showError("連線錯誤: " + err);
+                });
             }
         });
     }
