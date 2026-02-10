@@ -11,8 +11,10 @@
     <style>
         :root {
             /* 🎨 品牌色系 */
-            --brand-green: #48bbb1; /* 您的品牌綠 */
-            --brand-yellow: #fecb2f; /* BETA 黃 */
+            --brand-green: #48bbb1;
+            --brand-yellow: #fecb2f;
+            --mint-teal: #20c997; /* 用於某些 icon */
+            --mint-dark: #0f5132;
             
             /* 🍊 橫向橘色漸層 (按鈕用) */
             --gradient-orange-h: linear-gradient(90deg, #FDB96E 0%, #FA8B63 100%);
@@ -30,21 +32,20 @@
             background-color: var(--bg-grey);
             color: var(--text-dark);
             line-height: 1.6;
-            padding-bottom: 80px; /* 預留底部導航空間 */
+            padding-bottom: 80px;
         }
 
-        /* 🌟 首屏 Hero Section (復刻附圖2風格) */
+        /* 🌟 首屏 Hero Section */
         .hero-section {
             background-color: var(--brand-green);
             padding: 25px 20px 40px 20px;
-            border-radius: 0 0 30px 30px; /* 下方圓角 */
+            border-radius: 0 0 30px 30px;
             color: white;
             box-shadow: 0 4px 12px rgba(72, 187, 177, 0.3);
             margin-bottom: 30px;
             text-align: center;
         }
 
-        /* 膠囊標籤容器 */
         .tags-container {
             display: flex;
             flex-wrap: wrap;
@@ -53,7 +54,6 @@
             justify-content: center;
         }
 
-        /* 白色線框膠囊 */
         .capsule-tag {
             border: 1px solid rgba(255, 255, 255, 0.9);
             color: white;
@@ -64,7 +64,6 @@
             white-space: nowrap;
         }
 
-        /* 黃色 BETA 標籤 */
         .beta-tag {
             background-color: var(--brand-yellow);
             color: #333;
@@ -75,7 +74,6 @@
             border: none;
         }
 
-        /* 品牌大標題 */
         .brand-title {
             font-size: 2.5rem;
             font-weight: 900;
@@ -84,7 +82,6 @@
             text-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
         
-        /* 副標題 slogan */
         .hero-slogan {
             font-size: 1rem;
             font-weight: 500;
@@ -92,11 +89,7 @@
             margin-bottom: 0;
         }
 
-        /* 🍊 底部 CTA 按鈕 (橫向漸層) */
-        .btn-cta-wrapper {
-            position: relative;
-            z-index: 10;
-        }
+        /* 🍊 橫向橘色漸層按鈕 */
         .btn-orange-gradient {
             background: var(--gradient-orange-h);
             border: none;
@@ -105,16 +98,15 @@
             font-size: 1.3rem;
             padding: 15px 30px;
             border-radius: 50rem;
-            box-shadow: 0 8px 25px rgba(250, 139, 99, 0.5); /* 強烈的陰影 */
+            box-shadow: 0 8px 25px rgba(250, 139, 99, 0.5);
             transition: transform 0.2s;
             width: 100%;
             display: block;
             text-align: center;
             letter-spacing: 1px;
+            text-decoration: none;
         }
-        .btn-orange-gradient:active {
-            transform: scale(0.98);
-        }
+        .btn-orange-gradient:active { transform: scale(0.98); }
 
         /* 通用卡片樣式 */
         .card-custom {
@@ -161,6 +153,30 @@
             border: 1px solid #eee;
         }
 
+        /* Tabs 樣式 (如何開始使用) */
+        .nav-pills .nav-link {
+            color: var(--text-grey);
+            background-color: #f1f3f5;
+            border: none;
+            margin: 0 5px 10px 0;
+            border-radius: 50rem;
+            font-size: 0.9rem;
+            font-weight: 500;
+            padding: 8px 16px;
+            transition: all 0.2s;
+        }
+        .nav-pills .nav-link.active {
+            background-color: var(--brand-green) !important;
+            color: white !important;
+            box-shadow: 0 4px 10px rgba(72, 187, 177, 0.3);
+        }
+        .tab-content-box {
+            background-color: #f8f9fa;
+            border-radius: 12px;
+            padding: 15px;
+            border: 1px solid #eee;
+        }
+
         /* 常見問題 */
         .qa-item {
             border-bottom: 1px solid #f0f0f0;
@@ -171,6 +187,16 @@
         .qa-q { font-weight: 700; color: var(--text-dark); margin-bottom: 6px; }
         .qa-icon { color: var(--brand-green); margin-right: 5px; }
         .qa-a { color: var(--text-grey); font-size: 0.9rem; padding-left: 20px; }
+
+        /* 重要須知 */
+        .highlight-box {
+            background-color: #e0f2f1;
+            border-left: 4px solid var(--brand-green);
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            color: var(--mint-dark);
+        }
 
         /* 底部導航 */
         .bottom-nav {
@@ -208,9 +234,6 @@
             margin-right: 15px;
             flex-shrink: 0;
         }
-        
-        /* 💡 修正：隱藏 Google Form 上傳按鈕 */
-        /* 因為您之前說要隱藏上傳，這裡不用特別寫 CSS，只要不連結到有上傳題目的表單即可 */
     </style>
 </head>
 <body>
@@ -222,12 +245,8 @@
             <span class="capsule-tag">獨居守護</span>
             <span class="beta-tag">BETA</span>
         </div>
-
         <div class="brand-title">厚安守護寶</div>
-
-        <div class="hero-slogan">
-            不用每天打電話，也能知道家人平安
-        </div>
+        <div class="hero-slogan">不用每天打電話，也能知道家人平安</div>
     </div>
 
     <div class="container mb-5">
@@ -265,6 +284,23 @@
     </div>
 
     <div class="container mb-5">
+        <div class="grid-3-col">
+            <div class="feature-box">
+                <i class="fa-solid fa-gift mb-2 fs-4" style="color: var(--brand-green);"></i>
+                <div class="fw-bold small">免費體驗<br>10 天</div>
+            </div>
+            <div class="feature-box">
+                <i class="fa-solid fa-file-contract mb-2 fs-4" style="color: var(--brand-green);"></i>
+                <div class="fw-bold small">不綁約<br>不綁卡</div>
+            </div>
+            <div class="feature-box">
+                <i class="fa-solid fa-thumbs-up mb-2 fs-4" style="color: var(--brand-green);"></i>
+                <div class="fw-bold small">確認安心<br>再訂閱</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mb-5">
         <div class="card-custom">
             <div class="card-body-custom">
                 <h5 class="fw-bold mb-4" style="color: var(--brand-green);"><i class="fa-solid fa-rocket me-2"></i>如何開始使用</h5>
@@ -279,9 +315,34 @@
 
                 <div class="d-flex align-items-start mb-4">
                     <div class="step-icon"><i class="fa-solid fa-sliders"></i></div>
-                    <div>
-                        <h6 class="fw-bold mb-1">2. 設定守護對象</h6>
-                        <small class="text-secondary">選擇「守護自己」或是「守護親友」。</small>
+                    <div class="w-100">
+                        <h6 class="fw-bold mb-2">2. 設定守護對象</h6>
+                        
+                        <ul class="nav nav-pills mb-2" id="pills-tab" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="pills-self-tab" data-bs-toggle="pill" data-bs-target="#pills-self" type="button" role="tab" aria-controls="pills-self" aria-selected="true">
+                                    <i class="fa-solid fa-user-shield me-1"></i> 守護自己
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="pills-family-tab" data-bs-toggle="pill" data-bs-target="#pills-family" type="button" role="tab" aria-controls="pills-family" aria-selected="false">
+                                    <i class="fa-solid fa-hands-holding-child me-1"></i> 守護親友
+                                </button>
+                            </li>
+                        </ul>
+
+                        <div class="tab-content" id="pills-tabContent">
+                            <div class="tab-pane fade show active" id="pills-self" role="tabpanel" aria-labelledby="pills-self-tab">
+                                <div class="tab-content-box">
+                                    <small class="text-secondary">獨居適用。請填寫<strong>「緊急聯絡人」</strong>的手機，意外時系統將發送簡訊通知此人。</small>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="pills-family" role="tabpanel" aria-labelledby="pills-family-tab">
+                                <div class="tab-content-box">
+                                    <small class="text-secondary">守護親友適用。註冊後傳送<strong>「守護卡」</strong>給想要守護的親友，請對方點擊完成綁定。</small>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -302,57 +363,74 @@
                 <h5 class="fw-bold mb-3" style="color: var(--brand-green);"><i class="fa-regular fa-circle-question me-2"></i>常見問題</h5>
                 
                 <div class="qa-item">
-                    <div class="qa-q"><i class="fa-solid fa-q qa-icon"></i> 如果只是忘記按，家人會收到簡訊嗎?</div>
-                    <div class="qa-a">別擔心！在簡訊發送前（第 47 及 48 小時），系統會先透過 LINE 通知您。只要在收到提醒時補按「我平安」，回報後通知流程就會馬上中止。</div>
+                    <div class="qa-q"><i class="fa-solid fa-q qa-icon"></i> 忘記按會怎樣？</div>
+                    <div class="qa-a">別擔心！第47/48小時會先透過 LINE 提醒您。</div>
                 </div>
                 <div class="qa-item">
-                    <div class="qa-q"><i class="fa-solid fa-q qa-icon"></i> 只有長輩可以使用嗎？</div>
-                    <div class="qa-a">不限年齡！無論您是獨居青年、單身貴族，或是獨自租屋的學生，都可以使用此服務來保障自身安全。</div>
-                </div>
-                <div class="qa-item">
-                    <div class="qa-q"><i class="fa-solid fa-q qa-icon"></i> 安心點數怎麼使用？</div>
-                    <div class="qa-a">新註冊會員贈送 10 點，每日會自動扣除 1 點以維護系統運作與服務(包含簡訊預備金)。安心點數即將用完時，您可以於會員/設定頁面選擇儲值方案。</div>
-                </div>
-                <div class="qa-item">
-                    <div class="qa-q"><i class="fa-solid fa-q qa-icon"></i> 如果出國或沒網路，無法報平安怎麼辦？</div>
-                    <div class="qa-a">別擔心！您可以隨時啟用<strong>「暫停模式」</strong>。期間內不會扣點、也不會發送警報。等您回來後，記得手動恢復服務即可！</div>
+                    <div class="qa-q"><i class="fa-solid fa-q qa-icon"></i> 出國怎麼辦？</div>
+                    <div class="qa-a">可至設定開啟「暫停模式」，期間不會扣點與報警。</div>
                 </div>
             </div>
         </div>
     </div>
-    
- <div class="container mb-5">
-    <div class="grid-3-col">
-        <div class="feature-box">
-            <i class="fa-solid fa-gift mb-2 fs-4" style="color: var(--brand-green);"></i>
-            <div class="fw-bold small">免費體驗<br>10 天</div>
-        </div>
-        <div class="feature-box">
-            <i class="fa-solid fa-file-contract mb-2 fs-4" style="color: var(--brand-green);"></i>
-            <div class="fw-bold small">不綁約<br>不綁卡</div>
-        </div>
-        <div class="feature-box">
-            <i class="fa-solid fa-thumbs-up mb-2 fs-4" style="color: var(--brand-green);"></i>
-            <div class="fw-bold small">確認安心<br>再訂閱</div>
+
+    <div class="container mb-5">
+        <div class="card-custom">
+            <div class="card-body-custom">
+                <h5 class="fw-bold mb-3">
+                    <i class="fa-solid fa-circle-exclamation text-warning me-2"></i>重要須知
+                </h5>
+
+                <div class="mb-3 p-2 bg-light border border-warning rounded small text-secondary">
+                    <i class="fa-solid fa-flask text-warning me-1"></i>
+                    <strong>公開測試階段：</strong>系統功能可能尚不穩定。請勿將本服務作為您人身安全的唯一依賴手段。
+                </div>
+
+                <ul class="list-unstyled small text-secondary mb-3">
+                    <li class="mb-2 d-flex">
+                        <i class="fa-solid fa-user-slash text-danger me-2 mt-1"></i>
+                        <span><strong>請勿封鎖本帳號</strong>，否則無法收到提醒，可能導致系統誤判。</span>
+                    </li>
+                    <li class="mb-2 d-flex">
+                        <i class="fa-solid fa-mobile-screen text-dark me-2 mt-1"></i>
+                        <span>緊急簡訊可能顯示為<strong>國際號碼</strong>，請告知親友不要封鎖。</span>
+                    </li>
+                    <li class="d-flex">
+                        <i class="fa-solid fa-wifi text-primary me-2 mt-1"></i>
+                        <span><strong>用戶義務：</strong>請維持手機網路暢通與電力充足。若無法使用（如出國、住院），請務必開啟<strong>「暫停功能」</strong>以免誤報。</span>
+                    </li>
+                </ul>
+
+                <div class="highlight-box">
+                    <div class="d-flex">
+                        <i class="fa-solid fa-shield-halved me-2 mt-1"></i>
+                        <div>
+                            <strong>非醫療與救難系統：</strong>
+                            本服務僅為輔助通知工具，非醫療器材或法定119系統。<br>
+                            <span class="opacity-75" style="font-size: 0.85em;">
+                                （受限於電信訊號等不可抗力因素，不保證簡訊能100%送達，遇緊急危難請務必撥打119。）
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-</div>
-     
-        <div class="mb-4 mt-4">
-             <a href="https://liff.line.me/2008912295-edmRNdOM" class="btn w-100 shadow p-3 fw-bold text-white rounded-pill" style="background: var(--gradient-orange); border:none; font-size: 1.2rem;">
-                <i class="fa-solid fa-right-to-bracket me-2"></i> 立即啟用守護
-            </a>
-        </div>
 
-        <div class="text-center mt-4 mb-5 text-muted small">
-            <div>
-                <a href="privacy.html" class="text-decoration-none text-secondary me-3">服務條款與隱私權政策</a>
-                <span class="text-secondary">|</span>
-                <a href="mailto:hoan.guardian@gmail.com" class="text-decoration-none text-secondary ms-3">聯絡我們</a>
-            </div>
-            <p class="mt-2 mb-0">&copy; 2026 Hoan Service 厚安守護寶</p>
-        </div>
+    <div class="container mb-5 pb-3">
+        <a href="https://liff.line.me/2008912295-edmRNdOM" class="btn-orange-gradient">
+            <i class="fa-solid fa-arrow-right-to-bracket me-2"></i> 立即啟用守護
+        </a>
+        <p class="text-center mt-2 small text-muted">
+            <i class="fa-regular fa-circle-check me-1"></i>先試用 10 天，確認安心再訂閱
+        </p>
+    </div>
 
+    <div class="text-center mb-5 pb-3 text-muted small">
+        <a href="privacy.html" class="text-secondary text-decoration-none">服務條款與隱私權</a>
+        <span class="mx-2">|</span>
+        <a href="mailto:hoan.guardian@gmail.com" class="text-secondary text-decoration-none">聯絡我們</a>
+        <p class="mt-2">&copy; 2026 Hoan Service 厚安守護寶</p>
     </div>
 
     <div class="bottom-nav shadow-sm">
@@ -364,9 +442,9 @@
             <i class="fa-solid fa-user-gear"></i>
             註冊/設定
         </a>
-        <a href="https://docs.google.com/forms/d/e/1FAIpQLScaFIBV0BRcuSh5i470Gr36UlnhqohlECYsf1fi5IJZRWhkiQ/viewform?usp=dialog" target="_blank" class="nav-item-app">
-            <i class="fa-solid fa-pen-to-square"></i>
-            意見/回報
+        <a href="https://docs.google.com/forms/d/e/1FAIpQLScaFIBV0BRcuSh5i470Gr36UlnhqohlECYsf1fi5IJZRWhkiQ/viewform?usp=dialog" class="nav-item-app">
+            <i class="fa-solid fa-message-exclamation"></i>
+            問題回報
         </a>
     </div>
 
