@@ -632,11 +632,11 @@
       if (target === 'self') {
         const eName = document.getElementById('reg-eName').value.trim();
         const ePhone = document.getElementById('reg-ePhone').value.trim();
-        const contactAgree = document.getElementById('reg-contact-agree'); // ★ 取得緊急聯絡人同意框
+        const contactAgree = document.getElementById('reg-contact-agree'); // 取得緊急聯絡人同意框
 
         if (!eName || !phoneRegex.test(ePhone)) return Swal.fire({ icon: 'warning', title: '請完整填寫緊急聯絡人', text: '聯絡人電話格式需正確' });
         
-        // ★★★ 新增驗證：必須勾選緊急聯絡人授權 ★★★
+        // 驗證：必須勾選緊急聯絡人授權
         if (!contactAgree.checked) {
             return Swal.fire({ 
                 icon: 'warning', 
@@ -647,6 +647,7 @@
         }
       }
 
+      // 3. 準備參數
       let params = `action=register&uid=${userUid}&name=${encodeURIComponent(name)}&phone=${encodeURIComponent(phone)}&target=${target}`;
       if (inviterId) params += `&inviter=${inviterId}`;
       
@@ -656,18 +657,33 @@
         params += `&uTitle=${encodeURIComponent(document.getElementById('reg-uTitle').value)}&sAlias=${encodeURIComponent(document.getElementById('reg-sAlias').value)}`;
       }
 
+      // 4. 開啟遮罩並發送請求
       document.getElementById('loader').style.display = 'flex';
+      
       fetch(`${gasUrl}?${params}`, { method: 'GET', mode: 'cors' }) 
         .then(res => res.json())
         .then(data => {
+          // ★★★ 關鍵修正：不管成功失敗，第一件事就是把遮罩關掉！ ★★★
+          document.getElementById('loader').style.display = 'none';
+
           if (data.success) {
-            Swal.fire({ icon: 'success', title: '註冊成功' }).then(() => location.href = window.location.pathname);
+            Swal.fire({ 
+                icon: 'success', 
+                title: '註冊成功',
+                text: '歡迎加入厚安守護！'
+            }).then(() => {
+                // 重整頁面進入會員畫面
+                location.href = window.location.pathname;
+            });
           } else {
-            document.getElementById('loader').style.display = 'none';
             Swal.fire({ icon: 'error', title: '註冊失敗', text: data.error });
           }
         })
-        .catch(err => showError("註冊失敗: " + err));
+        .catch(err => {
+          // ★★★ 關鍵修正：連線錯誤也要關遮罩 ★★★
+          document.getElementById('loader').style.display = 'none';
+          showError("註冊失敗: " + err);
+        });
     }
 
     function sendInvite() {
