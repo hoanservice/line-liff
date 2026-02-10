@@ -9,68 +9,112 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        /* 🌟 [修復] 在這裡定義所有的 CSS 變數，讓顏色正常顯示 */
         :root {
-            --mint-teal: #20c997;
-            --mint-dark: #0f5132;
-            --gradient-mint: linear-gradient(135deg, #20c997 0%, #009688 100%);
-            /* 橘色漸層 (修復按鈕看不見的問題) */
-            --gradient-orange: linear-gradient(135deg, #FF8A65 0%, #FF5722 100%);
+            /* 🎨 品牌色系定義 */
+            --brand-green: #48bbb1; /* 依照附圖2吸取的薄荷綠 */
+            --brand-yellow: #fecb2f; /* BETA 標籤的黃色 */
+            
+            /* 🍊 附圖1 的橫向橘色漸層 */
+            --gradient-orange-h: linear-gradient(90deg, #FDB96E 0%, #FA8B63 100%);
+            
             --text-dark: #333333;
-            --text-grey: #6c757d;
+            --text-grey: #666666;
             --bg-grey: #f8f9fa;
             --card-radius: 16px;
         }
 
-        /* 1. 首屏主視覺漸層背景 */
-        .hero-section {
-            background: linear-gradient(135deg, #e8f5e9 0%, #ffffff 100%);
-            padding: 40px 20px;
-            text-align: center;
-            border-radius: 0 0 20px 20px;
-            margin-bottom: 30px;
-        }
-    
-        /* 2. 流程時間軸樣式 */
-        .timeline-step {
-            position: relative;
-            padding-left: 30px;
-            margin-bottom: 25px;
-            border-left: 2px solid #e9ecef;
-        }
-        .timeline-step:last-child {
-            border-left: none;
-        }
-        .timeline-icon {
-            position: absolute;
-            left: -11px;
-            top: 0;
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            background: #fff;
-            border: 2px solid #198754;
-        }
-    
-        /* 3. 強調文字 */
-        .highlight-text {
-            color: #198754; /* 品牌綠 */
-            font-weight: bold;
-        }
-        
-        html {
-            scroll-behavior: smooth; /* 讓點擊連結時有滑動效果 */
-        }
+        html { scroll-behavior: smooth; }
 
         body {
             font-family: 'Noto Sans TC', sans-serif;
             background-color: var(--bg-grey);
             color: var(--text-dark);
             line-height: 1.6;
-            padding-bottom: 70px;
+            padding-bottom: 80px; /* 預留底部導航空間 */
         }
 
-        /* 通用卡片 */
+        /* 🌟 首屏 Hero Section (復刻附圖2) */
+        .hero-section {
+            background-color: var(--brand-green);
+            padding: 30px 20px 50px 20px;
+            border-radius: 0 0 30px 30px; /* 下方圓角 */
+            color: white;
+            box-shadow: 0 4px 12px rgba(72, 187, 177, 0.3);
+            margin-bottom: 30px;
+        }
+
+        /* 膠囊標籤容器 */
+        .tags-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 15px;
+            justify-content: center; /* 置中排列 */
+        }
+
+        /* 白色線框膠囊 */
+        .capsule-tag {
+            border: 1px solid rgba(255, 255, 255, 0.9);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 50rem;
+            font-size: 0.85rem;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        /* 黃色 BETA 標籤 */
+        .beta-tag {
+            background-color: var(--brand-yellow);
+            color: #333;
+            padding: 4px 12px;
+            border-radius: 50rem;
+            font-size: 0.85rem;
+            font-weight: 800; /* 加粗 */
+            border: none;
+        }
+
+        /* 品牌大標題 */
+        .brand-title {
+            font-size: 2.5rem;
+            font-weight: 900;
+            text-align: center; /* 改為置中比較好看 */
+            margin-bottom: 15px;
+            letter-spacing: 2px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        /* 副標題 slogan */
+        .hero-slogan {
+            text-align: center;
+            font-size: 1.1rem;
+            font-weight: 500;
+            opacity: 0.95;
+            margin-bottom: 25px;
+        }
+
+        /* 🍊 橫向漸層 CTA 按鈕 (復刻附圖1) */
+        .btn-orange-gradient {
+            background: var(--gradient-orange-h);
+            border: none;
+            color: white;
+            font-weight: 700;
+            font-size: 1.25rem;
+            padding: 12px 30px;
+            border-radius: 50rem; /* 膠囊狀 */
+            box-shadow: 0 8px 20px rgba(250, 139, 99, 0.4); /* 柔和橘色投影 */
+            transition: transform 0.2s;
+            width: 100%;
+            display: block;
+            text-align: center;
+            letter-spacing: 1px;
+        }
+        .btn-orange-gradient:active {
+            transform: scale(0.98);
+            filter: brightness(0.95);
+        }
+
+        /* 通用卡片樣式 */
         .card-custom {
             border: none;
             border-radius: var(--card-radius);
@@ -79,115 +123,54 @@
             background: white;
             overflow: hidden;
         }
-        .card-body-custom {
-            padding: 20px;
-        }
+        .card-body-custom { padding: 20px; }
 
-        /* 漸層橘色 CTA 按鈕 */
-        .gradient-cta-box {
-            background: var(--gradient-orange); /* 這裡會用到上面定義的橘色 */
-            border-radius: var(--card-radius);
-            padding: 20px;
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 15px rgba(255, 138, 101, 0.3);
+        /* 流程時間軸 */
+        .timeline-step {
             position: relative;
-            overflow: hidden;
-            margin-bottom: 20px;
+            padding-left: 30px;
+            margin-bottom: 25px;
+            border-left: 2px solid #e9ecef;
         }
-        .vip-badge {
-            background: white;
-            color: #FF8A65;
-            font-weight: bold;
-            font-size: 0.7rem;
-            padding: 2px 8px;
-            border-radius: 10px;
-            margin-left: 10px;
-        }
-
-        /* 步驟圖示 */
-        .step-icon {
-            background-color: #e0f2f1;
-            color: var(--mint-teal);
-            width: 42px;
-            height: 42px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        .timeline-step:last-child { border-left: none; }
+        .timeline-icon {
+            position: absolute;
+            left: -11px;
+            top: 0;
+            width: 20px;
+            height: 20px;
             border-radius: 50%;
-            margin-right: 15px;
-            font-size: 1.1rem;
-            flex-shrink: 0;
+            background: #fff;
+            border: 2px solid var(--brand-green);
         }
 
-        /* Tabs 樣式 */
-        .nav-pills .nav-link {
-            color: var(--text-grey);
-            background-color: #f1f3f5;
-            border: none;
-            margin: 0 5px 10px 0;
-            border-radius: 50rem;
-            font-size: 0.9rem;
-            font-weight: 500;
-            padding: 8px 16px;
-            transition: all 0.2s;
+        /* 三欄 Grid */
+        .grid-3-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
         }
-        .nav-pills .nav-link.active {
-            background-color: var(--mint-teal) !important;
-            color: white !important;
-            box-shadow: 0 4px 10px rgba(0, 191, 165, 0.3);
-        }
-        .tab-content-box {
-            background-color: #f8f9fa;
+        .feature-box {
+            background: white;
+            padding: 15px 5px;
             border-radius: 12px;
-            padding: 15px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
             border: 1px solid #eee;
         }
-        
-        /* 常見問題樣式 */
+
+        /* 常見問題 */
         .qa-item {
-            margin-bottom: 15px;
-            padding-bottom: 15px;
             border-bottom: 1px solid #f0f0f0;
+            padding-bottom: 15px;
+            margin-bottom: 15px;
         }
-        .qa-item:last-child {
-            border-bottom: none;
-            margin-bottom: 0;
-            padding-bottom: 0;
-        }
-        .qa-q {
-            font-weight: 700;
-            color: var(--text-dark);
-            margin-bottom: 6px;
-            display: flex;
-            align-items: start;
-        }
-        .qa-icon {
-            color: var(--mint-teal);
-            margin-right: 8px;
-            margin-top: 4px;
-            font-size: 0.9rem;
-        }
-        .qa-a {
-            font-size: 0.9rem;
-            color: var(--text-grey);
-            padding-left: 22px;
-            margin-bottom: 0;
-        }
+        .qa-item:last-child { border-bottom: none; margin-bottom: 0; }
+        .qa-q { font-weight: 700; color: var(--text-dark); margin-bottom: 6px; }
+        .qa-icon { color: var(--brand-green); margin-right: 5px; }
+        .qa-a { color: var(--text-grey); font-size: 0.9rem; padding-left: 20px; }
 
-        /* 注意事項 */
-        .highlight-box {
-            background-color: #e0f2f1;
-            border-left: 4px solid var(--mint-teal);
-            padding: 15px;
-            border-radius: 8px;
-            font-size: 0.9rem;
-            color: var(--mint-dark);
-        }
-
-        /* 底部固定導航 */
+        /* 底部導航 */
         .bottom-nav {
             position: fixed;
             bottom: 0;
@@ -207,173 +190,120 @@
             text-decoration: none;
             flex: 1;
         }
-        .nav-item-app i {
-            font-size: 1.4rem;
-            display: block;
-            margin-bottom: 4px;
-        }
-        .nav-item-app.active {
-            color: var(--mint-teal);
+        .nav-item-app i { font-size: 1.4rem; display: block; margin-bottom: 4px; }
+        .nav-item-app.active { color: var(--brand-green); }
+
+        /* 步驟圖示 */
+        .step-icon {
+            background-color: #e0f2f1;
+            color: var(--brand-green);
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            margin-right: 15px;
+            flex-shrink: 0;
         }
     </style>
 </head>
 <body>
 
-    <div class="hero-section shadow-sm">
-        <div class="mb-3">
-            <span class="badge rounded-pill bg-warning text-dark px-3 py-2 mb-3 shadow-sm">
-                <i class="fa-solid fa-star me-1"></i> 守護家人首選
-            </span>
+    <div class="hero-section">
+        <div class="tags-container">
+            <span class="capsule-tag">LINE官方帳號</span>
+            <span class="capsule-tag">一鍵報平安</span>
+            <span class="capsule-tag">獨居守護</span>
+            <span class="beta-tag">BETA</span>
         </div>
-        <h1 class="fw-bold mb-3 text-dark" style="font-size: 1.75rem; line-height: 1.4;">
-            不用每天打電話<br>
-            也能知道家人平安
-        </h1>
-        <p class="text-secondary mb-4" style="font-size: 1rem; line-height: 1.6;">
-            忘記報平安時，系統會自動提醒與通報<br>
-            <span class="text-dark fw-bold">平日零打擾，意外即時守護</span>
-        </p>
-    
-        <div class="d-grid gap-2 col-10 mx-auto">
-            <a href="https://liff.line.me/2008912295-edmRNdOM" class="btn btn-success btn-lg rounded-pill shadow fw-bold py-3">
-                立即免費守護 10 天 <i class="fa-solid fa-arrow-right ms-2"></i>
+
+        <div class="brand-title">厚安守護寶</div>
+
+        <div class="hero-slogan">
+            不用每天打電話<br>也能知道家人平安
+        </div>
+
+        <div class="d-grid gap-2 col-10 mx-auto mt-4">
+            <a href="https://liff.line.me/2008912295-edmRNdOM" class="btn-orange-gradient text-decoration-none">
+                <i class="fa-solid fa-arrow-right-to-bracket me-2"></i> 立即啟用守護
             </a>
         </div>
-        <p class="mt-3 text-muted small">
-            <i class="fa-regular fa-circle-check me-1"></i>先試用，再決定是否訂閱
+        
+        <p class="text-center mt-3 small" style="opacity: 0.9;">
+            <i class="fa-regular fa-circle-check me-1"></i>免費體驗 10 天，免綁卡
         </p>
     </div>
 
     <div class="container mb-5">
-        <div class="text-center px-2">
-            <div class="mb-3 text-success opacity-75">
-                <i class="fa-solid fa-house-user fa-3x"></i>
-            </div>
-            <h3 class="fw-bold mb-4">遠距離，也能放心。</h3>
-            <p class="text-secondary" style="font-size: 1.05rem; line-height: 1.8;">
+        <div class="text-center px-3">
+            <h3 class="fw-bold mb-3 text-dark">遠距離，也能放心。</h3>
+            <p class="text-secondary" style="font-size: 1rem;">
                 不需要每天打電話確認，<br>
                 只要輕輕一按<strong>「報平安」</strong>，<br>
                 我們就替你持續守護家人的日常。
             </p>
-            <p class="fw-bold text-dark mt-3" style="font-size: 1.1rem;">
-                當真的出現異常，<br>
-                你會第一時間知道。
-            </p>
         </div>
     </div>
 
-    <hr class="my-5 opacity-25 mx-4">
-
     <div class="container mb-5">
-        <div class="card border-0 bg-light rounded-4 p-4">
-            <div class="text-center mb-4">
-                <h3 class="fw-bold mb-2">若未收到報平安...</h3>
-                <p class="text-muted small">一步步確認，只為不錯過真正需要幫助的時刻。</p>
-            </div>
-
+        <div class="card border-0 bg-white rounded-4 p-4 shadow-sm">
+            <h5 class="fw-bold mb-4 text-center">若未收到報平安...</h5>
             <div class="ps-2">
                 <div class="timeline-step">
-                    <div class="timeline-icon bg-success border-success"></div>
-                    <h5 class="fw-bold text-success mb-1">47 小時｜溫馨提醒</h5>
-                    <p class="text-secondary small mb-0">LINE 自動通知家人，避免忘記回報。</p>
+                    <div class="timeline-icon" style="border-color: #28a745;"></div>
+                    <strong class="text-success">47 小時｜溫馨提醒</strong>
+                    <p class="text-secondary small mb-0">LINE 自動通知，避免忘記。</p>
                 </div>
-
                 <div class="timeline-step">
-                    <div class="timeline-icon bg-warning border-warning"></div>
-                    <h5 class="fw-bold text-dark mb-1">48 小時｜進一步警示</h5>
-                    <p class="text-secondary small mb-0">發送預警訊息給雙方，提醒即時關心。</p>
+                    <div class="timeline-icon" style="border-color: #ffc107;"></div>
+                    <strong class="text-dark">48 小時｜進一步警示</strong>
+                    <p class="text-secondary small mb-0">發送預警訊息，提醒關心。</p>
                 </div>
-
                 <div class="timeline-step" style="border-left: none;">
-                    <div class="timeline-icon bg-danger border-danger"></div>
-                    <h5 class="fw-bold text-danger mb-1">49 小時｜緊急通報 🚨</h5>
-                    <p class="text-secondary small mb-0">發送<strong>緊急簡訊</strong>通知聯絡人，啟動救援機制。</p>
+                    <div class="timeline-icon" style="border-color: #dc3545;"></div>
+                    <strong class="text-danger">49 小時｜緊急通報 🚨</strong>
+                    <p class="text-secondary small mb-0">發送<strong>緊急簡訊</strong>通知聯絡人。</p>
                 </div>
             </div>
         </div>
     </div>
 
     <div class="container mb-5">
-        <div class="text-center">
-            <h3 class="fw-bold mb-4">先試用，再決定。</h3>
-            
-            <div class="row g-3 justify-content-center">
-                <div class="col-4">
-                    <div class="p-3 border rounded-3 h-100 bg-white shadow-sm">
-                        <i class="fa-solid fa-gift text-primary mb-2 fs-4"></i>
-                        <div class="fw-bold small">免費體驗<br>10 天</div>
-                    </div>
-                </div>
-                <div class="col-4">
-                    <div class="p-3 border rounded-3 h-100 bg-white shadow-sm">
-                        <i class="fa-solid fa-file-contract text-primary mb-2 fs-4"></i>
-                        <div class="fw-bold small">不綁約<br>隨時取消</div>
-                    </div>
-                </div>
-                <div class="col-4">
-                    <div class="p-3 border rounded-3 h-100 bg-white shadow-sm">
-                        <i class="fa-solid fa-thumbs-up text-primary mb-2 fs-4"></i>
-                        <div class="fw-bold small">確認安心<br>再訂閱</div>
-                    </div>
-                </div>
+        <div class="grid-3-col">
+            <div class="feature-box">
+                <i class="fa-solid fa-gift text-primary mb-2 fs-4"></i>
+                <div class="fw-bold small">免費體驗<br>10 天</div>
+            </div>
+            <div class="feature-box">
+                <i class="fa-solid fa-file-contract text-primary mb-2 fs-4"></i>
+                <div class="fw-bold small">不綁約<br>隨時取消</div>
+            </div>
+            <div class="feature-box">
+                <i class="fa-solid fa-thumbs-up text-primary mb-2 fs-4"></i>
+                <div class="fw-bold small">確認安心<br>再訂閱</div>
             </div>
         </div>
     </div>
 
-    <div class="container mb-5 pb-5">
-        <div class="card border-0 bg-success text-white rounded-4 p-4 text-center shadow">
-            <div class="card-body">
-                <h4 class="fw-bold mb-4">給家人的安心，<br>其實很簡單。</h4>
-                <a href="https://liff.line.me/2008912295-edmRNdOM" class="btn btn-light btn-lg rounded-pill fw-bold w-100 py-3 text-success">
-                    立即開始免費守護
-                </a>
-            </div>
-        </div>
-    </div>
-
-    <div class="container" style="max-width: 800px; padding: 0 15px;">
+    <div class="container mb-5">
         <div class="card-custom">
             <div class="card-body-custom">
-                <h5 class="fw-bold mb-4" style="color: var(--mint-teal);"><i class="fa-solid fa-rocket me-2"></i>如何開始使用</h5>
+                <h5 class="fw-bold mb-4" style="color: var(--brand-green);"><i class="fa-solid fa-rocket me-2"></i>如何開始使用</h5>
                 
                 <div class="d-flex align-items-start mb-4">
                     <div class="step-icon"><i class="fa-solid fa-user-pen"></i></div>
                     <div>
                         <h6 class="fw-bold mb-1">1. 會員註冊</h6>
-                        <small class="text-secondary">點擊LINE選單【註冊/設定】，填寫真實姓名與手機。</small>
+                        <small class="text-secondary">點擊選單【註冊/設定】，填寫資料。</small>
                     </div>
                 </div>
 
                 <div class="d-flex align-items-start mb-4">
                     <div class="step-icon"><i class="fa-solid fa-sliders"></i></div>
-                    <div class="w-100">
-                        <h6 class="fw-bold mb-2">2. 選擇守護模式</h6>
-                        
-                        <ul class="nav nav-pills mb-2" id="pills-tab" role="tablist">
-                            <li class="nav-item">
-                                <button class="nav-link active" id="pills-self-tab" data-bs-toggle="pill" data-bs-target="#pills-self" type="button">
-                                    <i class="fa-solid fa-user-shield me-1"></i> 守護自己
-                                </button>
-                            </li>
-                            <li class="nav-item">
-                                <button class="nav-link" id="pills-family-tab" data-bs-toggle="pill" data-bs-target="#pills-family" type="button">
-                                    <i class="fa-solid fa-hands-holding-child me-1"></i> 守護親友
-                                </button>
-                            </li>
-                        </ul>
-
-                        <div class="tab-content" id="pills-tabContent">
-                            <div class="tab-pane fade show active" id="pills-self">
-                                <div class="tab-content-box">
-                                    <small class="text-secondary">獨居適用。請填寫<strong>「緊急聯絡人」</strong>的手機，意外時系統將發送簡訊通知此人。</small>
-                                </div>
-                            </div>
-                            <div class="tab-pane fade" id="pills-family">
-                                <div class="tab-content-box">
-                                    <small class="text-secondary">守護親友適用。註冊後傳送<strong>「守護卡」</strong>給想要守護的親友，請對方點擊完成綁定。</small>
-                                </div>
-                            </div>
-                        </div>
+                    <div>
+                        <h6 class="fw-bold mb-1">2. 設定守護對象</h6>
+                        <small class="text-secondary">選擇「守護自己」或是「守護親友」。</small>
                     </div>
                 </div>
 
@@ -381,119 +311,35 @@
                     <div class="step-icon"><i class="fa-regular fa-calendar-check"></i></div>
                     <div>
                         <h6 class="fw-bold mb-1">3. 每日報平安</h6>
-                        <small class="text-secondary">
-                            被守護者每天點擊 LINE 選單上的 ✅️我平安 按鈕即可。
-                        </small>
+                        <small class="text-secondary">每天點擊 ✅️我平安 即可。</small>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
 
-        <div class="card-custom" id="faq">
-            <div class="card-body-custom">
-                <h5 class="fw-bold mb-3" style="color: var(--mint-teal);"><i class="fa-regular fa-circle-question me-2"></i>常見問題 Q&A</h5>
-                
-                <div class="qa-item">
-                    <div class="qa-q">
-                        <i class="fa-solid fa-q qa-icon"></i>
-                        如果只是忘記按，家人會收到簡訊嗎？
-                    </div>
-                    <p class="qa-a">
-                        別擔心！在簡訊發送前（第 47 及 48 小時），系統會先透過 LINE 通知您。只要在收到提醒時補按「我平安」，回報後通知流程就會馬上中止。
-                    </p>
-                </div>
-
-                <div class="qa-item">
-                    <div class="qa-q">
-                        <i class="fa-solid fa-q qa-icon"></i>
-                        只有長輩可以使用嗎？
-                    </div>
-                    <p class="qa-a">
-                        不限年齡！無論您是獨居青年、單身貴族，或是獨自租屋的學生，都可以使用此服務來保障自身安全。
-                    </p>
-                </div>
-
-                <div class="qa-item">
-                    <div class="qa-q">
-                        <i class="fa-solid fa-q qa-icon"></i>
-                        安心點數怎麼使用？
-                    </div>
-                    <p class="qa-a">
-                        新註冊會員贈送 10 點，每日會自動扣除 1 點以維護系統運作與服務(包含簡訊預備金)。安心點數即將用完時，您可以於會員/設定頁面選擇儲值方案。
-                    </p>
-                </div>
-                
-                <div class="qa-item">
-                    <div class="qa-q">
-                        <i class="fa-solid fa-q qa-icon"></i>
-                        如果出國或沒網路，無法報平安怎麼辦？
-                    </div>
-                    <p class="qa-a">
-                        別擔心！您可以隨時啟用<strong>「暫停模式」</strong>。
-                        <br>
-                        請至選單的「設定」中開啟暫停，期間內<strong>不會扣點、也不會發送警報</strong>。等您回來後，記得手動恢復服務即可！
-                    </p>
-                </div>
-
-            </div>
-        </div>
-
+    <div class="container mb-5">
         <div class="card-custom">
             <div class="card-body-custom">
-                <h5 class="fw-bold mb-3">
-                    <i class="fa-solid fa-circle-exclamation text-warning me-2"></i>重要須知
-                </h5>
-
-                <div class="mb-3 p-2 bg-light border border-warning rounded small text-secondary">
-                    <i class="fa-solid fa-flask text-warning me-1"></i>
-                    <strong>公開測試階段：</strong>系統功能可能尚不穩定。請勿將本服務作為您人身安全的唯一依賴手段。
+                <h5 class="fw-bold mb-3" style="color: var(--brand-green);"><i class="fa-regular fa-circle-question me-2"></i>常見問題</h5>
+                
+                <div class="qa-item">
+                    <div class="qa-q"><i class="fa-solid fa-q qa-icon"></i> 忘記按會怎樣？</div>
+                    <div class="qa-a">別擔心！第47/48小時會先透過 LINE 提醒您。</div>
                 </div>
-
-                <ul class="list-unstyled small text-secondary mb-3">
-                    <li class="mb-2 d-flex">
-                        <i class="fa-solid fa-user-slash text-danger me-2 mt-1"></i>
-                        <span><strong>請勿封鎖本帳號</strong>，否則無法收到提醒，可能導致系統誤判。</span>
-                    </li>
-                    <li class="mb-2 d-flex">
-                        <i class="fa-solid fa-mobile-screen text-dark me-2 mt-1"></i>
-                        <span>緊急簡訊可能顯示為<strong>國際號碼</strong>，請告知親友不要封鎖。</span>
-                    </li>
-                    <li class="d-flex">
-                        <i class="fa-solid fa-wifi text-primary me-2 mt-1"></i>
-                        <span><strong>用戶義務：</strong>請維持手機網路暢通與電力充足。若無法使用（如出國、住院），請務必開啟<strong>「暫停功能」</strong>以免誤報。</span>
-                    </li>
-                </ul>
-
-                <div class="highlight-box">
-                    <div class="d-flex">
-                        <i class="fa-solid fa-shield-halved me-2 mt-1"></i>
-                        <div>
-                            <strong>非醫療與救難系統：</strong>
-                            本服務僅為輔助通知工具，非醫療器材或法定119系統。<br>
-                            <span class="opacity-75" style="font-size: 0.85em;">
-                                （受限於電信訊號等不可抗力因素，不保證簡訊能100%送達，遇緊急危難請務必撥打119。）
-                            </span>
-                        </div>
-                    </div>
+                <div class="qa-item">
+                    <div class="qa-q"><i class="fa-solid fa-q qa-icon"></i> 出國怎麼辦？</div>
+                    <div class="qa-a">可至設定開啟「暫停模式」，期間不會扣點與報警。</div>
                 </div>
             </div>
         </div>
-        
-        <div class="mb-4 mt-4">
-             <a href="https://liff.line.me/2008912295-edmRNdOM" class="btn w-100 shadow p-3 fw-bold text-white rounded-pill" style="background: var(--gradient-orange); border:none; font-size: 1.2rem;">
-                <i class="fa-solid fa-right-to-bracket me-2"></i> 立即啟用守護
-            </a>
-        </div>
+    </div>
 
-        <div class="text-center mt-4 mb-5 text-muted small">
-            <div>
-                <a href="privacy.html" class="text-decoration-none text-secondary me-3">服務條款與隱私權政策</a>
-                <span class="text-secondary">|</span>
-                <a href="mailto:hoan.guardian@gmail.com" class="text-decoration-none text-secondary ms-3">聯絡我們</a>
-            </div>
-            <p class="mt-2 mb-0">&copy; 2026 Hoan Service 厚安守護寶</p>
-        </div>
-
+    <div class="text-center mb-5 pb-3 text-muted small">
+        <a href="privacy.html" class="text-secondary text-decoration-none">服務條款與隱私權</a>
+        <span class="mx-2">|</span>
+        <a href="mailto:hoan.guardian@gmail.com" class="text-secondary text-decoration-none">聯絡我們</a>
+        <p class="mt-2">&copy; 2026 Hoan Service 厚安守護寶</p>
     </div>
 
     <div class="bottom-nav shadow-sm">
@@ -505,9 +351,9 @@
             <i class="fa-solid fa-user-gear"></i>
             註冊/設定
         </a>
-        <a href="https://docs.google.com/forms/d/e/1FAIpQLScaFIBV0BRcuSh5i470Gr36UlnhqohlECYsf1fi5IJZRWhkiQ/viewform?usp=dialog" target="_blank" class="nav-item-app">
-            <i class="fa-solid fa-pen-to-square"></i>
-            意見/回報
+        <a href="https://docs.google.com/forms/d/e/1FAIpQLScaFIBV0BRcuSh5i470Gr36UlnhqohlECYsf1fi5IJZRWhkiQ/viewform?usp=dialog" class="nav-item-app">
+            <i class="fa-solid fa-message-exclamation"></i>
+            問題回報
         </a>
     </div>
 
