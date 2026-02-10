@@ -9,41 +9,54 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-       /* 1. 首屏主視覺漸層背景 */
-    .hero-section {
-        background: linear-gradient(135deg, #e8f5e9 0%, #ffffff 100%);
-        padding: 40px 20px;
-        text-align: center;
-        border-radius: 0 0 20px 20px;
-        margin-bottom: 30px;
-    }
+        /* 🌟 [修復] 在這裡定義所有的 CSS 變數，讓顏色正常顯示 */
+        :root {
+            --mint-teal: #20c997;
+            --mint-dark: #0f5132;
+            --gradient-mint: linear-gradient(135deg, #20c997 0%, #009688 100%);
+            /* 橘色漸層 (修復按鈕看不見的問題) */
+            --gradient-orange: linear-gradient(135deg, #FF8A65 0%, #FF5722 100%);
+            --text-dark: #333333;
+            --text-grey: #6c757d;
+            --bg-grey: #f8f9fa;
+            --card-radius: 16px;
+        }
+
+        /* 1. 首屏主視覺漸層背景 */
+        .hero-section {
+            background: linear-gradient(135deg, #e8f5e9 0%, #ffffff 100%);
+            padding: 40px 20px;
+            text-align: center;
+            border-radius: 0 0 20px 20px;
+            margin-bottom: 30px;
+        }
     
-    /* 2. 流程時間軸樣式 */
-    .timeline-step {
-        position: relative;
-        padding-left: 30px;
-        margin-bottom: 25px;
-        border-left: 2px solid #e9ecef;
-    }
-    .timeline-step:last-child {
-        border-left: none;
-    }
-    .timeline-icon {
-        position: absolute;
-        left: -11px;
-        top: 0;
-        width: 20px;
-        height: 20px;
-        border-radius: 50%;
-        background: #fff;
-        border: 2px solid #198754;
-    }
+        /* 2. 流程時間軸樣式 */
+        .timeline-step {
+            position: relative;
+            padding-left: 30px;
+            margin-bottom: 25px;
+            border-left: 2px solid #e9ecef;
+        }
+        .timeline-step:last-child {
+            border-left: none;
+        }
+        .timeline-icon {
+            position: absolute;
+            left: -11px;
+            top: 0;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #fff;
+            border: 2px solid #198754;
+        }
     
-    /* 3. 強調文字 */
-    .highlight-text {
-        color: #198754; /* 品牌綠 */
-        font-weight: bold;
-    }
+        /* 3. 強調文字 */
+        .highlight-text {
+            color: #198754; /* 品牌綠 */
+            font-weight: bold;
+        }
         
         html {
             scroll-behavior: smooth; /* 讓點擊連結時有滑動效果 */
@@ -56,42 +69,6 @@
             line-height: 1.6;
             padding-bottom: 70px;
         }
-
-        /* 🌟 頂部 Header 修改區塊 Start */
-        .header-section {
-            background: var(--gradient-mint); /* 改為漸層薄荷綠 */
-            padding: 35px 20px 40px 20px; /* 增加底部 padding 讓空間更寬裕 */
-            border-bottom: none;
-            border-radius: 0 0 25px 25px; /* 下方圓角設計 */
-            color: white; /* 全域文字變白 */
-            box-shadow: 0 4px 10px rgba(0, 191, 165, 0.2); /* 淡淡的綠色陰影 */
-        }
-        .pill-tag {
-            border: 1px solid rgba(255, 255, 255, 0.6); /* 半透明白線 */
-            color: white; /* 白字 */
-            background-color: rgba(255, 255, 255, 0.1); /* 微透背景 */
-            font-size: 0.8rem;
-            padding: 4px 12px;
-            border-radius: 50rem;
-            display: inline-block;
-            margin-right: 8px;
-            margin-bottom: 10px;
-            font-weight: 500;
-        }
-        .hero-title {
-            font-weight: 900;
-            font-size: 1.75rem;
-            margin-bottom: 5px;
-            color: white; /* 確保標題是全白 */
-        }
-        .hero-slogan {
-            font-size: 1rem;
-            font-weight: 500;
-            color: rgba(255, 255, 255, 0.9); /* 微透白，增加層次 */
-            margin-bottom: 0;
-        }
-        /* 🌟 頂部 Header 修改區塊 End */
-
 
         /* 通用卡片 */
         .card-custom {
@@ -108,7 +85,7 @@
 
         /* 漸層橘色 CTA 按鈕 */
         .gradient-cta-box {
-            background: var(--gradient-orange);
+            background: var(--gradient-orange); /* 這裡會用到上面定義的橘色 */
             border-radius: var(--card-radius);
             padding: 20px;
             color: white;
@@ -129,44 +106,6 @@
             border-radius: 10px;
             margin-left: 10px;
         }
-
-        /* 數據化儀表板 */
-        .data-dashboard {
-            display: flex;
-            background: white;
-            border-radius: var(--card-radius);
-            padding: 25px 15px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.03);
-            margin-bottom: 20px;
-            text-align: center;
-        }
-        .data-item {
-            flex: 1;
-            position: relative;
-        }
-        .data-item:not(:last-child)::after {
-            content: '';
-            position: absolute;
-            right: 0;
-            top: 15%;
-            height: 70%;
-            width: 1px;
-            background-color: #eee;
-        }
-        .big-number {
-            font-size: 2rem;
-            font-weight: 900;
-            line-height: 1;
-            margin-bottom: 8px;
-        }
-        .small-label {
-            font-size: 0.8rem;
-            color: var(--text-grey);
-            font-weight: 500;
-        }
-        .text-yellow-dark { color: #f5c518; }
-        .text-orange-dark { color: #ff7f50; }
-        .text-red-dark { color: #dc3545; }
 
         /* 步驟圖示 */
         .step-icon {
@@ -281,117 +220,118 @@
 <body>
 
     <div class="hero-section shadow-sm">
-    <div class="mb-3">
-        <span class="badge rounded-pill bg-warning text-dark px-3 py-2 mb-3 shadow-sm">
-            <i class="fa-solid fa-star me-1"></i> 家人守護首選
-        </span>
-    </div>
-    <h1 class="fw-bold mb-3 text-dark" style="font-size: 1.75rem; line-height: 1.4;">
-        不用每天打電話<br>
-        也能知道家人平安
-    </h1>
-    <p class="text-secondary mb-4" style="font-size: 1rem; line-height: 1.6;">
-        忘記報平安時，系統會自動提醒與通報<br>
-        <span class="text-dark fw-bold">平日零打擾，意外即時守護</span>
-    </p>
+        <div class="mb-3">
+            <span class="badge rounded-pill bg-warning text-dark px-3 py-2 mb-3 shadow-sm">
+                <i class="fa-solid fa-star me-1"></i> 守護家人首選
+            </span>
+        </div>
+        <h1 class="fw-bold mb-3 text-dark" style="font-size: 1.75rem; line-height: 1.4;">
+            不用每天打電話<br>
+            也能知道家人平安
+        </h1>
+        <p class="text-secondary mb-4" style="font-size: 1rem; line-height: 1.6;">
+            忘記報平安時，系統會自動提醒與通報<br>
+            <span class="text-dark fw-bold">平日零打擾，意外即時守護</span>
+        </p>
     
-    <div class="d-grid gap-2 col-10 mx-auto">
-        <a href="https://liff.line.me/2008912295-edmRNdOM" class="btn btn-success btn-lg rounded-pill shadow fw-bold py-3">
-            立即免費守護 10 天 <i class="fa-solid fa-arrow-right ms-2"></i>
-        </a>
-    </div>
-    <p class="mt-3 text-muted small">
-        <i class="fa-regular fa-circle-check me-1"></i>先幫爸媽試用，再決定是否訂閱
-    </p>
-</div>
-
-<div class="container mb-5">
-    <div class="text-center px-2">
-        <div class="mb-3 text-success opacity-75">
-            <i class="fa-solid fa-house-user fa-3x"></i>
-        </div>
-        <h3 class="fw-bold mb-4">遠距離，也能放心。</h3>
-        <p class="text-secondary" style="font-size: 1.05rem; line-height: 1.8;">
-            不需要每天打電話確認，<br>
-            只要輕輕一按<strong>「報平安」</strong>，<br>
-            我們就替你持續守護家人的日常。
-        </p>
-        <p class="fw-bold text-dark mt-3" style="font-size: 1.1rem;">
-            當真的出現異常，<br>
-            你會第一時間知道。
-        </p>
-    </div>
-</div>
-
-<hr class="my-5 opacity-25 mx-4">
-
-<div class="container mb-5">
-    <div class="card border-0 bg-light rounded-4 p-4">
-        <div class="text-center mb-4">
-            <h3 class="fw-bold mb-2">若未收到報平安...</h3>
-            <p class="text-muted small">一步步確認，只為不錯過真正需要幫助的時刻。</p>
-        </div>
-
-        <div class="ps-2">
-            <div class="timeline-step">
-                <div class="timeline-icon bg-success border-success"></div>
-                <h5 class="fw-bold text-success mb-1">47 小時｜溫馨提醒</h5>
-                <p class="text-secondary small mb-0">LINE 自動通知家人，避免忘記回報。</p>
-            </div>
-
-            <div class="timeline-step">
-                <div class="timeline-icon bg-warning border-warning"></div>
-                <h5 class="fw-bold text-dark mb-1">48 小時｜進一步警示</h5>
-                <p class="text-secondary small mb-0">發送預警訊息給雙方，提醒即時關心。</p>
-            </div>
-
-            <div class="timeline-step" style="border-left: none;">
-                <div class="timeline-icon bg-danger border-danger"></div>
-                <h5 class="fw-bold text-danger mb-1">49 小時｜緊急通報 🚨</h5>
-                <p class="text-secondary small mb-0">發送<strong>緊急簡訊</strong>通知聯絡人，啟動救援機制。</p>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="container mb-5">
-    <div class="text-center">
-        <h3 class="fw-bold mb-4">先試用，再決定。</h3>
-        
-        <div class="row g-3 justify-content-center">
-            <div class="col-4">
-                <div class="p-3 border rounded-3 h-100 bg-white shadow-sm">
-                    <i class="fa-solid fa-gift text-primary mb-2 fs-4"></i>
-                    <div class="fw-bold small">免費體驗<br>10 天</div>
-                </div>
-            </div>
-            <div class="col-4">
-                <div class="p-3 border rounded-3 h-100 bg-white shadow-sm">
-                    <i class="fa-solid fa-file-contract text-primary mb-2 fs-4"></i>
-                    <div class="fw-bold small">不綁約<br>隨時取消</div>
-                </div>
-            </div>
-            <div class="col-4">
-                <div class="p-3 border rounded-3 h-100 bg-white shadow-sm">
-                    <i class="fa-solid fa-thumbs-up text-primary mb-2 fs-4"></i>
-                    <div class="fw-bold small">確認安心<br>再訂閱</div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="container mb-5 pb-5">
-    <div class="card border-0 bg-success text-white rounded-4 p-4 text-center shadow">
-        <div class="card-body">
-            <h4 class="fw-bold mb-4">給家人的安心，<br>其實很簡單。</h4>
-            <a href="https://liff.line.me/2008912295-edmRNdOM" class="btn btn-light btn-lg rounded-pill fw-bold w-100 py-3 text-success">
-                立即開始免費守護
+        <div class="d-grid gap-2 col-10 mx-auto">
+            <a href="https://liff.line.me/2008912295-edmRNdOM" class="btn btn-success btn-lg rounded-pill shadow fw-bold py-3">
+                立即免費守護 10 天 <i class="fa-solid fa-arrow-right ms-2"></i>
             </a>
         </div>
+        <p class="mt-3 text-muted small">
+            <i class="fa-regular fa-circle-check me-1"></i>先試用，再決定是否訂閱
+        </p>
     </div>
-</div>
 
+    <div class="container mb-5">
+        <div class="text-center px-2">
+            <div class="mb-3 text-success opacity-75">
+                <i class="fa-solid fa-house-user fa-3x"></i>
+            </div>
+            <h3 class="fw-bold mb-4">遠距離，也能放心。</h3>
+            <p class="text-secondary" style="font-size: 1.05rem; line-height: 1.8;">
+                不需要每天打電話確認，<br>
+                只要輕輕一按<strong>「報平安」</strong>，<br>
+                我們就替你持續守護家人的日常。
+            </p>
+            <p class="fw-bold text-dark mt-3" style="font-size: 1.1rem;">
+                當真的出現異常，<br>
+                你會第一時間知道。
+            </p>
+        </div>
+    </div>
+
+    <hr class="my-5 opacity-25 mx-4">
+
+    <div class="container mb-5">
+        <div class="card border-0 bg-light rounded-4 p-4">
+            <div class="text-center mb-4">
+                <h3 class="fw-bold mb-2">若未收到報平安...</h3>
+                <p class="text-muted small">一步步確認，只為不錯過真正需要幫助的時刻。</p>
+            </div>
+
+            <div class="ps-2">
+                <div class="timeline-step">
+                    <div class="timeline-icon bg-success border-success"></div>
+                    <h5 class="fw-bold text-success mb-1">47 小時｜溫馨提醒</h5>
+                    <p class="text-secondary small mb-0">LINE 自動通知家人，避免忘記回報。</p>
+                </div>
+
+                <div class="timeline-step">
+                    <div class="timeline-icon bg-warning border-warning"></div>
+                    <h5 class="fw-bold text-dark mb-1">48 小時｜進一步警示</h5>
+                    <p class="text-secondary small mb-0">發送預警訊息給雙方，提醒即時關心。</p>
+                </div>
+
+                <div class="timeline-step" style="border-left: none;">
+                    <div class="timeline-icon bg-danger border-danger"></div>
+                    <h5 class="fw-bold text-danger mb-1">49 小時｜緊急通報 🚨</h5>
+                    <p class="text-secondary small mb-0">發送<strong>緊急簡訊</strong>通知聯絡人，啟動救援機制。</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mb-5">
+        <div class="text-center">
+            <h3 class="fw-bold mb-4">先試用，再決定。</h3>
+            
+            <div class="row g-3 justify-content-center">
+                <div class="col-4">
+                    <div class="p-3 border rounded-3 h-100 bg-white shadow-sm">
+                        <i class="fa-solid fa-gift text-primary mb-2 fs-4"></i>
+                        <div class="fw-bold small">免費體驗<br>10 天</div>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="p-3 border rounded-3 h-100 bg-white shadow-sm">
+                        <i class="fa-solid fa-file-contract text-primary mb-2 fs-4"></i>
+                        <div class="fw-bold small">不綁約<br>隨時取消</div>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="p-3 border rounded-3 h-100 bg-white shadow-sm">
+                        <i class="fa-solid fa-thumbs-up text-primary mb-2 fs-4"></i>
+                        <div class="fw-bold small">確認安心<br>再訂閱</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mb-5 pb-5">
+        <div class="card border-0 bg-success text-white rounded-4 p-4 text-center shadow">
+            <div class="card-body">
+                <h4 class="fw-bold mb-4">給家人的安心，<br>其實很簡單。</h4>
+                <a href="https://liff.line.me/2008912295-edmRNdOM" class="btn btn-light btn-lg rounded-pill fw-bold w-100 py-3 text-success">
+                    立即開始免費守護
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="container" style="max-width: 800px; padding: 0 15px;">
         <div class="card-custom">
             <div class="card-body-custom">
                 <h5 class="fw-bold mb-4" style="color: var(--mint-teal);"><i class="fa-solid fa-rocket me-2"></i>如何開始使用</h5>
@@ -499,45 +439,45 @@
         </div>
 
         <div class="card-custom">
-    <div class="card-body-custom">
-        <h5 class="fw-bold mb-3">
-            <i class="fa-solid fa-circle-exclamation text-warning me-2"></i>重要須知
-        </h5>
+            <div class="card-body-custom">
+                <h5 class="fw-bold mb-3">
+                    <i class="fa-solid fa-circle-exclamation text-warning me-2"></i>重要須知
+                </h5>
 
-        <div class="mb-3 p-2 bg-light border border-warning rounded small text-secondary">
-            <i class="fa-solid fa-flask text-warning me-1"></i>
-            <strong>公開測試階段：</strong>系統功能可能尚不穩定。請勿將本服務作為您人身安全的唯一依賴手段。
-        </div>
+                <div class="mb-3 p-2 bg-light border border-warning rounded small text-secondary">
+                    <i class="fa-solid fa-flask text-warning me-1"></i>
+                    <strong>公開測試階段：</strong>系統功能可能尚不穩定。請勿將本服務作為您人身安全的唯一依賴手段。
+                </div>
 
-        <ul class="list-unstyled small text-secondary mb-3">
-            <li class="mb-2 d-flex">
-                <i class="fa-solid fa-user-slash text-danger me-2 mt-1"></i>
-                <span><strong>請勿封鎖本帳號</strong>，否則無法收到提醒，可能導致系統誤判。</span>
-            </li>
-            <li class="mb-2 d-flex">
-                <i class="fa-solid fa-mobile-screen text-dark me-2 mt-1"></i>
-                <span>緊急簡訊可能顯示為<strong>國際號碼</strong>，請告知親友不要封鎖。</span>
-            </li>
-            <li class="d-flex">
-                <i class="fa-solid fa-wifi text-primary me-2 mt-1"></i>
-                <span><strong>用戶義務：</strong>請維持手機網路暢通與電力充足。若無法使用（如出國、住院），請務必開啟<strong>「暫停功能」</strong>以免誤報。</span>
-            </li>
-        </ul>
+                <ul class="list-unstyled small text-secondary mb-3">
+                    <li class="mb-2 d-flex">
+                        <i class="fa-solid fa-user-slash text-danger me-2 mt-1"></i>
+                        <span><strong>請勿封鎖本帳號</strong>，否則無法收到提醒，可能導致系統誤判。</span>
+                    </li>
+                    <li class="mb-2 d-flex">
+                        <i class="fa-solid fa-mobile-screen text-dark me-2 mt-1"></i>
+                        <span>緊急簡訊可能顯示為<strong>國際號碼</strong>，請告知親友不要封鎖。</span>
+                    </li>
+                    <li class="d-flex">
+                        <i class="fa-solid fa-wifi text-primary me-2 mt-1"></i>
+                        <span><strong>用戶義務：</strong>請維持手機網路暢通與電力充足。若無法使用（如出國、住院），請務必開啟<strong>「暫停功能」</strong>以免誤報。</span>
+                    </li>
+                </ul>
 
-        <div class="highlight-box">
-            <div class="d-flex">
-                <i class="fa-solid fa-shield-halved me-2 mt-1"></i>
-                <div>
-                    <strong>非醫療與救難系統：</strong>
-                    本服務僅為輔助通知工具，非醫療器材或法定119系統。<br>
-                    <span class="opacity-75" style="font-size: 0.85em;">
-                        （受限於電信訊號等不可抗力因素，不保證簡訊能100%送達，遇緊急危難請務必撥打119。）
-                    </span>
+                <div class="highlight-box">
+                    <div class="d-flex">
+                        <i class="fa-solid fa-shield-halved me-2 mt-1"></i>
+                        <div>
+                            <strong>非醫療與救難系統：</strong>
+                            本服務僅為輔助通知工具，非醫療器材或法定119系統。<br>
+                            <span class="opacity-75" style="font-size: 0.85em;">
+                                （受限於電信訊號等不可抗力因素，不保證簡訊能100%送達，遇緊急危難請務必撥打119。）
+                            </span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</div>
         
         <div class="mb-4 mt-4">
              <a href="https://liff.line.me/2008912295-edmRNdOM" class="btn w-100 shadow p-3 fw-bold text-white rounded-pill" style="background: var(--gradient-orange); border:none; font-size: 1.2rem;">
