@@ -245,6 +245,53 @@
     </div>
   </div>
 
+  // --- 報平安功能 (新增這段) ---
+    function reportSafety() {
+        // 1. 先顯示 Loading 轉圈圈
+        Swal.fire({
+            title: '正在回報...',
+            text: '系統紀錄中，請稍候',
+            allowOutsideClick: false,
+            didOpen: () => { Swal.showLoading(); }
+        });
+
+        // 2. 檢查是否在 LINE App 裡面開啟
+        if (liff.isInClient()) {
+            // 3. 嘗試幫使用者發送一則訊息到聊天室
+            liff.sendMessages([{
+                type: 'text',
+                text: "報平安"
+            }]).then(() => {
+                // 4. 發送成功！顯示綠色勾勾
+                Swal.fire({
+                    icon: 'success',
+                    title: '回報成功！',
+                    text: '已經收到您的平安回報囉 ❤️',
+                    timer: 3000,
+                    showConfirmButton: false
+                }).then(() => {
+                    // 5. 重整頁面，讓下方的「近7天紀錄」立刻更新
+                    location.reload(); 
+                });
+            }).catch((err) => {
+                console.error("發送失敗", err);
+                // 如果發送失敗，顯示錯誤 (通常發生在封鎖機器人時)
+                Swal.fire({
+                    icon: 'error',
+                    title: '回報失敗',
+                    text: '請確認網路連線，或直接在聊天室輸入文字報平安。'
+                });
+            });
+        } else {
+            // 如果是在電腦瀏覽器開啟 (無法自動發送 LINE 訊息)
+            Swal.fire({
+                icon: 'info',
+                title: '請在 LINE 中使用',
+                text: '此功能需要直接透過 LINE App 開啟才能自動發送通知喔！'
+            });
+        }
+    }
+
   <script>
     const liffId = "2008912295-edmRNdOM"; 
     // ★★★ 請確認這是您的 GAS 網址 ★★★
@@ -372,43 +419,31 @@
     }
 
     // --- 顯示會員頁面 (核心 UI 邏輯) ---
-    function showMemberPage(data) {
-        document.getElementById('member-page').style.display = 'block';
-        
-        // 判斷暫停狀態
-        const isPaused = (data.status === 'Pause');
-
-        // ★★★ 核心修改：如果是長輩(受守護者)，使用高對比專屬卡片 ★★★
         if (data.isTarget) {
 
-            // ▼▼▼【配色設定區】請在這裡選擇您喜歡的顏色 ▼▼▼
-            // 1 = 紅橘色 (原本的)
+            // ▼▼▼【配色設定區】▼▼▼
             // 2 = 森林綠 (推薦：護眼安全感)
-            // 3 = 深海藍 (推薦：專業信任感)
-            // 4 = 皇家紫 (優雅高對比)
-            const themeOption = 2; // <--- 改這裡的數字來換色！
+            const themeOption = 2; 
 
-            let activeGradient = "";
+            let activeGradient = "linear-gradient(135deg, #134E5E 0%, #71B280 100%)"; // 預設森林綠
             if (themeOption === 1) activeGradient = "linear-gradient(135deg, #D4145A 0%, #FBB03B 100%)"; // 紅橘
-            if (themeOption === 2) activeGradient = "linear-gradient(135deg, #134E5E 0%, #71B280 100%)"; // 森林綠
             if (themeOption === 3) activeGradient = "linear-gradient(135deg, #003973 0%, #E5E5BE 100%)"; // 深海藍
             if (themeOption === 4) activeGradient = "linear-gradient(135deg, #4b6cb7 0%, #182848 100%)"; // 皇家紫
 
             // ▼▼▼【暫停邏輯】▼▼▼
-            // 如果暫停(isPaused)，強制使用深灰色背景；否則使用上面的漸層
             const cardBackground = isPaused ? 
                 "background: #4f5b62;" : 
                 `background: ${activeGradient};`;
 
-            // 狀態標籤顯示
+            // 狀態標籤
             const displayStatus = isPaused ? 
                 '<span class="badge rounded-pill bg-danger text-white border border-white fs-6 px-3 py-2 fw-bold shadow-sm"><i class="bi bi-pause-circle-fill me-1"></i> 服務暫停中</span>' :
                 '<span class="badge rounded-pill bg-light text-dark border border-2 border-white fs-6 px-3 py-2 fw-bold shadow-sm"><i class="bi bi-shield-check me-1 text-success"></i> 安心守護中</span>';
             
-            // 守護者資訊顯示文字
+            // 守護者資訊文字
             const guardianText = isPaused ? "服務已暫停" : (data.guardianName || "尚未設定");
             const guardianDesc = isPaused ? "請點擊下方按鈕恢復服務" : `(${data.guardianAlias || "家人"})`;
-            const phoneBtnClass = (isPaused || !data.guardianPhone) ? "disabled opacity-50" : ""; // 暫停時禁用電話按鈕
+            const phoneBtnClass = (isPaused || !data.guardianPhone) ? "disabled opacity-50" : ""; 
 
             const elderCardHTML = `
             <div class="card border-0 shadow-lg rounded-4 overflow-hidden mb-3" 
@@ -417,44 +452,45 @@
                 <div class="card-body p-4" 
                     style="background-color: rgba(0, 0, 0, 0.1); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);">
 
-                    <div class="d-flex justify-content-between align-items-start mb-4">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
                         <div>
                             <h1 class="mb-1 fw-bolder text-white" style="font-size: 2.5rem; text-shadow: 0 2px 4px rgba(0,0,0,0.2);">
                                 ${data.name}
                             </h1>
-                            <div class="mt-2">
-                                ${displayStatus}
-                            </div>
+                            <div class="mt-2">${displayStatus}</div>
                         </div>
                         <i class="bi bi-person-hearts text-white opacity-50" style="font-size: 3rem;"></i>
                     </div>
 
-                    <div class="p-4 rounded-4 mt-3 shadow-sm border border-1 border-white border-opacity-25" 
+                    ${!isPaused ? `
+                    <button onclick="reportSafety()" class="btn btn-success w-100 py-3 rounded-4 shadow-lg mb-3 border border-2 border-white" 
+                            style="font-size: 1.8rem; font-weight: 900; letter-spacing: 2px; background: linear-gradient(to bottom, #2ecc71, #27ae60);">
+                        <i class="bi bi-check-circle-fill me-2"></i> 點擊報平安
+                        <div style="font-size: 0.9rem; font-weight: normal; opacity: 0.9; letter-spacing: 0;">讓家人放心</div>
+                    </button>
+                    ` : ''}
+
+                    <div class="p-3 rounded-4 mt-2 shadow-sm border border-1 border-white border-opacity-25" 
                         style="background-color: rgba(255, 255, 255, 0.15);">
                         
-                        <p class="text-white-50 mb-2 fw-bold fs-5">
-                            <i class="bi bi-award-fill me-2"></i>您的守護者
-                        </p>
-                        
-                        <div class="d-flex align-items-end mb-3">
-                            <h2 class="mb-0 fw-bold text-white me-3" style="font-size: 2rem; text-shadow: 0 1px 2px rgba(0,0,0,0.1);">
-                                ${guardianText}
-                            </h2>
-                            <span class="text-white fw-bold fs-5 pb-1">
-                                ${guardianDesc}
-                            </span>
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <div class="text-white fw-bold">
+                                <i class="bi bi-award-fill me-1"></i>您的守護者
+                            </div>
+                            <div class="text-white text-end">
+                                <span class="fs-4 fw-bold">${guardianText}</span>
+                                <span class="small opacity-75">${guardianDesc}</span>
+                            </div>
                         </div>
 
                         <a href="tel:${data.guardianPhone || '#'}" 
-                        class="btn btn-light w-100 py-3 rounded-pill fw-bold d-flex justify-content-center align-items-center shadow-sm ${phoneBtnClass}" 
-                        style="font-size: 1.5rem; color: #333;">
-                            <i class="bi bi-telephone-fill me-3 fs-3"></i>
-                            ${isPaused ? '暫停中' : (data.guardianPhone ? formatPhoneNumber(data.guardianPhone) : '無電話資訊')}
+                           class="btn btn-outline-light w-100 py-2 rounded-pill fw-bold d-flex justify-content-center align-items-center ${phoneBtnClass}" 
+                           style="border-width: 2px; font-size: 1.2rem;">
+                            <i class="bi bi-telephone-fill me-2"></i>
+                            ${isPaused ? '暫停中' : '撥打電話給家人'}
                         </a>
-                        <div class="text-white-50 text-center mt-2 small">
-                            ${isPaused ? '恢復服務後即可撥打' : '點擊上方按鈕可直接撥打電話'}
-                        </div>
                     </div>
+
                 </div>
             </div>`;
             
