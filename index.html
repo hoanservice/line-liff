@@ -519,23 +519,19 @@
             }
         }
 
-        // 3. 按鈕位置大風吹
+        // 3. 按鈕位置大風吹 (優化版：移除重複的恢復按鈕)
         const mainActionDiv = document.getElementById('manager-actions');   
         const footerActionDiv = document.getElementById('footer-actions'); 
         mainActionDiv.innerHTML = "";   
         footerActionDiv.innerHTML = ""; 
 
         if (isPaused) {
-            mainActionDiv.style.display = 'block';
-            mainActionDiv.innerHTML = `
-                <button onclick="toggleServiceStatus('Active')" class="btn btn-success w-100 py-3 shadow fw-bold rounded-4">
-                    <i class="bi bi-play-circle-fill me-2"></i> 立即恢復服務
-                </button>
-                <p class="text-center small text-secondary mt-2">點擊上方按鈕，重新啟動每日守護</p>
-            `;
+            // ★★★ 關鍵修改：暫停時，卡片內已經有按鈕了，所以這裡留空，不要再顯示綠色按鈕 ★★★
+            mainActionDiv.style.display = 'none'; 
         } else {
             mainActionDiv.style.display = 'none'; 
             
+            // 只有「守護長輩模式」且「自己不是被守護者」時，才顯示邀請按鈕
             if(data.target === 'elder' && !data.isTarget) {
                  mainActionDiv.style.display = 'block';
                  mainActionDiv.innerHTML = `
@@ -544,12 +540,13 @@
                     </button>`;
             }
 
+            // 底部按鈕：暫停服務
             footerActionDiv.innerHTML = `
                 <button onclick="toggleServiceStatus('Pause')" class="btn btn-outline-secondary btn-sm px-4 rounded-pill">
                     <i class="bi bi-pause-circle me-1"></i> 暫停服務
                 </button>
                 <div class="text-muted small mt-2" style="font-size: 0.75rem;">
-                    暫停期間將停止發送通知服務天數計算
+                    暫停期間將停止扣除服務天數與發送通知
                 </div>
             `;
         }
