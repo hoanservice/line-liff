@@ -778,25 +778,53 @@
         });
     }
 
-    // --- 報平安功能 ---
+    // --- 報平安功能 (雙保險版) ---
     function reportSafety() {
         Swal.fire({
             title: '正在回報...', text: '系統紀錄中，請稍候', allowOutsideClick: false,
             didOpen: () => { Swal.showLoading(); }
         });
 
+        // 定義 API 回報函式 (作為備案)
+        const reportViaApi = () => {
+            fetch(`${gasUrl}?action=report_safety&uid=${userUid}`, { method: 'GET', mode: 'cors' })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    Swal.fire({ 
+                        icon: 'success', title: '回報成功！', 
+                        text: '系統已更新您的安全狀態 ❤️', 
+                        timer: 3000, showConfirmButton: false 
+                    }).then(() => { location.reload(); });
+                } else {
+                    throw new Error(data.error || "API Error");
+                }
+            })
+            .catch(err => {
+                console.error("API 回報失敗", err);
+                Swal.fire({ icon: 'error', title: '回報失敗', text: '請確認網路連線，稍後再試。' });
+            });
+        };
+
+        // 優先嘗試透過 LINE 發送訊息
         if (liff.isInClient()) {
             liff.sendMessages([{ type: 'text', text: "報平安" }])
             .then(() => {
-                Swal.fire({ icon: 'success', title: '回報成功！', text: '已經收到您的平安回報囉 ❤️', timer: 3000, showConfirmButton: false })
-                .then(() => { location.reload(); });
+                // 發送成功，顯示成功並重整
+                Swal.fire({ 
+                    icon: 'success', title: '回報成功！', 
+                    text: '已經收到您的平安通知囉 ❤️', 
+                    timer: 3000, showConfirmButton: false 
+                }).then(() => { location.reload(); });
             })
             .catch((err) => {
-                console.error("發送失敗", err);
-                Swal.fire({ icon: 'error', title: '回報失敗', text: '請確認網路連線，或直接在聊天室輸入文字報平安。' });
+                console.error("LINE 發訊失敗，改用 API 回報", err);
+                // ★★★ 關鍵：如果發 LINE 失敗，立刻切換到 API 回報 ★★★
+                reportViaApi();
             });
         } else {
-            Swal.fire({ icon: 'info', title: '請在 LINE 中使用', text: '此功能需要直接透過 LINE App 開啟才能自動發送通知喔！' });
+            // 如果不在 LINE 裡 (例如電腦版)，直接用 API 回報
+            reportViaApi();
         }
     }
   </script> 
