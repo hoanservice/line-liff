@@ -245,53 +245,6 @@
     </div>
   </div>
 
-  // --- 報平安功能 (新增這段) ---
-    function reportSafety() {
-        // 1. 先顯示 Loading 轉圈圈
-        Swal.fire({
-            title: '正在回報...',
-            text: '系統紀錄中，請稍候',
-            allowOutsideClick: false,
-            didOpen: () => { Swal.showLoading(); }
-        });
-
-        // 2. 檢查是否在 LINE App 裡面開啟
-        if (liff.isInClient()) {
-            // 3. 嘗試幫使用者發送一則訊息到聊天室
-            liff.sendMessages([{
-                type: 'text',
-                text: "報平安"
-            }]).then(() => {
-                // 4. 發送成功！顯示綠色勾勾
-                Swal.fire({
-                    icon: 'success',
-                    title: '回報成功！',
-                    text: '已經收到您的平安回報囉 ❤️',
-                    timer: 3000,
-                    showConfirmButton: false
-                }).then(() => {
-                    // 5. 重整頁面，讓下方的「近7天紀錄」立刻更新
-                    location.reload(); 
-                });
-            }).catch((err) => {
-                console.error("發送失敗", err);
-                // 如果發送失敗，顯示錯誤 (通常發生在封鎖機器人時)
-                Swal.fire({
-                    icon: 'error',
-                    title: '回報失敗',
-                    text: '請確認網路連線，或直接在聊天室輸入文字報平安。'
-                });
-            });
-        } else {
-            // 如果是在電腦瀏覽器開啟 (無法自動發送 LINE 訊息)
-            Swal.fire({
-                icon: 'info',
-                title: '請在 LINE 中使用',
-                text: '此功能需要直接透過 LINE App 開啟才能自動發送通知喔！'
-            });
-        }
-    }
-
   <script>
     const liffId = "2008912295-edmRNdOM"; 
     // ★★★ 請確認這是您的 GAS 網址 ★★★
@@ -836,6 +789,53 @@
                 document.getElementById('plan-year').onclick = () => handlePlan('year');
             }
         });
+    }
+
+    // --- 報平安功能 (新增這段) ---
+    function reportSafety() {
+        // 1. 先顯示 Loading 轉圈圈
+        Swal.fire({
+            title: '正在回報...',
+            text: '系統紀錄中，請稍候',
+            allowOutsideClick: false,
+            didOpen: () => { Swal.showLoading(); }
+        });
+
+        // 2. 檢查是否在 LINE App 裡面開啟
+        if (liff.isInClient()) {
+            // 3. 嘗試幫使用者發送一則訊息到聊天室
+            liff.sendMessages([{
+                type: 'text',
+                text: "報平安"
+            }]).then(() => {
+                // 4. 發送成功！顯示綠色勾勾
+                Swal.fire({
+                    icon: 'success',
+                    title: '回報成功！',
+                    text: '已經收到您的平安回報囉 ❤️',
+                    timer: 3000,
+                    showConfirmButton: false
+                }).then(() => {
+                    // 5. 重整頁面，讓下方的「近7天紀錄」立刻更新
+                    location.reload(); 
+                });
+            }).catch((err) => {
+                console.error("發送失敗", err);
+                // 如果發送失敗，顯示錯誤 (通常發生在封鎖機器人時)
+                Swal.fire({
+                    icon: 'error',
+                    title: '回報失敗',
+                    text: '請確認網路連線，或直接在聊天室輸入文字報平安。'
+                });
+            });
+        } else {
+            // 如果是在電腦瀏覽器開啟 (無法自動發送 LINE 訊息)
+            Swal.fire({
+                icon: 'info',
+                title: '請在 LINE 中使用',
+                text: '此功能需要直接透過 LINE App 開啟才能自動發送通知喔！'
+            });
+        }
     }
   </script>
 </body>
