@@ -374,7 +374,7 @@
 
             // ▼▼▼【配色設定區】▼▼▼
             // 2 = 森林綠 (推薦：護眼安全感)
-            const themeOption = 2; 
+            const themeOption = 3; 
 
             let activeGradient = "linear-gradient(135deg, #134E5E 0%, #71B280 100%)"; // 預設森林綠
             if (themeOption === 1) activeGradient = "linear-gradient(135deg, #D4145A 0%, #FBB03B 100%)"; // 紅橘
@@ -774,7 +774,7 @@
         });
 
         if (liff.isInClient()) {
-            liff.sendMessages([{ type: 'text', text: "報平安💪" }])
+            liff.sendMessages([{ type: 'text', text: "報平安" }])
             .then(() => {
                 Swal.fire({ icon: 'success', title: '回報成功！', text: '已經收到您的平安回報囉 ❤️', timer: 3000, showConfirmButton: false })
                 .then(() => { location.reload(); });
