@@ -176,77 +176,62 @@
 
     <div id="member-page" style="display:none;">
       
-      <div id="member-card" class="card card-premium bg-gradient-custom p-4 text-white">
-        
-        <div class="d-flex justify-content-between align-items-center mb-2">
-            <div>
-              <p class="mb-0 opacity-80 small">Member Profile</p>
-              <h2 id="mem-name" class="mb-0 fw-bold text-shadow" style="letter-spacing: 1px;">載入中...</h2>
-              
-              <div id="credits-badge" class="mt-1" style="display:none;">
-                 <span class="badge rounded-pill bg-light text-dark shadow-sm">
-                   <i class="bi bi-coin text-warning"></i> 剩餘 <span id="credit-count">0</span> 點
-                 </span>
+      <div id="member-card-container">
+        <div id="member-card" class="card card-premium bg-gradient-custom p-4 text-white">
+          
+          <div class="d-flex justify-content-between align-items-center mb-2">
+              <div>
+                <p class="mb-0 opacity-80 small">Member Profile</p>
+                <h2 id="mem-name" class="mb-0 fw-bold text-shadow" style="letter-spacing: 1px;">載入中...</h2>
+                
+                <div id="credits-badge" class="mt-1" style="display:none;">
+                   <span class="badge rounded-pill bg-light text-dark shadow-sm">
+                     <i class="bi bi-coin text-warning"></i> 剩餘 <span id="credit-count">0</span> 點
+                   </span>
+                </div>
               </div>
-            </div>
-            
-            <span class="badge-pill" id="member-badge">
-              <i class="bi bi-star-fill text-warning me-1"></i>安心會員
-            </span>
-        </div>
-        
-        <p class="mb-3 opacity-80">
-          <span id="mem-phone" class="mono-font">---</span>
-        </p>
-        
-        <div id="guardian-info-box" class="glass-box" style="display:none;">
-          <div class="d-flex align-items-center mb-2">
-            <div class="ms-1">
-              <p class="mb-0 small fw-bold text-white opacity-80">安心守護中</p>
-            </div>
+              
+              <span class="badge-pill" id="member-badge">
+                <i class="bi bi-star-fill text-warning me-1"></i>安心會員
+              </span>
           </div>
-          <h4 class="mb-1 mt-2 fw-bold text-shadow ps-1">
-            <span id="guardian-name">---</span>
-          </h4>
-          <p class="small mb-0 opacity-80 border-top border-white border-opacity-25 pt-2 mt-2">
-             <span id="guardian-relation-text">正在守護您</span>
+          
+          <p class="mb-3 opacity-80">
+            <span id="mem-phone" class="mono-font">---</span>
           </p>
-        </div>
+          
+          <div id="manager-actions-box" class="glass-box" style="display:none;">
+             <div class="d-flex align-items-center mb-2">
+               <i class="bi bi-gear-fill me-2 opacity-80"></i>
+               <span class="small fw-bold opacity-80">守護設定資訊</span>
+             </div>
+             <div class="d-flex justify-content-between align-items-center">
+               <span>守護對象稱謂</span>
+               <span id="mem-uTitle" class="fw-bold fs-5 text-shadow">---</span>
+             </div>
+          </div>
 
-        <div id="manager-actions-box" class="glass-box" style="display:none;">
-           <div class="d-flex align-items-center mb-2">
-             <i class="bi bi-gear-fill me-2 opacity-80"></i>
-             <span class="small fw-bold opacity-80">守護設定資訊</span>
-           </div>
-           <div class="d-flex justify-content-between align-items-center">
-             <span>守護對象稱謂</span>
-             <span id="mem-uTitle" class="fw-bold fs-5 text-shadow">---</span>
-           </div>
-        </div>
+          <div id="self-guard-box" class="glass-box" style="display:none;">
+             <div class="d-flex align-items-center mb-2">
+               <i class="bi bi-shield-exclamation me-2 opacity-80"></i>
+               <span class="small fw-bold opacity-80">緊急聯絡人</span>
+             </div>
+             <div class="d-flex justify-content-between align-items-center mb-1">
+               <span class="opacity-80">姓名</span>
+               <span id="mem-eName" class="fw-bold text-shadow">---</span>
+             </div>
+             <div class="d-flex justify-content-between align-items-center">
+               <span class="opacity-80">電話</span>
+               <span id="mem-ePhone" class="mono-font fw-bold text-shadow">---</span>
+             </div>
+          </div>
 
-        <div id="self-guard-box" class="glass-box" style="display:none;">
-           <div class="d-flex align-items-center mb-2">
-             <i class="bi bi-shield-exclamation me-2 opacity-80"></i>
-             <span class="small fw-bold opacity-80">緊急聯絡人</span>
-           </div>
-           <div class="d-flex justify-content-between align-items-center mb-1">
-             <span class="opacity-80">姓名</span>
-             <span id="mem-eName" class="fw-bold text-shadow">---</span>
-           </div>
-           <div class="d-flex justify-content-between align-items-center">
-             <span class="opacity-80">電話</span>
-             <span id="mem-ePhone" class="mono-font fw-bold text-shadow">---</span>
-           </div>
-        </div>
+          <div style="position: absolute; top: -30px; right: -30px; width: 120px; height: 120px; background: rgba(255,255,255,0.1); border-radius: 50%;"></div>
+        </div> 
+      </div>
 
-        <div style="position: absolute; top: -30px; right: -30px; width: 120px; height: 120px; background: rgba(255,255,255,0.1); border-radius: 50%;"></div>
-      </div> 
-
-      <div id="manager-actions" class="mt-4" style="display:none;">
-        </div>
-
-      <div id="target-notice" class="alert alert-success mt-4 text-center shadow-sm border-0 rounded-4" style="display:none;">
-        </div>
+      <div id="manager-actions" class="mt-4" style="display:none;"></div>
+      <div id="target-notice" class="alert alert-success mt-4 text-center shadow-sm border-0 rounded-4" style="display:none;"></div>
 
       <div class="mt-4">
         <h6 class="text-secondary fw-bold px-2 mb-3"><i class="bi bi-clock-history me-1"></i> 近 7 天回報紀錄</h6>
@@ -255,10 +240,12 @@
         </div>
       </div>
 
-      <div id="footer-actions" class="mt-5 mb-4 text-center">
-         </div>
+      <div id="footer-actions" class="mt-5 mb-4 text-center"></div>
 
-    </div> </div> <script>
+    </div>
+  </div>
+
+  <script>
     const liffId = "2008912295-edmRNdOM"; 
     // ★★★ 請確認這是您的 GAS 網址 ★★★
     const gasUrl = "https://script.google.com/macros/s/AKfycbyBkgvbHViTf0oWj3K_TZvy7VPwZUQ3UAfvFQPt8U7FxCI1DMi-QIbEy3Epmol_8mWG/exec"; 
@@ -298,8 +285,7 @@
         try { localStorage.setItem(CACHE_KEY_PREFIX + uid, JSON.stringify(data)); } catch (e) { console.error("Cache save failed", e); }
     }
 
-    // --- 讀取會員狀態 (含快取) ---
-    // ★ 優化版 checkStatus (含防呆與正確查詢對象)
+    // --- 讀取會員狀態 ---
     function checkStatus(uid) {
       const cachedData = loadFromCache(uid);
       if (cachedData && cachedData.exists) {
@@ -324,24 +310,18 @@
           if (data.exists) {
             saveToCache(uid, data);
             
-            // ★ 保險絲：用 try-catch 包住介面渲染，避免 UI 錯誤卡死後面的歷史紀錄
             try {
                 showMemberPage(data);
             } catch (e) {
                 console.error("UI Render Error:", e);
-                // 就算介面壞了，我們還是嘗試讓使用者看到基本內容
                 document.getElementById('member-page').style.display = 'block';
             }
             
-            // ★ 關鍵修正：決定要查誰的紀錄？
-            let searchTarget = uid; // 預設查自己
-            
-            // 如果我是管理者(isTarget=false)，而且我守護的是長輩(target=elder)，且我有抓到長輩UID
+            let searchTarget = uid; 
             if (!data.isTarget && data.target === 'elder' && data.managedTargetUid) {
-                searchTarget = data.managedTargetUid; // 改為查長輩的紀錄
+                searchTarget = data.managedTargetUid; 
                 console.log("切換查詢對象為長輩:", searchTarget);
             }
-            
             loadHistory(searchTarget); 
 
           } else {
@@ -351,7 +331,7 @@
               document.getElementById('inviter-name').innerText = data.inviterName;
             } else {
               document.getElementById('register-page').style.display = 'block';
-              document.getElementById('reg-name').value = userName;
+              document.getElementById('reg-name').value = ""; // 強制清空，讓 placeholder "請輸入真實姓名" 顯示出來
             }
           }
         })
@@ -385,110 +365,120 @@
         .catch(console.error);
     }
 
+    // --- 輔助函式：格式化電話號碼 ---
+    function formatPhoneNumber(phone) {
+        if (!phone) return "";
+        return phone.replace(/(\d{4})(\d{3})(\d{3})/, '$1-$2-$3');
+    }
+
     // --- 顯示會員頁面 (核心 UI 邏輯) ---
     function showMemberPage(data) {
         document.getElementById('member-page').style.display = 'block';
-        document.getElementById('mem-name').innerText = data.name;
-
-        let displayPhone = data.phone;
-        if (displayPhone === "LINE綁定") displayPhone = "已綁定LINE";
-        document.getElementById('mem-phone').innerText = displayPhone;
-
-        const card = document.getElementById('member-card');
-        const creditsDiv = document.getElementById('credits-badge');
-        const creditCount = document.getElementById('credit-count');
-        const targetNotice = document.getElementById('target-notice');
-        const badgeIcon = document.getElementById('member-badge');
-        const mainActionDiv = document.getElementById('manager-actions'); 
-        const footerActionDiv = document.getElementById('footer-actions'); 
-
+        
         // 判斷暫停狀態
         const isPaused = (data.status === 'Pause');
 
-        // 1. 卡片樣式切換
-        if (isPaused) {
-            // [暫停中]
-            card.classList.add('grayscale'); // 使用 CSS class 控制變灰
-            card.classList.remove('bg-gradient-custom', 'bg-gradient-target'); // 移除漸層
-            card.classList.add('bg-secondary'); // 加深底色確保文字可讀
-            
-            badgeIcon.className = "badge-pill bg-danger text-white border-0"; 
-            badgeIcon.innerHTML = '<i class="bi bi-pause-circle-fill me-1"></i>服務暫停中';
-            creditsDiv.style.display = 'none';
-        } else {
-            // [正常]
-            card.classList.remove('grayscale', 'bg-secondary');
-            badgeIcon.className = "badge-pill";
-            badgeIcon.innerHTML = '<i class="bi bi-star-fill text-warning me-1"></i>安心會員';
-            
-            if (data.isTarget) {
-                card.classList.add('bg-gradient-target');
-            } else {
-                card.classList.add('bg-gradient-custom');
-            }
-        }
-
-        // 2. 內容顯示邏輯 (長輩 vs 管理者)
+        // ★★★ 核心修改：如果是長輩(受守護者)，使用高對比專屬卡片 ★★★
         if (data.isTarget) {
-            // --- 情境 A: 受守護者 (長輩) ---
-            creditsDiv.style.display = 'none';
-            document.getElementById('self-guard-box').style.display = 'none'; 
-            document.getElementById('manager-actions-box').style.display = 'none';
-            
-            let gCredits = (typeof data.guardianCredits !== 'undefined') ? data.guardianCredits : 99;
+            const displayStatus = isPaused ? 
+                '<span class="badge rounded-pill bg-danger text-white border border-white fs-6 px-3 py-2 fw-bold shadow-sm"><i class="bi bi-pause-circle-fill me-1"></i> 服務暫停中</span>' :
+                '<span class="badge rounded-pill bg-light text-dark border border-2 border-white fs-6 px-3 py-2 fw-bold shadow-sm"><i class="bi bi-shield-check me-1 text-success"></i> 安心守護中</span>';
 
-            if (gCredits > 0) {
-                document.getElementById('guardian-info-box').style.display = 'block';
-                document.getElementById('guardian-name').innerText = isPaused ? "暫停中" : data.guardianName;
-                document.getElementById('guardian-relation-text').innerText = isPaused ? "服務已暫停" : `${data.guardianAlias || ''} ${data.guardianName} 正在守護您`;
+            const elderCardHTML = `
+            <div class="card border-0 shadow-lg rounded-4 overflow-hidden mb-3" 
+                style="background: linear-gradient(135deg, #D4145A 0%, #FBB03B 100%); min-height: 300px;">
                 
-                if(!isPaused) {
-                    targetNotice.className = "alert alert-success mt-4 text-center shadow-sm border-0 rounded-4";
-                    targetNotice.innerHTML = `<i class="bi bi-heart-fill text-danger me-1"></i> 您的帳號已受守護<br><span class="small">點擊 LINE 下方選單每日報平安</span>`;
-                } else {
-                    targetNotice.className = "alert alert-danger mt-4 text-center shadow-sm border-0 rounded-4";
-                    targetNotice.innerHTML = `<i class="bi bi-pause-circle me-1"></i> 服務暫停中`;
-                }
-            } else {
-                // 欠費
-                document.getElementById('guardian-name').innerText = "服務暫停中";
-                document.getElementById('guardian-relation-text').innerText = "安心點數不足";
-                targetNotice.className = "alert alert-danger mt-4 text-center shadow-sm border-0 rounded-4";
-                targetNotice.innerHTML = `<i class="bi bi-exclamation-triangle-fill me-1"></i> 安心點數不足，服務已暫停`;
-            }
-            targetNotice.style.display = 'block';
+                <div class="card-body p-4" 
+                    style="background-color: rgba(0, 0, 0, 0.1); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);">
+
+                    <div class="d-flex justify-content-between align-items-start mb-4">
+                        <div>
+                            <h1 class="mb-1 fw-bolder text-white" style="font-size: 2.5rem; text-shadow: 0 2px 4px rgba(0,0,0,0.2);">
+                                ${data.name}
+                            </h1>
+                            <div class="mt-2">
+                                ${displayStatus}
+                            </div>
+                        </div>
+                        <i class="bi bi-person-hearts text-white opacity-50" style="font-size: 3rem;"></i>
+                    </div>
+
+                    <div class="p-4 rounded-4 mt-3 shadow-sm border border-1 border-white border-opacity-25" 
+                        style="background-color: rgba(255, 255, 255, 0.15);">
+                        
+                        <p class="text-white-50 mb-2 fw-bold fs-5">
+                            <i class="bi bi-award-fill me-2"></i>您的守護者
+                        </p>
+                        
+                        <div class="d-flex align-items-end mb-3">
+                            <h2 class="mb-0 fw-bold text-white me-3" style="font-size: 2rem; text-shadow: 0 1px 2px rgba(0,0,0,0.1);">
+                                ${data.guardianName || (isPaused ? "---" : "尚未設定")}
+                            </h2>
+                            <span class="text-white fw-bold fs-5 pb-1">
+                                (${data.guardianAlias || "家人"})
+                            </span>
+                        </div>
+
+                        <a href="tel:${data.guardianPhone || '#'}" 
+                        class="btn btn-light w-100 py-3 rounded-pill fw-bold d-flex justify-content-center align-items-center shadow-sm ${data.guardianPhone ? '' : 'disabled'}" 
+                        style="font-size: 1.5rem; color: #D4145A;">
+                            <i class="bi bi-telephone-fill me-3 fs-3"></i>
+                            ${data.guardianPhone ? formatPhoneNumber(data.guardianPhone) : '無電話資訊'}
+                        </a>
+                        <div class="text-white-50 text-center mt-2 small">
+                            點擊上方按鈕可直接撥打電話
+                        </div>
+                    </div>
+                </div>
+            </div>`;
+            
+            // 注入長輩專屬卡片
+            document.getElementById('member-card-container').innerHTML = elderCardHTML;
+            
+            // 隱藏不必要的通知區塊 (因為卡片已經顯示了)
+            document.getElementById('target-notice').style.display = 'none';
 
         } else {
-            // --- 情境 B: 管理者 / 自救 ---
-            document.getElementById('target-notice').style.display = 'none';
-            document.getElementById('guardian-info-box').style.display = 'none';
+            // --- 一般會員/管理者卡片 (維持原樣) ---
+            const creditsDiv = document.getElementById('credits-badge');
+            const creditCount = document.getElementById('credit-count');
+            const card = document.getElementById('member-card');
+            const badgeIcon = document.getElementById('member-badge');
 
-            if (!isPaused) {
+            document.getElementById('mem-name').innerText = data.name;
+            let displayPhone = data.phone === "LINE綁定" ? "已綁定LINE" : data.phone;
+            document.getElementById('mem-phone').innerText = displayPhone;
+
+            if (isPaused) {
+                card.classList.add('grayscale', 'bg-secondary');
+                card.classList.remove('bg-gradient-custom', 'bg-gradient-target');
+                badgeIcon.className = "badge-pill bg-danger text-white border-0"; 
+                badgeIcon.innerHTML = '<i class="bi bi-pause-circle-fill me-1"></i>服務暫停中';
+                creditsDiv.style.display = 'none';
+            } else {
+                card.classList.remove('grayscale', 'bg-secondary');
+                badgeIcon.className = "badge-pill";
+                badgeIcon.innerHTML = '<i class="bi bi-star-fill text-warning me-1"></i>安心會員';
+                card.classList.add('bg-gradient-custom');
+                
+                // 顯示點數與儲值按鈕
                 creditsDiv.style.display = 'block';
                 let myCredits = (typeof data.credits !== 'undefined') ? data.credits : 0;
                 
-                // 定義按鈕 HTML (小小的儲值按鈕)
                 const btnTopUp = `<button onclick="openTopUp()" class="btn btn-sm btn-light text-primary fw-bold ms-2 rounded-pill shadow-sm" style="font-size: 0.75rem; padding: 2px 10px;"><i class="bi bi-credit-card-2-front-fill me-1"></i>儲值</button>`;
                 
-                if (myCredits <= 3) {
-                   // 低水位：黃色警告 + 按鈕
-                   creditsDiv.innerHTML = `
-                       <span class="badge rounded-pill bg-warning text-dark shadow-sm animate__animated animate__pulse animate__infinite">
-                           <i class="bi bi-exclamation-circle-fill"></i> 剩餘 ${myCredits} 點
-                       </span>
-                       ${btnTopUp}
-                   `;
-                } else {
-                   // 正常：白色標籤 + 按鈕
-                   creditsDiv.innerHTML = `
-                       <span class="badge rounded-pill bg-light text-dark shadow-sm">
-                           <i class="bi bi-coin text-warning"></i> 剩餘 ${myCredits} 點
-                       </span>
-                       ${btnTopUp}
-                   `;
-                }
+                let badgeClass = myCredits <= 3 ? "badge rounded-pill bg-warning text-dark shadow-sm animate__animated animate__pulse animate__infinite" : "badge rounded-pill bg-light text-dark shadow-sm";
+                let iconClass = myCredits <= 3 ? "bi-exclamation-circle-fill" : "bi-coin text-warning";
+                
+                creditsDiv.innerHTML = `
+                   <span class="${badgeClass}">
+                       <i class="bi ${iconClass}"></i> 剩餘 ${myCredits} 點
+                   </span>
+                   ${btnTopUp}
+                `;
             }
 
+            // 顯示對應的資訊區塊
             if (data.target === 'elder') {
                 document.getElementById('manager-actions-box').style.display = 'block';
                 document.getElementById('self-guard-box').style.display = 'none';
@@ -502,11 +492,12 @@
         }
 
         // 3. 按鈕位置大風吹
+        const mainActionDiv = document.getElementById('manager-actions');   
+        const footerActionDiv = document.getElementById('footer-actions'); 
         mainActionDiv.innerHTML = "";   
         footerActionDiv.innerHTML = ""; 
 
         if (isPaused) {
-            // [暫停中] -> "恢復服務" 按鈕在顯眼處
             mainActionDiv.style.display = 'block';
             mainActionDiv.innerHTML = `
                 <button onclick="toggleServiceStatus('Active')" class="btn btn-success w-100 py-3 shadow fw-bold rounded-4">
@@ -515,10 +506,8 @@
                 <p class="text-center small text-secondary mt-2">點擊上方按鈕，重新啟動每日守護</p>
             `;
         } else {
-            // [正常] -> "暫停服務" 按鈕在底部
             mainActionDiv.style.display = 'none'; 
             
-            // 只有守護長輩模式才顯示邀請按鈕
             if(data.target === 'elder' && !data.isTarget) {
                  mainActionDiv.style.display = 'block';
                  mainActionDiv.innerHTML = `
@@ -538,9 +527,8 @@
         }
     }
 
-    // --- 切換服務狀態 (呼叫後端 API) ---
-    // 需搭配後端 GAS: action=update_status&status=Pause/Active
-  function toggleServiceStatus(targetStatus) {
+    // --- 切換服務狀態 ---
+    function toggleServiceStatus(targetStatus) {
         let title, text, icon, confirmColor, confirmText;
 
         if (targetStatus === 'Pause') {
@@ -564,20 +552,15 @@
             confirmButtonText: confirmText, cancelButtonText: '取消'
         }).then((result) => {
             if (result.isConfirmed) {
-                // 1. 開啟遮罩 (Loading)
                 document.getElementById('loader').style.display = 'flex';
-                
                 let url = `${gasUrl}?action=toggle_pause&uid=${userUid}`;
                 
                 fetch(url, { method: 'GET', mode: 'cors' })
                 .then(res => res.json())
                 .then(data => {
-                    // ★★★ 關鍵修正：收到回應後，第一件事就是關閉遮罩！ ★★★
                     document.getElementById('loader').style.display = 'none';
-
                     if (data.success) {
                         Swal.fire('設定已更新', '', 'success').then(() => {
-                            // 清除快取，強制重整以顯示最新狀態
                             localStorage.removeItem(CACHE_KEY_PREFIX + userUid);
                             location.reload();
                         });
@@ -586,7 +569,6 @@
                     }
                 })
                 .catch(err => {
-                    // ★★★ 關鍵修正：連線失敗也要關閉遮罩，不然會卡死 ★★★
                     document.getElementById('loader').style.display = 'none';
                     showError("連線錯誤: " + err);
                 });
@@ -594,17 +576,22 @@
         });
     }
 
-    function acceptInvite() { /* 保持原樣 */
+    // --- 邀請與註冊 ---
+    function acceptInvite() {
         document.getElementById('loader').style.display = 'flex';
         let params = `action=register&uid=${userUid}&name=${encodeURIComponent(userName)}&target=self&inviter=${inviterId}`;
         fetch(`${gasUrl}?${params}`, { method: 'GET', mode: 'cors' })
         .then(res => res.json())
         .then(data => {
+            document.getElementById('loader').style.display = 'none';
             if (data.success) {
                 Swal.fire({ icon: 'success', title: '綁定成功！', timer: 1500, showConfirmButton: false })
                 .then(() => { location.href = window.location.pathname; });
             } else { showError("綁定失敗：" + data.error); }
-        }).catch(err => showError("連線錯誤: " + err));
+        }).catch(err => {
+            document.getElementById('loader').style.display = 'none';
+            showError("連線錯誤: " + err);
+        });
     }
 
     function toggleFields() {
@@ -614,7 +601,6 @@
     }
 
     function submitRegister() {
-      // 1. 檢查最下方的通用服務條款
       const agreeCheckbox = document.getElementById('reg-agree');
       if (!agreeCheckbox.checked) {
         return Swal.fire({ icon: 'warning', title: '請同意服務條款', text: '請勾選最下方的同意「服務條款與免責聲明」才能繼續。', confirmButtonColor: '#667eea' });
@@ -628,26 +614,21 @@
       const phoneRegex = /^09\d{8}$/;
       if (!phoneRegex.test(phone)) return Swal.fire({ icon: 'error', title: '您的手機格式錯誤', text: '請輸入 09 開頭的 10 碼數字' });
 
-      // 2. 針對「自己守護自己」的額外檢查
       if (target === 'self') {
         const eName = document.getElementById('reg-eName').value.trim();
         const ePhone = document.getElementById('reg-ePhone').value.trim();
-        const contactAgree = document.getElementById('reg-contact-agree'); // 取得緊急聯絡人同意框
+        const contactAgree = document.getElementById('reg-contact-agree');
 
         if (!eName || !phoneRegex.test(ePhone)) return Swal.fire({ icon: 'warning', title: '請完整填寫緊急聯絡人', text: '聯絡人電話格式需正確' });
-        
-        // 驗證：必須勾選緊急聯絡人授權
         if (!contactAgree.checked) {
             return Swal.fire({ 
-                icon: 'warning', 
-                title: '請確認授權', 
+                icon: 'warning', title: '請確認授權', 
                 text: '您必須確認已取得緊急聯絡人的同意，我們才能合法使用其電話發送警報。', 
                 confirmButtonColor: '#667eea' 
             });
         }
       }
 
-      // 3. 準備參數
       let params = `action=register&uid=${userUid}&name=${encodeURIComponent(name)}&phone=${encodeURIComponent(phone)}&target=${target}`;
       if (inviterId) params += `&inviter=${inviterId}`;
       
@@ -657,22 +638,16 @@
         params += `&uTitle=${encodeURIComponent(document.getElementById('reg-uTitle').value)}&sAlias=${encodeURIComponent(document.getElementById('reg-sAlias').value)}`;
       }
 
-      // 4. 開啟遮罩並發送請求
       document.getElementById('loader').style.display = 'flex';
       
       fetch(`${gasUrl}?${params}`, { method: 'GET', mode: 'cors' }) 
         .then(res => res.json())
         .then(data => {
-          // ★★★ 關鍵修正：不管成功失敗，第一件事就是把遮罩關掉！ ★★★
           document.getElementById('loader').style.display = 'none';
-
           if (data.success) {
             Swal.fire({ 
-                icon: 'success', 
-                title: '註冊成功',
-                text: '歡迎加入厚安守護！'
+                icon: 'success', title: '註冊成功', text: '歡迎加入厚安守護！'
             }).then(() => {
-                // 重整頁面進入會員畫面
                 location.href = window.location.pathname;
             });
           } else {
@@ -680,7 +655,6 @@
           }
         })
         .catch(err => {
-          // ★★★ 關鍵修正：連線錯誤也要關遮罩 ★★★
           document.getElementById('loader').style.display = 'none';
           showError("註冊失敗: " + err);
         });
@@ -707,19 +681,13 @@
               { "type": "text", "text": "您與家人安心的依靠", "weight": "bold", "size": "xl", "margin": "md", "color": "#333333" },
               { "type": "text", "text": `親愛的 ${targetTitle}，我是 ${senderName}。我已申請「厚安守護寶」，邀請您每天打卡報平安。`, "size": "md", "color": "#555555", "wrap": true, "margin": "lg" },
               { "type": "text", "text": "請點擊下方按鈕完成綁定，讓我們每天日常多一份安心。", "size": "md", "color": "#555555", "wrap": true, "margin": "md" },
-              {
-                "type": "button",
-                "style": "primary",
-                "color": "#667eea",
-                "margin": "xxl",
-                "height": "sm",
+              { "type": "button", "style": "primary", "color": "#667eea", "margin": "xxl", "height": "sm",
                 "action": { "type": "uri", "label": "✨ 接受守護並綁定 ✨", "uri": inviteUrl }
               }
             ]
           },
           "footer": {
-            "type": "box",
-            "layout": "vertical",
+            "type": "box", "layout": "vertical",
             "contents": [
               { "type": "text", "text": "此連結僅限本人綁定使用，請勿轉傳", "size": "xxs", "color": "#aaaaaa", "align": "center" }
             ]
@@ -737,21 +705,19 @@
 
     window.onload = init;
 
-      // ★★★ 綠界儲值功能 (多方案版) ★★★
+    // --- 綠界儲值功能 (多方案版) ---
     function openTopUp() {
-        // ▼▼▼ 請填入您在綠界後台產生的三個真實連結 ▼▼▼
+        // ★★★ 請填入您在綠界後台產生的三個真實連結 ★★★
         const links = {
-            month: "https://p.ecpay.com.tw/YOUR_MONTH_LINK",  // 填入 $65 的網址
-            season: "https://p.ecpay.com.tw/YOUR_SEASON_LINK", // 填入 $180 的網址
-            year: "https://p.ecpay.com.tw/YOUR_YEAR_LINK"      // 填入 $520 的網址
+            month: "https://p.ecpay.com.tw/YOUR_MONTH_LINK", 
+            season: "https://p.ecpay.com.tw/YOUR_SEASON_LINK",
+            year: "https://p.ecpay.com.tw/YOUR_YEAR_LINK"     
         };
 
-        // 檢查是否還沒設定網址 (防呆)
         if (links.month.includes("YOUR_")) {
             return Swal.fire({ icon: 'info', title: '功能準備中', text: '金流連結設定中，請稍後再試。' });
         }
 
-        // 跳出方案選擇視窗
         Swal.fire({
             title: '選擇儲值方案',
             html: `
@@ -762,42 +728,40 @@
                             <div class="fw-bold fs-5">🌱 輕量體驗 (30天)</div>
                             <small class="text-muted">適合短期試用</small>
                         </div>
-                        <div class="text-primary fw-bold fs-4">$65</div>
+                        <div class="text-primary fw-bold fs-4">$90</div>
                     </button>
 
                     <button id="plan-season" class="btn btn-outline-success p-3 rounded-4 shadow-sm d-flex justify-content-between align-items-center" onclick="Swal.clickConfirm(); return 'season';">
                         <div>
                             <div class="fw-bold fs-5">🍂 一季安心 (90天)</div>
-                            <small class="text-muted">平均$60/月</small>
+                            <small class="text-muted">平均$83/月</small>
                         </div>
-                        <div class="text-success fw-bold fs-4">$180</div>
+                        <div class="text-success fw-bold fs-4">$250</div>
                     </button>
 
                     <button id="plan-year" class="btn btn-primary p-3 rounded-4 shadow d-flex justify-content-between align-items-center position-relative" onclick="Swal.clickConfirm(); return 'year';">
                         <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill bg-danger">
-                            🔥 最划算 (省$260)
+                            🔥 最划算 (省$390)
                         </span>
                         <div class="text-white">
                             <div class="fw-bold fs-5">🌳 長效守護 (365天)</div>
-                            <small class="text-white-50">平均$43/月，一天不到1.5元</small>
+                            <small class="text-white-50">平均$58/月，一天不到2元</small>
                         </div>
-                        <div class="text-white fw-bold fs-3">$520</div>
+                        <div class="text-white fw-bold fs-3">$690</div>
                     </button>
 
                 </div>
                 <div class="mt-3 text-muted small text-center">
-                    ⚠️ 付款時請務必在備註欄填寫 <b>LINE 名稱</b>
+                    ⚠️ 付款時請務必在備註欄填寫 <b>真實姓名與手機號碼</b>
                 </div>
             `,
-            showConfirmButton: false, // 隱藏預設按鈕，改用上面的自訂按鈕觸發
+            showConfirmButton: false, 
             showCancelButton: true,
             cancelButtonText: '取消',
             didOpen: () => {
-                // 綁定按鈕點擊事件 (為了傳遞參數)
                 const handlePlan = (plan) => {
                     const url = links[plan];
-                    Swal.close(); // 關閉選單
-                    // 開啟綠界
+                    Swal.close(); 
                     liff.openWindow({ url: url, external: true });
                 };
                 
