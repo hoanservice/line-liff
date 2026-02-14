@@ -364,44 +364,35 @@
         return phone.replace(/(\d{4})(\d{3})(\d{3})/, '$1-$2-$3');
     }
 
-    // --- 顯示會員頁面 (核心 UI 邏輯) ---
-    // ★★★ 之前這裡少了函式宣告，現在補上了！ ★★★
+    // --- 顯示會員頁面 (核心 UI 邏輯 - 乾淨卡片大一統版) ---
     function showMemberPage(data) {
         document.getElementById('member-page').style.display = 'block';
         const isPaused = (data.status === 'Pause');
 
+        // ==========================================
+        // 1. 卡片渲染區 (只負責顯示資訊，不放主按鈕)
+        // ==========================================
         if (data.isTarget) {
-
-            // ▼▼▼【配色設定區】▼▼▼
-            // 2 = 森林綠 (推薦：護眼安全感)
-            const themeOption = 2; 
-
-            let activeGradient = "linear-gradient(135deg, #134E5E 0%, #71B280 100%)"; // 預設森林綠
-            if (themeOption === 1) activeGradient = "linear-gradient(135deg, #D4145A 0%, #FBB03B 100%)"; // 紅橘
-            if (themeOption === 3) activeGradient = "linear-gradient(135deg, #003973 0%, #E5E5BE 100%)"; // 深海藍
-            if (themeOption === 4) activeGradient = "linear-gradient(135deg, #4b6cb7 0%, #182848 100%)"; // 皇家紫
-
-            // ▼▼▼【暫停邏輯】▼▼▼
-            const cardBackground = isPaused ? 
-                "background: #4f5b62;" : 
-                `background: ${activeGradient};`;
-
-            // 狀態標籤
+            // --- 長輩/受守護者專屬卡片 (高對比設計) ---
+            const themeOption = 2; // 2 = 森林綠
+            let activeGradient = "linear-gradient(135deg, #134E5E 0%, #71B280 100%)";
+            if (themeOption === 1) activeGradient = "linear-gradient(135deg, #D4145A 0%, #FBB03B 100%)";
+            if (themeOption === 3) activeGradient = "linear-gradient(135deg, #003973 0%, #E5E5BE 100%)";
+            
+            const cardBackground = isPaused ? "background: #4f5b62;" : `background: ${activeGradient};`;
             const displayStatus = isPaused ? 
                 '<span class="badge rounded-pill bg-danger text-white border border-white fs-6 px-3 py-2 fw-bold shadow-sm"><i class="bi bi-pause-circle-fill me-1"></i> 服務暫停中</span>' :
                 '<span class="badge rounded-pill bg-light text-dark border border-2 border-white fs-6 px-3 py-2 fw-bold shadow-sm"><i class="bi bi-shield-check me-1 text-success"></i> 安心守護中</span>';
             
-            // 守護者資訊文字
             const guardianText = isPaused ? "服務已暫停" : (data.guardianName || "尚未設定");
-            const guardianDesc = isPaused ? "請點擊下方按鈕恢復服務" : `(${data.guardianAlias || "家人"})`;
+            const guardianDesc = isPaused ? "恢復後可撥打" : `(${data.guardianAlias || "家人"})`;
             const phoneBtnClass = (isPaused || !data.guardianPhone) ? "disabled opacity-50" : ""; 
 
+            // 乾淨版卡片 (移除了內部的報平安與恢復按鈕)
             const elderCardHTML = `
-            <div class="card border-0 shadow-lg rounded-4 overflow-hidden mb-3" 
-                style="${cardBackground} min-height: 320px; transition: all 0.5s ease;">
-                
+            <div class="card border-0 shadow-lg rounded-4 overflow-hidden mb-4" 
+                style="${cardBackground} min-height: 240px; transition: all 0.5s ease;">
                 <div class="card-body p-4 d-flex flex-column justify-content-between">
-                    
                     <div>
                         <div class="d-flex justify-content-between align-items-start">
                             <div>
@@ -412,70 +403,31 @@
                             </div>
                             <i class="bi bi-person-circle text-white opacity-25" style="font-size: 3.5rem; margin-top: -10px;"></i>
                         </div>
-                        
-                        <div class="mt-3">
-                            ${displayStatus}
-                        </div>
+                        <div class="mt-3">${displayStatus}</div>
                     </div>
 
-                    <div class="my-4">
-                        ${!isPaused ? `
-                        <button onclick="reportSafety()" class="btn w-100 py-3 rounded-4 shadow-sm position-relative overflow-hidden border-0" 
-                                style="background: white; color: #134E5E;">
-                            <div class="d-flex align-items-center justify-content-center">
-                                <i class="bi bi-check-circle-fill fs-1 me-3 text-success"></i>
-                                <div class="text-start">
-                                    <div class="fw-bold" style="font-size: 1.3rem; line-height: 1;">點擊報平安</div>
-                                    <small class="text-muted" style="font-size: 0.8rem;">您也可以點擊LINE選單報平安</small>
-                                </div>
-                            </div>
-                        </button>
-                        ` : `
-                        <button onclick="toggleServiceStatus('Active')" class="btn w-100 py-3 rounded-4 shadow-sm border-0" 
-                                style="background: rgba(255,255,255,0.9); color: #444;">
-                            <i class="bi bi-play-circle-fill fs-1 me-2 text-dark"></i>
-                            <span class="fw-bold fs-4">恢復服務</span>
-                        </button>
-                        `}
-                    </div>
-
-                    <div class="rounded-4 p-3" style="background: rgba(0, 0, 0, 0.2);">
+                    <div class="rounded-4 p-3 mt-4" style="background: rgba(0, 0, 0, 0.2);">
                         <div class="d-flex align-items-center justify-content-between mb-2">
-                            <div class="text-white-50 small fw-bold">
-                                <i class="bi bi-shield-fill me-1"></i>您的守護者
-                            </div>
-                            <div class="text-white fw-bold">
-                                ${guardianText} <span class="small opacity-75 fw-normal">${guardianDesc}</span>
-                            </div>
+                            <div class="text-white-50 small fw-bold"><i class="bi bi-shield-fill me-1"></i>您的守護者</div>
+                            <div class="text-white fw-bold">${guardianText} <span class="small opacity-75 fw-normal">${guardianDesc}</span></div>
                         </div>
-
-                        <a href="tel:${data.guardianPhone || '#'}" 
-                           class="btn btn-sm w-100 rounded-pill d-flex align-items-center justify-content-center py-2 ${phoneBtnClass}" 
-                           style="background: rgba(255,255,255,0.15); color: white; border: none;">
-                            <i class="bi bi-telephone-fill me-2"></i>
-                            ${isPaused ? '暫停中' : '撥打電話'}
+                        <a href="tel:${data.guardianPhone || '#'}" class="btn btn-sm w-100 rounded-pill d-flex align-items-center justify-content-center py-2 ${phoneBtnClass}" style="background: rgba(255,255,255,0.15); color: white; border: none;">
+                            <i class="bi bi-telephone-fill me-2"></i>撥打電話
                         </a>
                     </div>
-
                 </div>
             </div>`;
-            
-            // 注入長輩專屬卡片
             document.getElementById('member-card-container').innerHTML = elderCardHTML;
-            
-            // 隱藏不必要的通知區塊
             document.getElementById('target-notice').style.display = 'none';
 
         } else {
-            // --- 一般會員/管理者卡片 ---
+            // --- 一般會員/自己守護自己 (維持原本的 HTML 結構) ---
             const creditsDiv = document.getElementById('credits-badge');
-            const creditCount = document.getElementById('credit-count');
             const card = document.getElementById('member-card');
             const badgeIcon = document.getElementById('member-badge');
 
             document.getElementById('mem-name').innerText = data.name;
-            let displayPhone = data.phone === "LINE綁定" ? "已綁定LINE" : data.phone;
-            document.getElementById('mem-phone').innerText = displayPhone;
+            document.getElementById('mem-phone').innerText = data.phone === "LINE綁定" ? "已綁定LINE" : data.phone;
 
             if (isPaused) {
                 card.classList.add('grayscale', 'bg-secondary');
@@ -489,24 +441,13 @@
                 badgeIcon.innerHTML = '<i class="bi bi-star-fill text-warning me-1"></i>安心會員';
                 card.classList.add('bg-gradient-custom');
                 
-                // 顯示剩餘天數與訂閱按鈕
                 creditsDiv.style.display = 'block';
                 let myCredits = (typeof data.credits !== 'undefined') ? data.credits : 0;
-                
                 const btnTopUp = `<button onclick="openTopUp()" class="btn btn-sm btn-light text-primary fw-bold ms-2 rounded-pill shadow-sm" style="font-size: 0.75rem; padding: 2px 10px;"><i class="bi bi-credit-card-2-front-fill me-1"></i>訂閱</button>`;
-                
                 let badgeClass = myCredits <= 3 ? "badge rounded-pill bg-warning text-dark shadow-sm animate__animated animate__pulse animate__infinite" : "badge rounded-pill bg-light text-dark shadow-sm";
-                let iconClass = myCredits <= 3 ? "bi-exclamation-circle-fill" : "bi-coin text-warning";
-                
-                creditsDiv.innerHTML = `
-                   <span class="${badgeClass}">
-                       <i class="bi ${iconClass}"></i> 剩餘 ${myCredits} 天
-                   </span>
-                   ${btnTopUp}
-                `;
+                creditsDiv.innerHTML = `<span class="${badgeClass}"><i class="bi bi-coin text-warning"></i> 剩餘 ${myCredits} 天</span>${btnTopUp}`;
             }
 
-            // 顯示對應的資訊區塊
             if (data.target === 'elder') {
                 document.getElementById('manager-actions-box').style.display = 'block';
                 document.getElementById('self-guard-box').style.display = 'none';
@@ -519,28 +460,44 @@
             }
         }
 
-        // 3. 按鈕位置大風吹 (優化版：移除重複的恢復按鈕)
+        // ==========================================
+        // 2. 主按鈕與副按鈕區 (智能分配大一統)
+        // ==========================================
         const mainActionDiv = document.getElementById('manager-actions');   
         const footerActionDiv = document.getElementById('footer-actions'); 
-        mainActionDiv.innerHTML = "";   
-        footerActionDiv.innerHTML = ""; 
+        
+        mainActionDiv.style.display = 'block'; // 確保按鈕區塊顯示
 
         if (isPaused) {
-            // ★★★ 關鍵修改：暫停時，卡片內已經有按鈕了，所以這裡留空，不要再顯示綠色按鈕 ★★★
-            mainActionDiv.style.display = 'none'; 
+            // 【情境 A：暫停中】所有人統一顯示「恢復服務」
+            mainActionDiv.innerHTML = `
+                <button onclick="toggleServiceStatus('Active')" class="btn btn-success w-100 py-3 shadow-sm fw-bold rounded-4" style="font-size: 1.3rem;">
+                    <i class="bi bi-play-circle-fill me-2"></i> 立即恢復服務
+                </button>
+                <p class="text-center small text-secondary mt-2">點擊上方按鈕，重新啟動每日守護</p>
+            `;
+            footerActionDiv.innerHTML = ""; // 暫停時不需要顯示暫停按鈕
         } else {
-            mainActionDiv.style.display = 'none'; 
-            
-            // 只有「守護長輩模式」且「自己不是被守護者」時，才顯示邀請按鈕
-            if(data.target === 'elder' && !data.isTarget) {
-                 mainActionDiv.style.display = 'block';
-                 mainActionDiv.innerHTML = `
-                    <button onclick="sendInvite()" class="btn btn-success w-100 py-3 shadow fw-bold rounded-4">
+            // 【情境 B：服務正常】
+            if (data.isTarget || (data.target === 'self' && !data.isTarget)) {
+                // 身分 1：需要報平安的人 (長輩 或 獨居自護者)
+                mainActionDiv.innerHTML = `
+                    <button onclick="reportSafety()" class="btn btn-success w-100 py-3 rounded-4 shadow-sm mb-3 border border-2 border-white" 
+                            style="font-size: 1.8rem; font-weight: 900; letter-spacing: 2px; background: linear-gradient(to bottom, #2ecc71, #27ae60);">
+                        <i class="bi bi-check-circle-fill me-2"></i> 點擊報平安
+                        <div style="font-size: 0.9rem; font-weight: normal; opacity: 0.9; letter-spacing: 0;">讓家人放心</div>
+                    </button>
+                `;
+            } else if (data.target === 'elder' && !data.isTarget) {
+                // 身分 2：純守護者 (幫長輩設定的人，自己不用報平安)
+                mainActionDiv.innerHTML = `
+                    <button onclick="sendInvite()" class="btn btn-primary w-100 py-3 shadow-sm fw-bold rounded-4 mb-3" style="font-size: 1.2rem;">
                         <i class="bi bi-send-fill me-2"></i> 傳送守護卡給家人
-                    </button>`;
+                    </button>
+                `;
             }
 
-            // 底部按鈕：暫停服務
+            // 底部統一顯示暫停按鈕
             footerActionDiv.innerHTML = `
                 <button onclick="toggleServiceStatus('Pause')" class="btn btn-outline-secondary btn-sm px-4 rounded-pill">
                     <i class="bi bi-pause-circle me-1"></i> 暫停服務
