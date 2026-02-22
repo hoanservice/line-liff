@@ -334,7 +334,7 @@
         });
     }
 
-    // --- 載入歷史紀錄 ---
+    // --- 載入歷史紀錄 (升級版：顯示自動重置標記) ---
     function loadHistory(searchUid) {
         const historyBox = document.getElementById('history-list');
         historyBox.innerHTML = '<div class="list-group-item small text-center text-muted py-3"><div class="spinner-border spinner-border-sm text-secondary" role="status"></div> 更新紀錄中...</div>';
@@ -345,12 +345,30 @@
         .then(res => res.json())
         .then(data => {
             if (data.history && data.history.length > 0) {
-                historyBox.innerHTML = data.history.map(item => `
-                <div class="list-group-item d-flex justify-content-between align-items-center">
-                    <span><i class="bi bi-check-circle-fill text-success"></i> ${item.name} 報平安</span>
-                    <span class="badge bg-light text-secondary border">${item.time}</span>
-                </div>
-                `).join('');
+                historyBox.innerHTML = data.history.map(item => {
+                    
+                    // 預設狀態：手動報平安 (綠色打勾)
+                    let text = `${item.name} 報平安`;
+                    let icon = `<i class="bi bi-check-circle-fill text-success"></i>`;
+                    
+                    // ★★★ 判斷是否為「系統自動恢復」 ★★★
+                    if (item.source && item.source.includes("系統自動")) {
+                        if (item.source.includes("守護者")) {
+                            text = `守護者恢復服務 <span class="text-primary" style="font-size:0.75rem;">(系統重置)</span>`;
+                        } else {
+                            text = `本人恢復服務 <span class="text-primary" style="font-size:0.75rem;">(系統重置)</span>`;
+                        }
+                        // 換成藍色的「重新啟動」圖示，區分視覺
+                        icon = `<i class="bi bi-arrow-clockwise text-primary"></i>`; 
+                    }
+
+                    return `
+                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                        <span>${icon} ${text}</span>
+                        <span class="badge bg-light text-secondary border">${item.time}</span>
+                    </div>
+                    `;
+                }).join('');
             } else {
                 historyBox.innerHTML = '<div class="list-group-item small text-center text-muted py-3">目前尚無紀錄</div>';
             }
