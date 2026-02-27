@@ -597,8 +597,13 @@
         .then(data => {
             document.getElementById('loader').style.display = 'none';
             if (data.success) {
-                Swal.fire({ icon: 'success', title: '綁定成功！', timer: 1500, showConfirmButton: false })
-                .then(() => { location.href = window.location.pathname; });
+            Swal.fire({ 
+            icon: 'success', 
+            title: '綁定成功！', 
+            html: '歡迎加入！<br><span class="text-danger fw-bold small">⚠️ 請務必確認已將本帳號「加入好友」<br>以免漏接緊急安全通知喔！</span>',
+            confirmButtonColor: '#667eea',
+          confirmButtonText: '我知道了'
+            }).then(() => { location.href = window.location.pathname; });
             } else { showError("綁定失敗：" + data.error); }
         }).catch(err => {
             document.getElementById('loader').style.display = 'none';
@@ -675,7 +680,11 @@
           document.getElementById('loader').style.display = 'none';
           if (data.success) {
             Swal.fire({ 
-                icon: 'success', title: '註冊成功', text: '歡迎加入厚安守護！'
+            icon: 'success', 
+            title: '註冊成功', 
+            html: '歡迎加入厚安守護！<br><br><span class="text-danger fw-bold small">⚠️ 提醒您：請務必將本帳號「加入好友」並解除靜音，才能正常接收每日守護通知喔！</span>',
+            confirmButtonColor: '#667eea',
+            confirmButtonText: '我知道了'
             }).then(() => {
                 location.href = window.location.pathname;
             });
@@ -764,14 +773,25 @@
                         <div class="text-white fw-bold fs-3">$690</div>
                     </button>
                 </div>
-                <div class="mt-4 p-2 rounded bg-light text-center small text-muted" style="border: 1px dashed #ccc;">
-                <div class="text-primary fw-bold mb-1">
-                <i class="fa-solid fa-circle-info me-1"></i> 小叮嚀
-                </div>
-                <div>
-                請於付款頁面填寫您的<strong class="text-dark">「註冊手機號碼」</strong>。<br>
-                我們將於確認收款後的 12 小時內開通服務或延長天數。
-                </div>
+                <div class="card border-0 bg-light rounded-4 p-3 shadow-sm my-4">
+    <h6 class="fw-bold text-dark mb-3">
+        <i class="fa-solid fa-circle-exclamation text-warning me-2"></i>付款小叮嚀
+    </h6>
+    <ul class="list-unstyled small text-secondary mb-0" style="line-height: 1.6;">
+        <li class="mb-2 d-flex align-items-start">
+            <i class="fa-solid fa-check mt-1 me-2" style="color: var(--brand-green);"></i>
+            <span>請務必於付款頁面填寫正確的<strong>「註冊手機號碼」</strong>，這是為您加值天數的唯一憑證喔！</span>
+        </li>
+        <li class="mb-2 d-flex align-items-start">
+            <i class="fa-regular fa-clock mt-1 me-2" style="color: var(--brand-green);"></i>
+            <span>確認收款後，我們將於 <strong>12 小時內</strong>為您開通服務或自動延長天數。</span>
+        </li>
+        <li class="d-flex align-items-start">
+            <i class="fa-solid fa-headset mt-1 me-2" style="color: var(--brand-green);"></i>
+            <span>若付款後超過 12 小時未開通，請直接於 LINE 官方帳號回傳您的「手機號碼與付款截圖」，客服會為您優先處理。</span>
+        </li>
+    </ul>
+</div>
                 </div>
             `,
             showConfirmButton: false, 
