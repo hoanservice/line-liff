@@ -607,19 +607,31 @@
       }
 
       const name = document.getElementById('reg-name').value.trim();
-      const phone = document.getElementById('reg-phone').value.trim();
-      const target = document.getElementById('reg-target').value;
-      
       if (!name) return Swal.fire({ icon: 'warning', title: '請輸入姓名' });
+
+      // ★ 1. 會員本人手機淨化與驗證
+      const rawPhone = document.getElementById('reg-phone').value.trim();
+      const phone = rawPhone.replace(/\D/g, ''); // 濾除非數字
+      
       const phoneRegex = /^09\d{8}$/;
       if (!phoneRegex.test(phone)) return Swal.fire({ icon: 'error', title: '您的手機格式錯誤', text: '請輸入 09 開頭的 10 碼數字' });
 
+      const target = document.getElementById('reg-target').value;
+      let finalEName = "";
+      let finalEPhone = "";
+      let finalUTitle = "";
+      let finalSAlias = "";
+
       if (target === 'self') {
-        const eName = document.getElementById('reg-eName').value.trim();
-        const ePhone = document.getElementById('reg-ePhone').value.trim();
+        finalEName = document.getElementById('reg-eName').value.trim();
+        const rawEPhone = document.getElementById('reg-ePhone').value.trim();
+        finalEPhone = rawEPhone.replace(/\D/g, ''); // ★ 2. 緊急聯絡人手機淨化
+        
         const contactAgree = document.getElementById('reg-contact-agree');
 
-        if (!eName || !phoneRegex.test(ePhone)) return Swal.fire({ icon: 'warning', title: '請完整填寫緊急聯絡人', text: '聯絡人電話格式需正確' });
+        if (!finalEName || !phoneRegex.test(finalEPhone)) {
+            return Swal.fire({ icon: 'warning', title: '請完整填寫緊急聯絡人', text: '緊急聯絡人電話必須是 09 開頭的 10 碼數字。' });
+        }
         if (!contactAgree.checked) {
             return Swal.fire({ 
                 icon: 'warning', title: '請確認授權', 
@@ -627,15 +639,20 @@
                 confirmButtonColor: '#667eea' 
             });
         }
+      } else {
+          // target === 'elder'
+          finalUTitle = document.getElementById('reg-uTitle').value.trim();
+          finalSAlias = document.getElementById('reg-sAlias').value.trim();
       }
 
+      // ★ 3. 組合 URL 參數 (傳送乾淨的 phone 與 finalEPhone)
       let params = `action=register&uid=${userUid}&name=${encodeURIComponent(name)}&phone=${encodeURIComponent(phone)}&target=${target}`;
       if (inviterId) params += `&inviter=${inviterId}`;
       
       if (target === 'self') {
-        params += `&eName=${encodeURIComponent(document.getElementById('reg-eName').value)}&ePhone=${encodeURIComponent(document.getElementById('reg-ePhone').value)}`;
+        params += `&eName=${encodeURIComponent(finalEName)}&ePhone=${encodeURIComponent(finalEPhone)}`;
       } else {
-        params += `&uTitle=${encodeURIComponent(document.getElementById('reg-uTitle').value)}&sAlias=${encodeURIComponent(document.getElementById('reg-sAlias').value)}`;
+        params += `&uTitle=${encodeURIComponent(finalUTitle)}&sAlias=${encodeURIComponent(finalSAlias)}`;
       }
 
       document.getElementById('loader').style.display = 'flex';
