@@ -154,23 +154,35 @@
     </div>
 
     <div id="invite-page" style="display:none;">
-      <div class="card shadow p-4 invite-card text-center border-0" style="border-radius: 20px;">
-        <div class="mb-4">
-          <i class="bi bi-envelope-heart-fill text-danger" style="font-size: 4rem; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));"></i>
+      <div class="card shadow p-4 text-center border-0" style="border-radius: 24px; background: #ffffff;">
+        
+        <div class="mb-4 mt-2">
+          <div class="d-inline-flex justify-content-center align-items-center" style="width: 80px; height: 80px; background: rgba(102, 126, 234, 0.1); border-radius: 50%;">
+            <i class="bi bi-envelope-paper-heart-fill text-primary" style="font-size: 2.8rem;"></i>
+          </div>
         </div>
-        <h3 class="fw-bold mb-3">來自家人的邀請</h3>
-        <p class="fs-5">
-          <span id="inviter-name" class="fw-bold text-primary bg-white px-2 py-1 rounded">---</span> 邀請您加入<br>
-          「厚安守護」
+        
+        <h3 class="fw-bolder mb-3 text-dark" style="letter-spacing: 1px;">來自家人的邀請</h3>
+        <p class="fs-5 text-secondary mb-4">
+          <span id="inviter-name" class="fw-bold text-primary fs-4">---</span> <br>
+          邀請您加入「厚安守護」
         </p>
-        <p class="text-secondary small">
-          接受邀請後，系統將自動設定<br>對方為您的緊急聯絡人。
-        </p>
-        <div class="d-grid gap-2 mt-4">
-          <button onclick="acceptInvite()" class="btn btn-dark btn-lg py-3 shadow rounded-pill">
+        
+        <div class="alert border-0 rounded-4 mb-4 text-start shadow-sm" style="background: #f8f9fa;">
+          <div class="d-flex align-items-start">
+            <i class="bi bi-info-circle-fill text-primary me-2 mt-1"></i>
+            <span class="small text-muted" style="line-height: 1.6;">
+              接受邀請後，系統將自動設定對方為您的<strong class="text-dark">緊急聯絡人</strong>，陪伴並守護您的日常安全。
+            </span>
+          </div>
+        </div>
+        
+        <div class="d-grid gap-2 mt-2 mb-2">
+          <button onclick="acceptInvite()" class="btn py-3 text-white fw-bold shadow-sm rounded-pill" style="font-size: 1.15rem; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none;">
             ✨ 接受並開啟守護卡
           </button>
         </div>
+        
       </div>
     </div>
 
