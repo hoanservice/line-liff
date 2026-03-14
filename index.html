@@ -758,45 +758,45 @@
         Swal.fire({
             title: '選擇服務方案',
             html: `
-                <div class="d-grid gap-2 text-start">
-                    <button id="plan-month" class="btn btn-outline-primary p-3 rounded-4 shadow-sm d-flex justify-content-between align-items-center" onclick="Swal.clickConfirm(); return 'month';">
+                <div class="d-grid gap-2 text-start mt-3">
+                    <button id="plan-month" class="btn btn-outline-primary p-3 rounded-4 shadow-sm d-flex justify-content-between align-items-center">
                         <div><div class="fw-bold fs-5">🌱 輕量體驗 (30天)</div><small class="text-muted">單次訂閱，到期不自動續約</small></div>
                         <div class="text-primary fw-bold fs-4">$90</div>
                     </button>
-                    <button id="plan-season" class="btn btn-outline-success p-3 rounded-4 shadow-sm d-flex justify-content-between align-items-center" onclick="Swal.clickConfirm(); return 'season';">
+                    <button id="plan-season" class="btn btn-outline-success p-3 rounded-4 shadow-sm d-flex justify-content-between align-items-center">
                         <div><div class="fw-bold fs-5">🌿 一季安心 (90天)</div><small class="text-muted">平均$83/月</small></div>
                         <div class="text-success fw-bold fs-4">$250</div>
                     </button>
-                    <button id="plan-year" class="btn btn-primary p-3 rounded-4 shadow d-flex justify-content-between align-items-center position-relative" onclick="Swal.clickConfirm(); return 'year';">
+                    <button id="plan-year" class="btn btn-primary p-3 rounded-4 shadow d-flex justify-content-between align-items-center position-relative">
                         <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill bg-danger">🔥 最划算 (省$390)</span>
                         <div class="text-white"><div class="fw-bold fs-5">🌳 長效守護 (365天)</div><small class="text-white-50">平均$58/月，一天不到2元</small></div>
                         <div class="text-white fw-bold fs-3">$690</div>
                     </button>
                 </div>
+                
                 <div class="card border-0 bg-light rounded-4 p-3 shadow-sm my-4">
-    <h6 class="fw-bold text-dark mb-3">
-        <i class="fa-solid fa-circle-exclamation text-warning me-2"></i>付款小叮嚀
-    </h6>
-    <ul class="list-unstyled small text-secondary mb-0" style="line-height: 1.6;">
-        <li class="mb-2 d-flex align-items-start">
-            <i class="fa-solid fa-check mt-1 me-2" style="color: var(--brand-green);"></i>
-            <span>・請於付款頁面填寫<strong>「註冊手機號碼」</strong>，這是為您加值天數的憑證喔！</span>
-        </li>
-        <li class="mb-2 d-flex align-items-start">
-            <i class="fa-regular fa-clock mt-1 me-2" style="color: var(--brand-green);"></i>
-            <span>・確認收款後，我們將於 12 小時內 為您加值服務天數。</span>
-        </li>
-        <li class="d-flex align-items-start">
-            <i class="fa-solid fa-headset mt-1 me-2" style="color: var(--brand-green);"></i>
-            <span>・若付款後超過 12 小時未開通，請於 LINE 官方帳號回傳您的「手機號碼與付款截圖」，我們會為您優先處理。</span>
-        </li>
-    </ul>
-</div>
+                    <h6 class="fw-bold text-dark mb-3">
+                        <i class="fa-solid fa-circle-exclamation text-warning me-2"></i>付款小叮嚀
+                    </h6>
+                    <ul class="list-unstyled small text-secondary mb-0" style="line-height: 1.6;">
+                        <li class="mb-2 d-flex align-items-start">
+                            <i class="fa-solid fa-check mt-1 me-2" style="color: var(--brand-green);"></i>
+                            <span>・請於付款頁面填寫<strong>「註冊手機號碼」</strong>，這是為您加值天數的憑證喔！</span>
+                        </li>
+                        <li class="mb-2 d-flex align-items-start">
+                            <i class="fa-regular fa-clock mt-1 me-2" style="color: var(--brand-green);"></i>
+                            <span>・確認收款後，我們將於 12 小時內為您加值服務天數。</span>
+                        </li>
+                        <li class="d-flex align-items-start">
+                            <i class="fa-solid fa-headset mt-1 me-2" style="color: var(--brand-green);"></i>
+                            <span>・若付款後超過 12 小時未開通，請於 LINE 官方帳號回傳您的「手機號碼與付款截圖」，我們會為您優先處理。</span>
+                        </li>
+                    </ul>
                 </div>
             `,
+            showCloseButton: true,    // 新增這行：顯示右上角的叉叉 ❌
             showConfirmButton: false, 
-            showCancelButton: true,
-            cancelButtonText: '取消',
+            showCancelButton: false,  //改成 false：隱藏下方的取消按鈕
             didOpen: () => {
                 const handlePlan = (plan) => {
                     const url = links[plan];
