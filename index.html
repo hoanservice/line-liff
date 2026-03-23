@@ -461,22 +461,36 @@
             document.getElementById('mem-phone').innerText = data.phone === "LINE綁定" ? "已綁定LINE" : data.phone;
 
             if (isPaused) {
+                // 【情境 1：手動暫停中】(維持灰白)
                 card.classList.add('grayscale', 'bg-secondary');
                 card.classList.remove('bg-gradient-custom', 'bg-gradient-target');
                 badgeIcon.className = "badge-pill bg-danger text-white border-0"; 
                 badgeIcon.innerHTML = '<i class="bi bi-pause-circle-fill me-1"></i>服務暫停中';
                 creditsDiv.style.display = 'none';
             } else {
+                // 【情境 2：服務運作中】(免費版 與 付費版 分流)
                 card.classList.remove('grayscale', 'bg-secondary');
-                badgeIcon.className = "badge-pill";
-                badgeIcon.innerHTML = '<i class="bi bi-star-fill text-warning me-1"></i>安心會員';
                 card.classList.add('bg-gradient-custom');
-                
                 creditsDiv.style.display = 'block';
+                
                 let myCredits = (typeof data.credits !== 'undefined') ? data.credits : 0;
-                const btnTopUp = `<button onclick="openTopUp()" class="btn btn-sm btn-light text-primary fw-bold ms-2 rounded-pill shadow-sm" style="font-size: 0.75rem; padding: 2px 10px;"><i class="bi bi-credit-card-2-front-fill me-1"></i>訂閱</button>`;
-                let badgeClass = myCredits <= 3 ? "badge rounded-pill bg-warning text-dark shadow-sm animate__animated animate__pulse animate__infinite" : "badge rounded-pill bg-light text-dark shadow-sm";
-                creditsDiv.innerHTML = `<span class="${badgeClass}"><i class="bi bi-coin text-warning"></i> 剩餘 ${myCredits} 天</span>${btnTopUp}`;
+                
+                if (myCredits > 0) {
+                    // 💎 付費版 (Premium) 視覺
+                    badgeIcon.className = "badge-pill";
+                    badgeIcon.innerHTML = '<i class="bi bi-star-fill text-warning me-1"></i>安心方案';
+                    
+                    const btnTopUp = `<button onclick="openTopUp()" class="btn btn-sm btn-light text-primary fw-bold ms-2 rounded-pill shadow-sm" style="font-size: 0.75rem; padding: 2px 10px;"><i class="bi bi-lightning-charge-fill me-1"></i>續約</button>`;
+                    let badgeClass = myCredits <= 3 ? "badge rounded-pill bg-warning text-dark shadow-sm animate__animated animate__pulse animate__infinite" : "badge rounded-pill bg-light text-dark shadow-sm";
+                    creditsDiv.innerHTML = `<span class="${badgeClass}"><i class="bi bi-clock-history text-secondary"></i> 剩餘 ${myCredits} 天</span>${btnTopUp}`;
+                } else {
+                    // 🆓 免費版 (Free) 視覺
+                    badgeIcon.className = "badge-pill";
+                    badgeIcon.innerHTML = '<i class="bi bi-shield-check text-primary me-1"></i>免費版';
+                    
+                    // 把「剩餘0天」隱藏，直接換成一個吸睛的升級按鈕
+                    creditsDiv.innerHTML = `<button onclick="openTopUp()" class="btn btn-sm btn-warning text-dark fw-bold rounded-pill shadow-sm animate__animated animate__pulse animate__infinite" style="font-size: 0.8rem; padding: 4px 12px; border: 2px solid #fff;"><i class="bi bi-unlock-fill me-1"></i>解鎖簡訊守護</button>`;
+                }
             }
 
             if (data.target === 'elder') {
